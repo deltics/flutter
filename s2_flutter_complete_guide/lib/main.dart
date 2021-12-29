@@ -17,6 +17,21 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  static const _questions = [
+    {
+      'text': 'What\'s your favorite color?',
+      'answers': ['Black', 'Red', 'Green', 'Blue'],
+    },
+    {
+      'text': 'What\'s your favorite animal?',
+      'answers': ['Rabbit', 'Snake', 'Elephant', 'Lion', 'Gekko'],
+    },
+    {
+      'text': 'What\'s your favorite language?',
+      'answers': ['Pascal', 'Go', 'Dart', 'C#', 'COBOL', 'JavaScript'],
+    },
+  ];
+
   var _questionIndex = 0;
 
   @override
@@ -28,21 +43,6 @@ class _AppState extends State<App> {
       });
     }
 
-    var questions = [
-      {
-        'text': 'What\'s your favorite color?',
-        'answers': ['Black', 'Red', 'Green', 'Blue'],
-      },
-      {
-        'text': 'What\'s your favorite animal?',
-        'answers': ['Rabbit', 'Snake', 'Elephant', 'Lion', 'Gekko'],
-      },
-      {
-        'text': 'What\'s your favorite language?',
-        'answers': ['Pascal', 'Go', 'Dart', 'C#', 'COBOL', 'JavaScript'],
-      },
-    ];
-
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -50,7 +50,7 @@ class _AppState extends State<App> {
         ),
         body: Column(
           children: [
-            Question(text: questions[_questionIndex]['text'].toString()),
+            Question(text: _questions[_questionIndex]['text'].toString()),
 
             // Deep breath...
             //
@@ -60,7 +60,7 @@ class _AppState extends State<App> {
             //  Answer() widgets in the list being passed to the 'children:' property
             //  (i.e. N Answer() widgets, rather than a single LIST of N Answer() widgets)
 
-            ...(questions[_questionIndex]['answers'] as List<String>)
+            ...(_questions[_questionIndex]['answers'] as List<String>)
                 .map((answer) {
               return Answer(text: answer, fn: _answerQuestion);
             }).toList(),
