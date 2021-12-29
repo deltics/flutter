@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Question extends StatelessWidget {
   late final String _text;
 
-  Question({@required String? text, Key? key}) : super(key: key) {
+  Question({Key? key, @required String? text}) : super(key: key) {
     _text = text!;
   }
 
