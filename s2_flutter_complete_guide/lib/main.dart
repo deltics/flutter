@@ -10,19 +10,19 @@ class App extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return AppState();
+    return _AppState();
   }
 }
 
-class AppState extends State<App> {
-  var questionIndex = 0;
+class _AppState extends State<App> {
+  var _questionIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    void answerQuestion() {
+    void _answerQuestion() {
       print('Answered the question');
       setState(() {
-        questionIndex++;
+        _questionIndex++;
       });
     }
 
@@ -38,9 +38,9 @@ class AppState extends State<App> {
         ),
         body: Column(
           children: [
-            Text(questions[questionIndex]),
+            Text(questions[_questionIndex]),
             ElevatedButton(
-                child: const Text('Answer One'), onPressed: answerQuestion),
+                child: const Text('Answer One'), onPressed: _answerQuestion),
             ElevatedButton(
                 child: const Text('Answer Two'),
                 onPressed: () => print('Answered \'Two\'')),
