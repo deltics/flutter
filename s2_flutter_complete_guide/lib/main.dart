@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 
 // Dart entry point
 void main() {
-  runApp(App());
+  runApp(const App());
 }
 
 // The App widget
 class App extends StatelessWidget {
-  Widget build(BuildContext ctx) {
-    return MaterialApp(
+  const App({Key? key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
       home: Text('Hello!'),
     );
   }
