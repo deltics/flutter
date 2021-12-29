@@ -2,9 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Dart entry point
-void main() {
-  runApp(const App());
-}
+void main() => runApp(const App());
+
 
 // The App widget
 class App extends StatelessWidget {
