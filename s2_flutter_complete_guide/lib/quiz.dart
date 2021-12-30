@@ -6,13 +6,13 @@ import 'question.dart';
 class Quiz extends StatelessWidget {
   late final List<Map<String, Object>> _questions;
   late final int _questionIndex;
-  late final VoidCallback _answerHandler;
+  late final void Function(int) _answerHandler;
 
   Quiz(
       {Key? key,
       @required List<Map<String, Object>>? questions,
       @required int? questionIndex,
-      @required VoidCallback? answerHandler})
+      @required void Function(int)? answerHandler})
       : super(key: key) {
     _questions = questions!;
     _questionIndex = questionIndex!;
@@ -33,9 +33,11 @@ class Quiz extends StatelessWidget {
         //  Answer() widgets in the list being passed to the 'children:' property
         //  (i.e. N Answer() widgets, rather than a single LIST of N Answer() widgets)
 
-        ...(_questions[_questionIndex]['answers'] as List<String>)
+        ...(_questions[_questionIndex]['answers'] as List<Map<String, Object>>)
             .map((answer) {
-          return Answer(text: answer, fn: _answerHandler);
+          return Answer(
+              text: answer['text'] as String,
+              fn: () => _answerHandler(answer['score'] as int));
         }).toList(),
       ],
     );
