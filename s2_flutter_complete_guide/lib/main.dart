@@ -1,7 +1,7 @@
 // Imports
 import 'package:flutter/material.dart';
-import "question.dart";
-import 'answer.dart';
+import 'quiz.dart';
+import 'result.dart';
 
 // Dart entry point
 void main() => runApp(App());
@@ -34,29 +34,6 @@ class _AppState extends State<App> {
 
   var _questionIndex = 0;
 
-  Widget currentActivity() {
-    return _questionIndex < _questions.length
-        ? Column(
-            children: [
-              Question(text: _questions[_questionIndex]['text'].toString()),
-
-              // Deep breath...
-              //
-              // We take the list of answers for the current question and map it
-              //  to produce a list of Answer() widgets.  The spread operator ('...')
-              //  that is applied to this result then places the resulting list of
-              //  Answer() widgets in the list being passed to the 'children:' property
-              //  (i.e. N Answer() widgets, rather than a single LIST of N Answer() widgets)
-
-              ...(_questions[_questionIndex]['answers'] as List<String>)
-                  .map((answer) {
-                return Answer(text: answer, fn: _answerQuestion);
-              }).toList(),
-            ],
-          )
-        : const Center(child: Text('All Done!'));
-  }
-
   void _answerQuestion() {
     print('Answered the question');
     setState(() {
@@ -68,10 +45,16 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Complete Guide'),
-          ),
-          body: currentActivity()),
+        appBar: AppBar(
+          title: const Text('Complete Guide'),
+        ),
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                questions: _questions,
+                questionIndex: _questionIndex,
+                answerHandler: _answerQuestion)
+            : const Result(),
+      ),
     );
   }
 }
