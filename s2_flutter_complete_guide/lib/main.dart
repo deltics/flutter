@@ -69,36 +69,6 @@ class _AppState extends State<App> {
     });
   }
 
-  Widget currentActivity() {
-    return _questionIndex < _questions.length
-        ? Column(
-            children: [
-              Question(text: _questions[_questionIndex]['text'].toString()),
-
-              // Deep breath...
-              //
-              // We take the list of answers for the current question and map it
-              //  to produce a list of Answer() widgets.  The spread operator ('...')
-              //  that is applied to this result then places the resulting list of
-              //  Answer() widgets in the list being passed to the 'children:' property
-              //  (i.e. N Answer() widgets, rather than a single LIST of N Answer() widgets)
-
-              ...(_questions[_questionIndex]['answers'] as List<String>)
-                  .map((answer) {
-                return Answer(text: answer, fn: _answerQuestion);
-              }).toList(),
-            ],
-          )
-        : const Text('All Done!');
-  }
-
-  void _answerQuestion() {
-    print('Answered the question');
-    setState(() {
-      _questionIndex++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
