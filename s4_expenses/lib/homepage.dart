@@ -11,7 +11,23 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: const Text('<app> body'),
+      body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              width: double.infinity,
+              child: const Card(
+                color: Colors.blue,
+                child: Text('CHART'),
+                elevation: 5,
+              ),
+            ),
+            const Card(
+              color: Colors.red,
+              child: Text('LIST OF TX'),
+            ),
+          ]),
     );
   }
 }
