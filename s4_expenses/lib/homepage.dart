@@ -1,9 +1,25 @@
 import 'package:flutter/material.dart';
 
+import './transaction.dart';
+
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key, required this.title}) : super(key: key);
+  HomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
+  final List<Transaction> transactions = [
+    Transaction(
+      id: 't1',
+      title: 'New Shoes',
+      amount: 129.99,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'Groceries',
+      amount: 454.78,
+      date: DateTime.now(),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +39,12 @@ class HomePage extends StatelessWidget {
                 elevation: 5,
               ),
             ),
-            const Card(
-              color: Colors.red,
-              child: Text('LIST OF TX'),
+            Column(
+              children: transactions.map((tx) {
+                return Card(
+                  child: Text(tx.title),
+                );
+              }).toList(),
             ),
           ]),
     );
