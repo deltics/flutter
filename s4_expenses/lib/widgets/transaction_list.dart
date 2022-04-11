@@ -13,49 +13,51 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 300,
-      child: ListView(
-        children: transactions.map((tx) {
-          return Card(
-              child: Row(children: <Widget>[
-            Container(
-                margin: const EdgeInsets.symmetric(
-                  vertical: 10,
-                  horizontal: 15,
-                ),
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.purple, width: 1)),
-                padding: const EdgeInsets.all(10),
-                child: Text(
-                  '\$${tx.amount}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.purple,
+      child: ListView.builder(
+          itemCount: transactions.length,
+          itemBuilder: (ctx, index) {
+            final tx = transactions[index];
+
+            return Card(
+                child: Row(children: <Widget>[
+              Container(
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 15,
                   ),
-                )),
-            Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    tx.title,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.purple, width: 1)),
+                  padding: const EdgeInsets.all(10),
+                  child: Text(
+                    '\$${tx.amount.toStringAsFixed(2)}',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.black,
+                      fontSize: 20,
+                      color: Colors.purple,
                     ),
-                  ),
-                  Text(
-                    DateFormat('dd MMM yyyy @ hh:mm:ss').format(tx.date),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                      color: Colors.grey,
+                  )),
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      tx.title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
                     ),
-                  ),
-                ])
-          ]));
-        }).toList(),
-      ),
+                    Text(
+                      DateFormat('dd MMM yyyy @ hh:mm:ss').format(tx.date),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ])
+            ]));
+          }),
     );
   }
 }

@@ -7,6 +7,17 @@ class TransactionEntry extends StatelessWidget {
 
   TransactionEntry({Key? key, required this.addFunction}) : super(key: key);
 
+  void submit() {
+    final title = titleController.text;
+    final amount = double.parse(amountController.text);
+
+    if (title.isEmpty || amount <= 0) {
+      return;
+    }
+
+    addFunction(title, amount);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -21,16 +32,17 @@ class TransactionEntry extends StatelessWidget {
             TextField(
               decoration: const InputDecoration(labelText: 'Title'),
               controller: titleController,
+              onSubmitted: (_) => submit(),
             ),
             TextField(
               decoration: const InputDecoration(labelText: 'Amount'),
               controller: amountController,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              onSubmitted: (_) => submit(),
             ),
             TextButton(
-              onPressed: () {
-                addFunction(
-                    titleController.text, double.parse(amountController.text));
-              },
+              onPressed: () => submit(),
               style: TextButton.styleFrom(primary: Colors.green),
               child: const Text('Add Transaction'),
             ),
