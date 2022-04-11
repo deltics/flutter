@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-import 'widgets/transactionEditor.dart';
+import 'widgets/transaction_editor.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({Key? key, required this.title}) : super(key: key);
+  const HomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -17,17 +16,17 @@ class HomePage extends StatelessWidget {
       body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
+          children: const [
             // CHART
-            Container(
+            SizedBox(
               width: double.infinity,
-              child: const Card(
+              child: Card(
                 color: Colors.blue,
                 child: Text('CHART'),
                 elevation: 5,
               ),
             ),
-            const TransactionEditor(),
+            TransactionEditor(),
           ]),
     );
   }

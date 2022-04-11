@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../models/transaction.dart';
 
-import 'transactionEntry.dart';
-import 'transactionList.dart';
+import 'transaction_entry.dart';
+import 'transaction_list.dart';
 
 class TransactionEditor extends StatefulWidget {
   const TransactionEditor({Key? key}) : super(key: key);
@@ -24,6 +24,24 @@ class _TransactionEditorState extends State<TransactionEditor> {
       id: 't2',
       title: 'Groceries',
       amount: 454.78,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't3',
+      title: 'Petrol (CX-9)',
+      amount: 152.36,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't4',
+      title: 'Coffee',
+      amount: 4.50,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't5',
+      title: 'Petrol (Pretzel)',
+      amount: 110.82,
       date: DateTime.now(),
     ),
   ];
