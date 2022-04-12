@@ -90,11 +90,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _addTransaction(String title, double amount) {
+  void _addTransaction(String title, double amount, DateTime date) {
     final tx = Transaction(
       title: title,
       amount: amount,
-      date: DateTime.now(),
+      date: date,
       id: 't${_transactions.length.toString()}',
     );
 

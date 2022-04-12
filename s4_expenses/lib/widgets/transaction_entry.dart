@@ -20,11 +20,14 @@ class _TransactionEntryState extends State<TransactionEntry> {
     final title = _titleController.text;
     final amount = double.tryParse(_amountController.text);
 
-    if (title.isEmpty || amount == null || amount <= 0) {
+    if (title.isEmpty ||
+        amount == null ||
+        amount <= 0 ||
+        _transactionDate == null) {
       return;
     }
 
-    widget.addFunction(title, amount);
+    widget.addFunction(title, amount, _transactionDate!);
 
     Navigator.of(context).pop();
   }

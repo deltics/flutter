@@ -28,45 +28,37 @@ class TransactionList extends StatelessWidget {
                 final tx = transactions[index];
 
                 return Card(
-                    child: Row(children: <Widget>[
-                  Container(
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 15,
+                  elevation: 4,
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 3,
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                        child: Padding(
+                      padding: const EdgeInsets.all(3),
+                      child:
+                          FittedBox(child: Text(tx.amount.toStringAsFixed(2))),
+                    )),
+                    title: Text(
+                      tx.title,
+                      style: const TextStyle(
+                        fontFamily: 'Chalkduster',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.black,
                       ),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.purple, width: 1)),
-                      padding: const EdgeInsets.all(10),
-                      child: Text(
-                        '\$${tx.amount.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.purple,
-                        ),
-                      )),
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          tx.title,
-                          style: const TextStyle(
-                            fontFamily: 'Chalkduster',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Text(
-                          DateFormat('dd MMM yyyy @ hh:mm:ss').format(tx.date),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ])
-                ]));
+                    ),
+                    subtitle: Text(
+                      DateFormat('dd MMM yyyy @ hh:mm:ss').format(tx.date),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                );
               }),
     );
   }
