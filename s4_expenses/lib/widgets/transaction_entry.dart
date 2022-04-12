@@ -9,9 +9,9 @@ class TransactionEntry extends StatelessWidget {
 
   void submit() {
     final title = titleController.text;
-    final amount = double.parse(amountController.text);
+    final amount = double.tryParse(amountController.text);
 
-    if (title.isEmpty || amount <= 0) {
+    if (title.isEmpty || amount == null || amount <= 0) {
       return;
     }
 
