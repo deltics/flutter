@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Transaction> transactions = [
+  final List<Transaction> _transactions = [
     Transaction(
       id: 't1',
       title: 'New Shoes',
@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             TransactionList(
-              transactions: transactions,
+              transactions: _transactions,
             ),
           ]),
       floatingActionButton: FloatingActionButton(
@@ -93,11 +93,11 @@ class _HomePageState extends State<HomePage> {
       title: title,
       amount: amount,
       date: DateTime.now(),
-      id: transactions.length.toString(),
+      id: 't${_transactions.length.toString()}',
     );
 
     setState(() {
-      transactions.add(tx);
+      _transactions.add(tx);
     });
   }
 }
