@@ -8,11 +8,11 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '<App> Title',
+      title: 'My Money',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(title: '<App> Home Page'),
+      home: const HomePage(title: 'MyMoney Home Page'),
     );
   }
 }
