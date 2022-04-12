@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:s4_expenses/widgets/transaction_entry.dart';
 
 import 'models/transaction.dart';
+import 'widgets/chart.dart';
 import 'widgets/transaction_list.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,39 +15,45 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Transaction> _transactions = [];
-  // [
-  //   Transaction(
-  //     id: 't1',
-  //     title: 'New Shoes',
-  //     amount: 129.99,
-  //     date: DateTime.now(),
-  //   ),
-  //   Transaction(
-  //     id: 't2',
-  //     title: 'Groceries',
-  //     amount: 454.78,
-  //     date: DateTime.now(),
-  //   ),
-  //   Transaction(
-  //     id: 't3',
-  //     title: 'Petrol (CX-9)',
-  //     amount: 152.36,
-  //     date: DateTime.now(),
-  //   ),
-  //   Transaction(
-  //     id: 't4',
-  //     title: 'Coffee',
-  //     amount: 4.50,
-  //     date: DateTime.now(),
-  //   ),
-  //   Transaction(
-  //     id: 't5',
-  //     title: 'Petrol (Pretzel)',
-  //     amount: 110.82,
-  //     date: DateTime.now(),
-  //   ),
-  // ];
+  final List<Transaction> _transactions = [
+    Transaction(
+      id: 't1',
+      title: 'New Shoes',
+      amount: 129.99,
+      date: DateTime.now().subtract(const Duration(days: 1)),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'Groceries',
+      amount: 454.78,
+      date: DateTime.now().subtract(const Duration(days: 3)),
+    ),
+    Transaction(
+      id: 't3',
+      title: 'Petrol (CX-9)',
+      amount: 152.36,
+      date: DateTime.now().subtract(const Duration(days: 4)),
+    ),
+    Transaction(
+      id: 't4',
+      title: 'Coffee',
+      amount: 4.50,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't5',
+      title: 'Petrol (Pretzel)',
+      amount: 110.82,
+      date: DateTime.now(),
+    ),
+  ];
+
+  List<Transaction> get _recentTransactions {
+    return _transactions
+        .where((tx) =>
+            tx.date.isAfter(DateTime.now().subtract(const Duration(days: 7))))
+        .toList();
+  }
 
   void _showModalTransactionEntry(BuildContext ctx) {
     showModalBottomSheet(
@@ -69,14 +76,8 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // CHART
-            const SizedBox(
-              width: double.infinity,
-              child: Card(
-                color: Colors.blue,
-                child: Text('CHART'),
-                elevation: 5,
-              ),
+            Chart(
+              transactions: _recentTransactions,
             ),
             TransactionList(
               transactions: _transactions,
