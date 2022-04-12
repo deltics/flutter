@@ -16,32 +16,27 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<Transaction> _transactions = [
-    Transaction(
-      id: 't1',
+    Transaction.newTransaction(
       title: 'New Shoes',
       amount: 129.99,
       date: DateTime.now().subtract(const Duration(days: 1)),
     ),
-    Transaction(
-      id: 't2',
+    Transaction.newTransaction(
       title: 'Groceries',
       amount: 454.78,
       date: DateTime.now().subtract(const Duration(days: 3)),
     ),
-    Transaction(
-      id: 't3',
+    Transaction.newTransaction(
       title: 'Petrol (CX-9)',
       amount: 152.36,
       date: DateTime.now().subtract(const Duration(days: 4)),
     ),
-    Transaction(
-      id: 't4',
+    Transaction.newTransaction(
       title: 'Coffee',
       amount: 4.50,
       date: DateTime.now(),
     ),
-    Transaction(
-      id: 't5',
+    Transaction.newTransaction(
       title: 'Petrol (Pretzel)',
       amount: 110.82,
       date: DateTime.now(),
@@ -53,14 +48,6 @@ class _HomePageState extends State<HomePage> {
         .where((tx) =>
             tx.date.isAfter(DateTime.now().subtract(const Duration(days: 7))))
         .toList();
-  }
-
-  void _showModalTransactionEntry(BuildContext ctx) {
-    showModalBottomSheet(
-        context: ctx,
-        builder: (_) {
-          return TransactionEntry(addFunction: _addTransaction);
-        });
   }
 
   @override
@@ -91,15 +78,22 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _addTransaction(String title, double amount, DateTime date) {
-    final tx = Transaction(
+    final tx = Transaction.newTransaction(
       title: title,
       amount: amount,
       date: date,
-      id: 't${_transactions.length.toString()}',
     );
 
     setState(() {
       _transactions.add(tx);
     });
+  }
+
+  void _showModalTransactionEntry(BuildContext ctx) {
+    showModalBottomSheet(
+        context: ctx,
+        builder: (_) {
+          return TransactionEntry(addFunction: _addTransaction);
+        });
   }
 }
