@@ -67,8 +67,7 @@ class _HomePageState extends State<HomePage> {
               transactions: _recentTransactions,
             ),
             TransactionList(
-              transactions: _transactions,
-            ),
+                transactions: _transactions, deleteFn: _deleteTransaction),
           ]),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
@@ -87,6 +86,10 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _transactions.add(tx);
     });
+  }
+
+  void _deleteTransaction({required String id}) {
+    setState(() => _transactions.removeWhere((tx) => tx.id == id));
   }
 
   void _showModalTransactionEntry(BuildContext ctx) {
