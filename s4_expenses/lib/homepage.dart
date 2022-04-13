@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:s4_expenses/widgets/transaction_entry.dart';
 
 import 'models/transaction.dart';
@@ -52,36 +56,50 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.title), actions: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.add),
-          onPressed: () => _showModalTransactionEntry(context),
-        )
-      ]),
-      body: LayoutBuilder(builder: (ctx, constraints) {
+    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+    var body = SafeArea(
+      child: LayoutBuilder(builder: (ctx, constraints) {
         return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SizedBox(
-                height: constraints.maxHeight * 0.3,
+                height: constraints.maxHeight * (isPortrait ? 0.3 : 0.5),
                 child: Chart(
                   transactions: _recentTransactions,
                 ),
               ),
               SizedBox(
-                height: constraints.maxHeight * 0.7,
+                height: constraints.maxHeight * (isPortrait ? 0.7 : 0.5),
                 child: TransactionList(
                     transactions: _transactions, deleteFn: _deleteTransaction),
               ),
             ]);
       }),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () => _showModalTransactionEntry(context),
-      ),
     );
+
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: body,
+            navigationBar: CupertinoNavigationBar(
+              middle: Text(widget.title),
+              trailing: CupertinoButton(
+                child: const Icon(CupertinoIcons.add),
+                onPressed: () => _showModalTransactionEntry(context),
+              ),
+            ),
+          )
+        : Scaffold(
+            appBar: AppBar(title: Text(widget.title)),
+            body: body,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    child: const Icon(Icons.add),
+                    onPressed: () => _showModalTransactionEntry(context),
+                  ),
+          );
   }
 
   void _addTransaction(String title, double amount, DateTime date) {
@@ -101,10 +119,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showModalTransactionEntry(BuildContext ctx) {
-    showModalBottomSheet(
-        context: ctx,
-        builder: (_) {
-          return TransactionEntry(addFunction: _addTransaction);
-        });
+    Platform.isIOS
+        ? showCupertinoModalPopup(
+            context: ctx,
+            builder: (_) {
+              return SafeArea(
+                  child: TransactionEntry(addFunction: _addTransaction));
+            })
+        : showModalBottomSheet(
+            context: ctx,
+            builder: (_) {
+              return TransactionEntry(addFunction: _addTransaction);
+            });
   }
 }
