@@ -59,16 +59,24 @@ class _HomePageState extends State<HomePage> {
           onPressed: () => _showModalTransactionEntry(context),
         )
       ]),
-      body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Chart(
-              transactions: _recentTransactions,
-            ),
-            TransactionList(
-                transactions: _transactions, deleteFn: _deleteTransaction),
-          ]),
+      body: LayoutBuilder(builder: (ctx, constraints) {
+        return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                height: constraints.maxHeight * 0.3,
+                child: Chart(
+                  transactions: _recentTransactions,
+                ),
+              ),
+              SizedBox(
+                height: constraints.maxHeight * 0.7,
+                child: TransactionList(
+                    transactions: _transactions, deleteFn: _deleteTransaction),
+              ),
+            ]);
+      }),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () => _showModalTransactionEntry(context),
