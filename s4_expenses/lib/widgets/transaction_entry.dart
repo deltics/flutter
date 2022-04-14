@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:s4_expenses/widgets/adaptive_field.dart';
+
+import 'adaptive_button.dart';
 
 class TransactionEntry extends StatefulWidget {
   final Function addFunction;
@@ -36,10 +39,7 @@ class _TransactionEntryState extends State<TransactionEntry> {
   }
 
   void _showDatePicker(BuildContext ctx) {
-    DateTime? chosenDate;
-    setState(() {
-      _transactionDate = DateTime.now();
-    });
+    DateTime chosenDate = DateTime.now();
 
     Platform.isIOS
         ? showCupertinoModalPopup(
@@ -52,11 +52,13 @@ class _TransactionEntryState extends State<TransactionEntry> {
                       SizedBox(
                         height: 400,
                         child: CupertinoDatePicker(
-                            initialDateTime: _transactionDate,
+                            initialDateTime: chosenDate,
+                            maximumDate: DateTime.now(),
+                            minimumDate: DateTime(chosenDate.year - 1),
                             mode: CupertinoDatePickerMode.date,
                             onDateTimeChanged: (val) {
                               setState(() {
-                                _transactionDate = val;
+                                chosenDate = val;
                               });
                             }),
                       ),
@@ -64,7 +66,13 @@ class _TransactionEntryState extends State<TransactionEntry> {
                       // Close the modal
                       CupertinoButton(
                         child: const Text('OK'),
-                        onPressed: () => {Navigator.of(ctx).pop()},
+                        onPressed: () {
+                          setState(() {
+                            _transactionDate = chosenDate;
+                          });
+
+                          Navigator.of(ctx).pop();
+                        },
                       )
                     ],
                   ),
@@ -72,7 +80,7 @@ class _TransactionEntryState extends State<TransactionEntry> {
         : showDatePicker(
             context: context,
             initialDate: DateTime.now(),
-            firstDate: DateTime(2022),
+            firstDate: DateTime(DateTime.now().year - 1),
             lastDate: DateTime.now(),
           ).then((val) {
             if (val == null) {
@@ -96,32 +104,16 @@ class _TransactionEntryState extends State<TransactionEntry> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Platform.isIOS
-                ? CupertinoTextField(
-                    placeholder: 'Title',
-                    enabled: true,
-                    controller: _titleController,
-                    onSubmitted: (_) => _submit(),
-                  )
-                : TextField(
-                    decoration: const InputDecoration(labelText: 'Title'),
-                    controller: _titleController,
-                    onSubmitted: (_) => _submit(),
-                  ),
-            Platform.isIOS
-                ? CupertinoTextField(
-                    placeholder: 'Amount',
-                    enabled: true,
-                    controller: _amountController,
-                    onSubmitted: (_) => _submit(),
-                  )
-                : TextField(
-                    decoration: const InputDecoration(labelText: 'Amount'),
-                    controller: _amountController,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    onSubmitted: (_) => _submit(),
-                  ),
+            AdaptiveTextField(
+              hint: 'Title',
+              controller: _titleController,
+              onSubmitted: () => _submit(),
+            ),
+            AdaptiveTextField(
+              hint: 'Amount',
+              controller: _amountController,
+              onSubmitted: () => _submit(),
+            ),
             Row(children: [
               Expanded(
                 child: Text(_transactionDate == null
@@ -129,36 +121,16 @@ class _TransactionEntryState extends State<TransactionEntry> {
                     : DateFormat('dd MMM yyyy @ hh:mm')
                         .format(_transactionDate!)),
               ),
-              Platform.isIOS
-                  ? CupertinoButton(
-                      child: Text(_transactionDate == null
-                          ? 'Choose date/time'
-                          : 'Change date/time'),
-                      onPressed: () => _showDatePicker(context),
-                    )
-                  : TextButton(
-                      child: Text(_transactionDate == null
-                          ? 'Choose date/time'
-                          : 'Change date/time'),
-                      style: TextButton.styleFrom(
-                          primary: Theme.of(context).primaryColor),
-                      onPressed: () => _showDatePicker(context),
-                    ),
+              AdaptiveButton(
+                  text:
+                      _transactionDate == null ? 'Choose date' : 'Change date',
+                  onPressed: () => _showDatePicker(context)),
             ]),
-            Platform.isIOS
-                ? CupertinoButton(
-                    child: const Text('Add Transaction'),
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () => _submit(),
-                  )
-                : TextButton(
-                    onPressed: () => _submit(),
-                    style: TextButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
-                      primary: Colors.white,
-                    ),
-                    child: const Text('Add Transaction'),
-                  ),
+            AdaptiveButton(
+              text: 'Add Transaction',
+              isSolid: true,
+              onPressed: () => _submit(),
+            )
           ],
         ),
       ),
