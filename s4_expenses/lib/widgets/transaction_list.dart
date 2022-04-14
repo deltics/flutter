@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../models/transaction.dart';
+import 'transaction_list_item.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
@@ -29,44 +29,11 @@ class TransactionList extends StatelessWidget {
           : ListView.builder(
               itemCount: transactions.length,
               itemBuilder: (ctx, index) {
-                final tx = transactions[index];
-
-                return Card(
-                  elevation: 4,
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 3,
-                  ),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                        child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child:
-                          FittedBox(child: Text(tx.amount.toStringAsFixed(2))),
-                    )),
-                    title: Text(
-                      tx.title,
-                      style: const TextStyle(
-                        fontFamily: 'Chalkduster',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                    ),
-                    subtitle: Text(
-                      DateFormat('dd MMM yyyy @ hh:mm:ss').format(tx.date),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete),
-                      color: Theme.of(context).errorColor,
-                      onPressed: () => deleteFn(id: tx.id),
-                    ),
-                  ),
+                var tx = transactions[index];
+                return TransactionListItem(
+                  key: ValueKey(tx.id),
+                  transaction: tx,
+                  deleteFn: deleteFn,
                 );
               }),
     );
