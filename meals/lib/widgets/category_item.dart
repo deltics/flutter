@@ -1,10 +1,7 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meals/pages/category_meals.dart';
 
-import 'cupertino_ink_well.dart';
+import '../adapters/platform_ink_well.dart';
+import '../pages/category_meals.dart';
 
 class CategoryItem extends StatelessWidget {
   final String id;
@@ -36,17 +33,11 @@ class CategoryItem extends StatelessWidget {
       ),
     );
 
-    return Platform.isIOS
-        ? CupertinoInkWell(
-            onPressed: () => _showCategoryMeals(context),
-            child: content,
-          )
-        : InkWell(
-            onTap: () => _showCategoryMeals(context),
-            splashColor: Theme.of(context).primaryColor,
-            borderRadius: BorderRadius.circular(15),
-            child: content,
-          );
+    return PlatformInkWell(
+      onPressed: () => _showCategoryMeals(context),
+      child: content,
+      borderRadius: BorderRadius.circular(15),
+    );
   }
 
   void _showCategoryMeals(BuildContext context) {
