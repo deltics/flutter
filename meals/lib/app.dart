@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meals/widgets/category_item.dart';
 
 import 'pages/categories.dart';
+import 'pages/category_meals.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -12,12 +14,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Platform.isIOS
-        ? const CupertinoApp(
+        ? CupertinoApp(
             title: 'Meals',
-            theme: CupertinoThemeData(
+            theme: const CupertinoThemeData(
               primaryColor: Colors.orange,
             ),
-            home: CategoriesPage(),
+            home: const CategoriesPage(),
+            routes: {
+              '/categories': (ctx) => const CategoriesPage(),
+              '/category-meals': (ctx) => const CategoryMealsPage(),
+            },
           )
         : MaterialApp(
             title: 'Meals',

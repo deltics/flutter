@@ -4,22 +4,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CategoryMealsPage extends StatelessWidget {
-  const CategoryMealsPage({Key? key}) : super(key: key);
+  const CategoryMealsPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, String>;
+    final title = args['title'];
     final body = Container();
 
     return Platform.isIOS
         ? CupertinoPageScaffold(
-            navigationBar: const CupertinoNavigationBar(
-              middle: Text('Categories'),
+            navigationBar: CupertinoNavigationBar(
+              middle: Text('$title Meals'),
             ),
             child: SafeArea(child: body),
           )
         : Scaffold(
             appBar: AppBar(
-              title: const Text('Categories'),
+              title: Text('$title Meals'),
             ),
             body: SafeArea(child: body),
           );
