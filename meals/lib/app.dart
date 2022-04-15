@@ -20,9 +20,10 @@ class MyApp extends StatelessWidget {
               primaryColor: Colors.orange,
             ),
             home: const CategoriesPage(),
+            initialRoute: CategoriesPage.route,
             routes: {
-              '/categories': (ctx) => const CategoriesPage(),
-              '/category-meals': (ctx) => const CategoryMealsPage(),
+              CategoriesPage.route: (ctx) => const CategoriesPage(),
+              CategoryMealsPage.route: (ctx) => const CategoryMealsPage(),
             },
           )
         : MaterialApp(
@@ -44,6 +45,11 @@ class MyApp extends StatelessWidget {
                       ),
                     )),
             home: const CategoriesPage(),
+            initialRoute: CategoriesPage.route,
+            routes: {
+              CategoriesPage.route: (ctx) => const CategoriesPage(),
+              CategoryMealsPage.route: (ctx) => const CategoryMealsPage(),
+            },
           );
   }
 }

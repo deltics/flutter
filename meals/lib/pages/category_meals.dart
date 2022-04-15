@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CategoryMealsPage extends StatelessWidget {
+  static const route = '/category-meals';
+
   const CategoryMealsPage({
     Key? key,
   }) : super(key: key);

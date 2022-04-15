@@ -6,6 +6,8 @@ import 'package:meals/data/categories.dart';
 import 'package:meals/widgets/category_item.dart';
 
 class CategoriesPage extends StatelessWidget {
+  static const route = '/categories';
+
   const CategoriesPage({Key? key}) : super(key: key);
 
   @override
