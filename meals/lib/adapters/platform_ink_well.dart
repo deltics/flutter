@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:meals/widgets/cupertino_ink_well.dart';
+import 'package:meals/adapters/cupertino_ink_well.dart';
 
 class PlatformInkWell extends StatelessWidget {
   final Widget child;

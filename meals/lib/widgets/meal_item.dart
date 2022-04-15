@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:meals/models/meal.dart';
 
@@ -44,7 +45,50 @@ class MealItem extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
+                Positioned(
+                  bottom: 20,
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.only(
+                      left: 10,
+                      top: 10,
+                      bottom: 10,
+                    ),
+                    width: 300,
+                    color: Colors.black54,
+                    child: Text(title,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          color: Colors.white,
+                        ),
+                        softWrap: true,
+                        overflow: TextOverflow.fade),
+                  ),
+                ),
               ]),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(children: [
+                      const Icon(Icons.schedule_outlined),
+                      const SizedBox(width: 6),
+                      Text("$preparationTime"),
+                    ]),
+                    Row(children: [
+                      const Icon(Icons.work_outline),
+                      const SizedBox(width: 6),
+                      Text(describeEnum(complexity)),
+                    ]),
+                    Row(children: [
+                      const Icon(Icons.attach_money_outlined),
+                      const SizedBox(width: 2),
+                      Text(describeEnum(affordability)),
+                    ]),
+                  ],
+                ),
+              ),
             ],
           )),
     );
