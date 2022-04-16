@@ -11,7 +11,11 @@ const meals = [
     affordability: MealAffordability.cheap,
     complexity: MealComplexity.simple,
     imageUrl:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Spaghetti_Bolognese_mit_Parmesan_oder_Grana_Padano.jpg/800px-Spaghetti_Bolognese_mit_Parmesan_oder_Grana_Padano.jpg',
+        'https://cdn.pixabay.com/photo/2014/10/09/20/02/pasta-482402_640.jpg',
+// CERT expired errors with these Urls (on Android device)
+//  imageUrl: 'https://www.giallozafferano.com/images/228-22832/spaghetti-with-tomato-sauce_1200x800.jpg',
+//  imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Spaghetti_Bolognese_mit_Parmesan_oder_Grana_Padano.jpg/800px-Spaghetti_Bolognese_mit_Parmesan_oder_Grana_Padano.jpg',
+
     preparationTime: 20,
     ingredients: [
       '4 Tomatoes',

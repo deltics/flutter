@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:meals/models/meal.dart';
+import 'package:meals/pages/meal_detail.dart';
 
 import '../adapters/platform_ink_well.dart';
 
 class MealItem extends StatelessWidget {
+  final String id;
   final int preparationTime;
   final String imageUrl;
   final String title;
@@ -13,6 +15,7 @@ class MealItem extends StatelessWidget {
 
   const MealItem({
     Key? key,
+    required this.id,
     required this.imageUrl,
     required this.preparationTime,
     required this.title,
@@ -94,5 +97,9 @@ class MealItem extends StatelessWidget {
     );
   }
 
-  void _showMeal(BuildContext context) {}
+  void _showMeal(BuildContext context) {
+    Navigator.of(context).pushNamed(MealDetailPage.route, arguments: {
+      'id': id,
+    });
+  }
 }

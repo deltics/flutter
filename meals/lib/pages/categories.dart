@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meals/data/categories.dart';
-import 'package:meals/widgets/category_item.dart';
+
+import '../../adapters/platform_page.dart';
+import '../../data/categories.dart';
+import '../../widgets/category_item.dart';
 
 class CategoriesPage extends StatelessWidget {
   static const route = '/categories';
@@ -29,18 +31,9 @@ class CategoriesPage extends StatelessWidget {
           .toList(),
     );
 
-    return Platform.isIOS
-        ? CupertinoPageScaffold(
-            navigationBar: const CupertinoNavigationBar(
-              middle: Text('Categories'),
-            ),
-            child: SafeArea(child: body),
-          )
-        : Scaffold(
-            appBar: AppBar(
-              title: const Text('Categories'),
-            ),
-            body: SafeArea(child: body),
-          );
+    return PlatformPage(
+      title: 'Categories',
+      content: body,
+    );
   }
 }

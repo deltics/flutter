@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meals/pages/meal_detail.dart';
 import 'package:meals/widgets/category_item.dart';
 
 import 'pages/categories.dart';
@@ -13,6 +14,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final routes = {
+      CategoriesPage.route: (ctx) => const CategoriesPage(),
+      CategoryMealsPage.route: (ctx) => const CategoryMealsPage(),
+      MealDetailPage.route: (ctx) => const MealDetailPage(),
+    };
+
     return Platform.isIOS
         ? CupertinoApp(
             title: 'Meals',
@@ -21,10 +28,7 @@ class MyApp extends StatelessWidget {
             ),
             home: const CategoriesPage(),
             initialRoute: CategoriesPage.route,
-            routes: {
-              CategoriesPage.route: (ctx) => const CategoriesPage(),
-              CategoryMealsPage.route: (ctx) => const CategoryMealsPage(),
-            },
+            routes: routes,
           )
         : MaterialApp(
             title: 'Meals',
@@ -46,10 +50,7 @@ class MyApp extends StatelessWidget {
                     )),
             home: const CategoriesPage(),
             initialRoute: CategoriesPage.route,
-            routes: {
-              CategoriesPage.route: (ctx) => const CategoriesPage(),
-              CategoryMealsPage.route: (ctx) => const CategoryMealsPage(),
-            },
+            routes: routes,
           );
   }
 }
