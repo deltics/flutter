@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final routes = {
+      '/': (ctx) => const CategoriesPage(),
       CategoriesPage.route: (ctx) => const CategoriesPage(),
       CategoryMealsPage.route: (ctx) => const CategoryMealsPage(),
       MealDetailPage.route: (ctx) => const MealDetailPage(),
@@ -26,8 +27,7 @@ class MyApp extends StatelessWidget {
             theme: const CupertinoThemeData(
               primaryColor: Colors.orange,
             ),
-            home: const CategoriesPage(),
-            initialRoute: CategoriesPage.route,
+            initialRoute: '/',
             routes: routes,
           )
         : MaterialApp(
@@ -48,8 +48,7 @@ class MyApp extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     )),
-            home: const CategoriesPage(),
-            initialRoute: CategoriesPage.route,
+            initialRoute: '/',
             routes: routes,
           );
   }
