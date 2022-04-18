@@ -8,19 +8,19 @@ import 'pages/meal_detail.dart';
 import 'pages/category_meals.dart';
 import 'pages/filters.dart';
 
+final routes = {
+  HomePage.route: (ctx) => const HomePage(),
+  CategoryMealsPage.route: (ctx) => const CategoryMealsPage(),
+  MealDetailPage.route: (ctx) => const MealDetailPage(),
+  FiltersPage.route: (ctx) => const FiltersPage(),
+};
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final routes = {
-      HomePage.route: (ctx) => const HomePage(),
-      CategoryMealsPage.route: (ctx) => const CategoryMealsPage(),
-      MealDetailPage.route: (ctx) => const MealDetailPage(),
-      FiltersPage.route: (ctx) => const FiltersPage(),
-    };
-
     return Platform.isIOS
         ? CupertinoApp(
             title: 'Meals',

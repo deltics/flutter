@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../app.dart';
 import '../widgets/drawer.dart';
 
 class TabDefinition {
@@ -46,9 +48,11 @@ class PlatformTabbedPage extends StatelessWidget {
                   ),
                   tabBuilder: (context, index) {
                     final tab = tabs[index];
+
                     return CupertinoTabView(
                       navigatorKey: tab.navigationKey,
                       builder: (_) => tab.content,
+                      routes: routes,
                     );
                   }),
             ))
