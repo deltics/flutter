@@ -7,9 +7,14 @@ import 'cupertino_list_tile.dart';
 class PlatformListTile extends StatelessWidget {
   final Widget leading;
   final Widget title;
+  Function? onTap;
 
-  const PlatformListTile({Key? key, required this.leading, required this.title})
-      : super(key: key);
+  PlatformListTile({
+    Key? key,
+    required this.leading,
+    required this.title,
+    this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +22,20 @@ class PlatformListTile extends StatelessWidget {
         ? CupertinoListTile(
             leading: leading,
             title: title,
+            onTap: () {
+              if (onTap != null) {
+                onTap!();
+              }
+            },
           )
         : ListTile(
             leading: leading,
             title: title,
+            onTap: () {
+              if (onTap != null) {
+                onTap!();
+              }
+            },
           );
   }
 }

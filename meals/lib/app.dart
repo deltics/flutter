@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meals/pages/meal_detail.dart';
-import 'package:meals/widgets/category_item.dart';
 
-import 'pages/categories.dart';
+import 'pages/home.dart';
+import 'pages/meal_detail.dart';
 import 'pages/category_meals.dart';
+import 'pages/filters.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -15,10 +15,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final routes = {
-      '/': (ctx) => const CategoriesPage(),
-      CategoriesPage.route: (ctx) => const CategoriesPage(),
+      HomePage.route: (ctx) => const HomePage(),
       CategoryMealsPage.route: (ctx) => const CategoryMealsPage(),
       MealDetailPage.route: (ctx) => const MealDetailPage(),
+      FiltersPage.route: (ctx) => const FiltersPage(),
     };
 
     return Platform.isIOS
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
             theme: const CupertinoThemeData(
               primaryColor: Colors.orange,
             ),
-            initialRoute: '/',
+            initialRoute: HomePage.route,
             routes: routes,
           )
         : MaterialApp(
@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     )),
-            initialRoute: '/',
+            initialRoute: HomePage.route,
             routes: routes,
           );
   }

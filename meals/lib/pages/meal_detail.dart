@@ -75,6 +75,11 @@ class MealDetailPage extends StatelessWidget {
           ]),
         ),
       ),
+      FloatingActionButton(
+          child: const Icon(Icons.delete),
+          onPressed: () {
+            Navigator.of(context).pop(mealId);
+          }),
     ]);
 
     return PlatformPage(

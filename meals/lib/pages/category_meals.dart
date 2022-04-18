@@ -1,14 +1,13 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../utils.dart';
-import '../../adapters/platform_page.dart';
-import '../../data/meals.dart';
+import '../adapters/platform_page.dart';
+import '../data/meals.dart';
+import '../models/meal.dart';
 import '../widgets/meal_item.dart';
 
-class CategoryMealsPage extends StatelessWidget {
+class CategoryMealsPage extends StatefulWidget {
   static const route = '/category-meals';
 
   const CategoryMealsPage({
@@ -16,17 +15,30 @@ class CategoryMealsPage extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<CategoryMealsPage> createState() => _CategoryMealsPageState();
+}
+
+class _CategoryMealsPageState extends State<CategoryMealsPage> {
+  List<Meal> displayedMeals = [];
+  String title = '';
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
     final args = routeArguments(context);
     final categoryId = args['id'];
-    final categoryTitle = args['title'];
+    title = args['title']!;
 
-    final categoryMeals =
+    displayedMeals =
         meals.where((m) => m.categoryIds.contains(categoryId)).toList();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     final body = ListView.builder(
       itemBuilder: (ctx, index) {
-        final meal = categoryMeals[index];
+        final meal = displayedMeals[index];
 
         return MealItem(
           id: meal.id,
@@ -35,14 +47,21 @@ class CategoryMealsPage extends StatelessWidget {
           preparationTime: meal.preparationTime,
           complexity: meal.complexity,
           affordability: meal.affordability,
+          removeFn: _removeItem,
         );
       },
-      itemCount: categoryMeals.length,
+      itemCount: displayedMeals.length,
     );
 
     return PlatformPage(
-      title: '$categoryTitle Meals',
+      title: '$title Meals',
       content: body,
     );
+  }
+
+  void _removeItem(String id) {
+    setState(() {
+      meals.removeWhere((meal) => meal.id == id);
+    });
   }
 }

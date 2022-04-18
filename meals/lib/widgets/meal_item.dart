@@ -12,6 +12,7 @@ class MealItem extends StatelessWidget {
   final String title;
   final MealAffordability affordability;
   final MealComplexity complexity;
+  final Function removeFn;
 
   const MealItem({
     Key? key,
@@ -21,6 +22,7 @@ class MealItem extends StatelessWidget {
     required this.title,
     required this.affordability,
     required this.complexity,
+    required this.removeFn,
   }) : super(key: key);
 
   @override
@@ -98,8 +100,11 @@ class MealItem extends StatelessWidget {
   }
 
   void _showMeal(BuildContext context) {
-    Navigator.of(context).pushNamed(MealDetailPage.route, arguments: {
-      'id': id,
-    });
+    Navigator.of(context).pushNamed(
+      MealDetailPage.route,
+      arguments: {
+        'id': id,
+      },
+    ).then((result) => {});
   }
 }

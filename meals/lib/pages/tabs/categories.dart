@@ -1,20 +1,17 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../adapters/platform_page.dart';
-import '../../data/categories.dart';
-import '../../widgets/category_item.dart';
+import '../../../data/categories.dart';
+import '../../../widgets/category_item.dart';
 
-class CategoriesPage extends StatelessWidget {
+class CategoriesTab extends StatelessWidget {
   static const route = '/categories';
 
-  const CategoriesPage({Key? key}) : super(key: key);
+  const CategoriesTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var body = GridView(
+    return GridView(
       padding: const EdgeInsets.all(20),
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 200,
@@ -29,11 +26,6 @@ class CategoriesPage extends StatelessWidget {
                 color: c.color,
               ))
           .toList(),
-    );
-
-    return PlatformPage(
-      title: 'Categories',
-      content: body,
     );
   }
 }
