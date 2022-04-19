@@ -22,9 +22,13 @@ class _CategoryMealsPageState extends State<CategoryMealsPage> {
   List<Meal> displayedMeals = [];
   String title = '';
 
+  bool _stateInitialised = false;
+
   @override
   void didChangeDependencies() {
-    super.didChangeDependencies();
+    if (_stateInitialised) {
+      // return;
+    }
 
     final args = routeArguments(context);
     final categoryId = args['id'];
@@ -32,6 +36,10 @@ class _CategoryMealsPageState extends State<CategoryMealsPage> {
 
     displayedMeals =
         meals.where((m) => m.categoryIds.contains(categoryId)).toList();
+
+    _stateInitialised = true;
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -62,6 +70,7 @@ class _CategoryMealsPageState extends State<CategoryMealsPage> {
   void _removeItem(String id) {
     setState(() {
       meals.removeWhere((meal) => meal.id == id);
+      print(meals);
     });
   }
 }

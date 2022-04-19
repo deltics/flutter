@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../utils.dart';
@@ -8,7 +10,9 @@ import '../../data/meals.dart';
 class MealDetailPage extends StatelessWidget {
   static const route = '/meal';
 
-  const MealDetailPage({Key? key}) : super(key: key);
+  const MealDetailPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -75,16 +79,15 @@ class MealDetailPage extends StatelessWidget {
           ]),
         ),
       ),
-      FloatingActionButton(
-          child: const Icon(Icons.delete),
-          onPressed: () {
-            Navigator.of(context).pop(mealId);
-          }),
     ]);
 
     return PlatformPage(
       title: meal.name,
       content: body,
+      action: PageAction(
+        icon: const Icon(Icons.delete),
+        onPressed: (ctx) => Navigator.of(context).pop(mealId),
+      ),
     );
   }
 }

@@ -9,9 +9,9 @@ class FiltersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const PlatformPage(
+    return PlatformPage(
       title: 'Filters',
-      content: Center(
+      content: const Center(
         child: Text('Filters'),
       ),
     );

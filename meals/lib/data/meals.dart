@@ -1,7 +1,7 @@
 import 'package:meals/models/meal.dart';
 
-const meals = [
-  Meal(
+var meals = [
+  const Meal(
     id: 'm1',
     categoryIds: [
       'c1',
@@ -39,7 +39,7 @@ const meals = [
     isVegetarian: true,
     isLactoseFree: true,
   ),
-  Meal(
+  const Meal(
     id: 'm2',
     categoryIds: [
       'c2',
@@ -67,7 +67,7 @@ const meals = [
     isVegetarian: false,
     isLactoseFree: false,
   ),
-  Meal(
+  const Meal(
     id: 'm3',
     categoryIds: [
       'c2',
@@ -99,7 +99,7 @@ const meals = [
     isVegetarian: false,
     isLactoseFree: true,
   ),
-  Meal(
+  const Meal(
     id: 'm4',
     categoryIds: [
       'c4',
@@ -134,7 +134,7 @@ const meals = [
     isVegetarian: false,
     isLactoseFree: false,
   ),
-  Meal(
+  const Meal(
     id: 'm5',
     categoryIds: [
       'c2'
@@ -170,7 +170,7 @@ const meals = [
     isVegetarian: true,
     isLactoseFree: true,
   ),
-  Meal(
+  const Meal(
     id: 'm6',
     categoryIds: [
       'c6',
@@ -206,7 +206,7 @@ const meals = [
     isVegetarian: true,
     isLactoseFree: false,
   ),
-  Meal(
+  const Meal(
     id: 'm7',
     categoryIds: [
       'c7',
@@ -237,7 +237,7 @@ const meals = [
     isVegetarian: true,
     isLactoseFree: false,
   ),
-  Meal(
+  const Meal(
     id: 'm8',
     categoryIds: [
       'c8',
@@ -270,7 +270,7 @@ const meals = [
     isVegetarian: false,
     isLactoseFree: true,
   ),
-  Meal(
+  const Meal(
     id: 'm9',
     categoryIds: [
       'c9',
@@ -319,7 +319,7 @@ const meals = [
     isVegetarian: true,
     isLactoseFree: false,
   ),
-  Meal(
+  const Meal(
     id: 'm10',
     categoryIds: [
       'c2',

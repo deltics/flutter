@@ -105,6 +105,8 @@ class MealItem extends StatelessWidget {
       arguments: {
         'id': id,
       },
-    ).then((result) => {});
+    ).then(
+      (result) => removeFn(id),
+    );
   }
 }
