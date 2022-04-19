@@ -86,7 +86,10 @@ class MealDetailPage extends StatelessWidget {
       content: body,
       action: PageAction(
         icon: const Icon(Icons.delete),
-        onPressed: (ctx) => Navigator.of(context).pop(mealId),
+        onPressed: (ctx) {
+          print("About to pop...");
+          Navigator.of(context).pop(mealId);
+        },
       ),
     );
   }

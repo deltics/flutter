@@ -26,8 +26,12 @@ class _CategoryMealsPageState extends State<CategoryMealsPage> {
 
   @override
   void didChangeDependencies() {
+    // Cannot use initState for this initialisation as there is no valid context
+    //  when initState() is called.  But didChangeDependencies is called more often,
+    //  so we have to manually ensure we run-once once, via the _stateInitialised flag
+
     if (_stateInitialised) {
-      // return;
+      return;
     }
 
     final args = routeArguments(context);
@@ -69,8 +73,13 @@ class _CategoryMealsPageState extends State<CategoryMealsPage> {
 
   void _removeItem(String id) {
     setState(() {
+      // Ideally we'd remove from meals and let state updates take care
+      //  of updating displayedMeals, but dependencies don't change
+      //  when 'pop'ping back to the page so we need to manually remove
+      //  from both displayedMeals and the source meals list.
+
       meals.removeWhere((meal) => meal.id == id);
-      print(meals);
+      displayedMeals.removeWhere((meal) => meal.id == id);
     });
   }
 }
