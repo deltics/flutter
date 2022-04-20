@@ -20,6 +20,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  List<String> _favoriteIds = [];
   List<Meal> _meals = meals;
   final List<MealSuitability> _mealFilter = [
     MealSuitability.glutenFree,
@@ -66,6 +67,23 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void _setFavorite({
+    required String id,
+    required bool isFavorite,
+  }) {
+    setState(() {
+      if (isFavorite) {
+        if (!_favoriteIds.contains(id)) {
+          _favoriteIds.add(id);
+        }
+      } else {
+        if (_favoriteIds.contains(id)) {
+          _favoriteIds.remove(id);
+        }
+      }
+    });
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -74,7 +92,9 @@ class _MyAppState extends State<MyApp> {
       CategoryMealsPage.route: (ctx) => CategoryMealsPage(
             key: ValueKey(_meals.hashCode),
             meals: _meals,
+            favoriteIds: _favoriteIds,
             updateMealsFn: _applyFilters,
+            setFavoriteFn: _setFavorite,
           ),
       MealDetailPage.route: (ctx) => const MealDetailPage(),
       FiltersPage.route: (ctx) => FiltersPage(

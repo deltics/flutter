@@ -10,13 +10,17 @@ import '../widgets/meal_item.dart';
 class CategoryMealsPage extends StatefulWidget {
   static const route = '/category-meals';
 
+  final List<String> favoriteIds;
   final List<Meal> meals;
   final Function updateMealsFn;
+  final Function setFavoriteFn;
 
   const CategoryMealsPage({
     Key? key,
     required this.meals,
+    required this.favoriteIds,
     required this.updateMealsFn,
+    required this.setFavoriteFn,
   }) : super(key: key);
 
   @override
@@ -64,6 +68,8 @@ class _CategoryMealsPageState extends State<CategoryMealsPage> {
           preparationTime: meal.preparationTime,
           complexity: meal.complexity,
           affordability: meal.affordability,
+          isFavorite: widget.favoriteIds.contains(meal.id),
+          favoriteFn: widget.setFavoriteFn,
           removeFn: _removeItem,
         );
       },

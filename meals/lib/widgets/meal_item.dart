@@ -12,7 +12,9 @@ class MealItem extends StatelessWidget {
   final String title;
   final MealAffordability affordability;
   final MealComplexity complexity;
+  final bool isFavorite;
   final Function removeFn;
+  final Function favoriteFn;
 
   const MealItem({
     Key? key,
@@ -22,7 +24,9 @@ class MealItem extends StatelessWidget {
     required this.title,
     required this.affordability,
     required this.complexity,
+    required this.isFavorite,
     required this.removeFn,
+    required this.favoriteFn,
   }) : super(key: key);
 
   @override
@@ -48,6 +52,16 @@ class MealItem extends StatelessWidget {
                     height: 250,
                     width: double.infinity,
                     fit: BoxFit.cover,
+                  ),
+                ),
+                Positioned(
+                  right: 20,
+                  top: 20,
+                  child: GestureDetector(
+                    child: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_outline,
+                    ),
+                    onTap: () => favoriteFn(id: id, isFavorite: !isFavorite),
                   ),
                 ),
                 Positioned(
