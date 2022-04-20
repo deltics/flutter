@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meals/pages/filters.dart';
 
 import '../utils.dart';
 import '../adapters/platform_page.dart';
@@ -66,9 +67,15 @@ class _CategoryMealsPageState extends State<CategoryMealsPage> {
     );
 
     return PlatformPage(
-      title: '$title Meals',
-      content: body,
-    );
+        title: '$title Meals',
+        content: body,
+        action: PageAction(
+          icon: const Icon(Icons.filter_alt),
+          onPressed: (_) => {
+            Navigator.of(context, rootNavigator: true)
+                .pushNamed(FiltersPage.route)
+          },
+        ));
   }
 
   void _removeItem(String id) {

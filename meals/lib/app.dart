@@ -8,19 +8,41 @@ import 'pages/meal_detail.dart';
 import 'pages/category_meals.dart';
 import 'pages/filters.dart';
 
-final routes = {
-  HomePage.route: (ctx) => const HomePage(),
-  CategoryMealsPage.route: (ctx) => const CategoryMealsPage(),
-  MealDetailPage.route: (ctx) => const MealDetailPage(),
-  FiltersPage.route: (ctx) => const FiltersPage(),
-};
+Map<String, Widget Function(BuildContext)> appRoutes = {};
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Map<String, bool> _filters = {
+    'gluten-free': true,
+    'lactose-free': true,
+    'vegan': true,
+    'vegetarian': true,
+  };
+
+  void _applyFilters(Map<String, bool> filters) {
+    setState(() => _filters = filters);
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final routes = {
+      HomePage.route: (ctx) => const HomePage(),
+      CategoryMealsPage.route: (ctx) => const CategoryMealsPage(),
+      MealDetailPage.route: (ctx) => const MealDetailPage(),
+      FiltersPage.route: (ctx) => FiltersPage(
+            applyFiltersFn: _applyFilters,
+          ),
+    };
+
+    appRoutes = routes;
+
     return Platform.isIOS
         ? CupertinoApp(
             title: 'Meals',

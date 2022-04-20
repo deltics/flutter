@@ -52,7 +52,7 @@ class PlatformTabbedPage extends StatelessWidget {
                     return CupertinoTabView(
                       navigatorKey: tab.navigationKey,
                       builder: (_) => tab.content,
-                      routes: routes,
+                      routes: appRoutes,
                     );
                   }),
             ))
