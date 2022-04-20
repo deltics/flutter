@@ -10,6 +10,13 @@ enum MealComplexity {
   difficult,
 }
 
+enum MealSuitability {
+  glutenFree,
+  lactoseFree,
+  vegan,
+  vegetarian,
+}
+
 class Meal {
   final String id;
   final String name;

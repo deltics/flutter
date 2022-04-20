@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meals/pages/filters.dart';
 
@@ -11,8 +10,13 @@ import '../widgets/meal_item.dart';
 class CategoryMealsPage extends StatefulWidget {
   static const route = '/category-meals';
 
+  final List<Meal> meals;
+  final Function updateMealsFn;
+
   const CategoryMealsPage({
     Key? key,
+    required this.meals,
+    required this.updateMealsFn,
   }) : super(key: key);
 
   @override
@@ -40,7 +44,7 @@ class _CategoryMealsPageState extends State<CategoryMealsPage> {
     title = args['title']!;
 
     displayedMeals =
-        meals.where((m) => m.categoryIds.contains(categoryId)).toList();
+        widget.meals.where((m) => m.categoryIds.contains(categoryId)).toList();
 
     _stateInitialised = true;
 
@@ -74,6 +78,7 @@ class _CategoryMealsPageState extends State<CategoryMealsPage> {
           onPressed: (_) => {
             Navigator.of(context, rootNavigator: true)
                 .pushNamed(FiltersPage.route)
+                .then((_) => widget.updateMealsFn())
           },
         ));
   }
@@ -86,7 +91,7 @@ class _CategoryMealsPageState extends State<CategoryMealsPage> {
       //  from both displayedMeals and the source meals list.
 
       meals.removeWhere((meal) => meal.id == id);
-      displayedMeals.removeWhere((meal) => meal.id == id);
+      widget.updateMealsFn();
     });
   }
 }

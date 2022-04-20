@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'data/meals.dart';
+import 'models/meal.dart';
 import 'pages/home.dart';
 import 'pages/meal_detail.dart';
 import 'pages/category_meals.dart';
@@ -18,15 +20,50 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Map<String, bool> _filters = {
-    'gluten-free': true,
-    'lactose-free': true,
-    'vegan': true,
-    'vegetarian': true,
-  };
+  List<Meal> _meals = meals;
+  final List<MealSuitability> _mealFilter = [
+    MealSuitability.glutenFree,
+    MealSuitability.lactoseFree,
+    MealSuitability.vegan,
+    MealSuitability.vegetarian,
+  ];
 
-  void _applyFilters(Map<String, bool> filters) {
-    setState(() => _filters = filters);
+  void _applyFilter({
+    required MealSuitability suitability,
+    required bool show,
+  }) {
+    // setState(() {
+    if (show && !_mealFilter.contains(suitability)) {
+      _mealFilter.add(suitability);
+    } else if (!show && _mealFilter.contains(suitability)) {
+      _mealFilter.remove(suitability);
+    }
+    _applyFilters();
+    // });
+  }
+
+  void _applyFilters() {
+    setState(() {
+      _meals = meals.where((meal) {
+        if (_mealFilter.contains(MealSuitability.glutenFree) &&
+            !meal.isGlutenFree) {
+          return false;
+        }
+        if (_mealFilter.contains(MealSuitability.lactoseFree) &&
+            !meal.isLactoseFree) {
+          return false;
+        }
+        if (_mealFilter.contains(MealSuitability.vegan) && !meal.isVegan) {
+          return false;
+        }
+        if (_mealFilter.contains(MealSuitability.vegetarian) &&
+            !meal.isVegetarian) {
+          return false;
+        }
+
+        return true;
+      }).toList();
+    });
   }
 
   // This widget is the root of your application.
@@ -34,10 +71,15 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     final routes = {
       HomePage.route: (ctx) => const HomePage(),
-      CategoryMealsPage.route: (ctx) => const CategoryMealsPage(),
+      CategoryMealsPage.route: (ctx) => CategoryMealsPage(
+            key: ValueKey(_meals.hashCode),
+            meals: _meals,
+            updateMealsFn: _applyFilters,
+          ),
       MealDetailPage.route: (ctx) => const MealDetailPage(),
       FiltersPage.route: (ctx) => FiltersPage(
-            applyFiltersFn: _applyFilters,
+            filters: _mealFilter,
+            applyFilterFn: _applyFilter,
           ),
     };
 

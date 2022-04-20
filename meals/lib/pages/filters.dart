@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:meals/models/meal.dart';
 
 import '../adapters/platform_page.dart';
 
 class FiltersPage extends StatefulWidget {
   static const route = '/filters';
 
-  final Function applyFiltersFn;
+  final Function applyFilterFn;
+  final List<MealSuitability> filters;
 
   const FiltersPage({
     Key? key,
-    required this.applyFiltersFn,
+    required this.filters,
+    required this.applyFilterFn,
   }) : super(key: key);
 
   @override
@@ -17,11 +20,6 @@ class FiltersPage extends StatefulWidget {
 }
 
 class _FiltersPageState extends State<FiltersPage> {
-  var _showGlutenFree = true;
-  var _showLactoseFree = true;
-  var _showVegan = true;
-  var _showVegetarian = true;
-
   @override
   Widget build(BuildContext context) {
     return PlatformPage(
@@ -31,24 +29,19 @@ class _FiltersPageState extends State<FiltersPage> {
           children: [
             _switch(
               title: 'Gluten Free',
-              value: _showGlutenFree,
-              onChanged: (value) =>
-                  widget.applyFiltersFn({'gluten-free': value}),
+              suitability: MealSuitability.glutenFree,
             ),
             _switch(
               title: 'Lactose Free',
-              value: _showLactoseFree,
-              onChanged: (value) => setState(() => _showLactoseFree = value),
+              suitability: MealSuitability.lactoseFree,
             ),
             _switch(
               title: 'Vegan',
-              value: _showVegan,
-              onChanged: (value) => setState(() => _showVegan = value),
+              suitability: MealSuitability.vegan,
             ),
             _switch(
               title: 'Vegetarian',
-              value: _showVegetarian,
-              onChanged: (value) => setState(() => _showVegetarian = value),
+              suitability: MealSuitability.vegetarian,
             ),
           ],
         ),
@@ -58,8 +51,7 @@ class _FiltersPageState extends State<FiltersPage> {
 
   Widget _switch({
     required String title,
-    required bool value,
-    required Function onChanged,
+    required MealSuitability suitability,
   }) {
     return Card(
       child: Row(
@@ -69,7 +61,13 @@ class _FiltersPageState extends State<FiltersPage> {
             padding: const EdgeInsets.only(left: 15),
             child: Text(title),
           )),
-          Switch(value: value, onChanged: (value) => onChanged(value)),
+          Switch(
+            value: widget.filters.contains(suitability),
+            onChanged: (value) => widget.applyFilterFn(
+              suitability: suitability,
+              show: value,
+            ),
+          ),
         ],
       ),
     );
