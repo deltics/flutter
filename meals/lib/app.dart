@@ -62,6 +62,12 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void _deleteMeal(String id) {
+    setState(() {
+      meals.removeWhere((meal) => meal.id == id);
+    });
+  }
+
   void _setFavorite({
     required String id,
     required bool isFavorite,
@@ -83,11 +89,17 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     final routes = {
-      HomePage.route: (ctx) => const HomePage(),
+      HomePage.route: (ctx) => HomePage(
+            favoriteMeals:
+                meals.where((meal) => _favoriteIds.contains(meal.id)).toList(),
+            delete: _deleteMeal,
+            setFavorite: _setFavorite,
+          ),
       CategoryMealsPage.route: (ctx) => CategoryMealsPage(
             key: ValueKey(_meals.hashCode),
             meals: _meals,
             favoriteIds: _favoriteIds,
+            deleteFn: _deleteMeal,
             updateMealsFn: _applyFilters,
             setFavoriteFn: _setFavorite,
           ),

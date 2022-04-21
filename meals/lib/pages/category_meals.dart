@@ -12,6 +12,7 @@ class CategoryMealsPage extends StatefulWidget {
 
   final List<String> favoriteIds;
   final List<Meal> meals;
+  final Function deleteFn;
   final Function updateMealsFn;
   final Function setFavoriteFn;
 
@@ -19,6 +20,7 @@ class CategoryMealsPage extends StatefulWidget {
     Key? key,
     required this.meals,
     required this.favoriteIds,
+    required this.deleteFn,
     required this.updateMealsFn,
     required this.setFavoriteFn,
   }) : super(key: key);
@@ -57,32 +59,13 @@ class _CategoryMealsPageState extends State<CategoryMealsPage> {
 
   @override
   Widget build(BuildContext context) {
-    // final body = ListView.builder(
-    //   itemBuilder: (ctx, index) {
-    //     final meal = displayedMeals[index];
-
-    //     return MealItem(
-    //       id: meal.id,
-    //       title: meal.name,
-    //       imageUrl: meal.imageUrl,
-    //       preparationTime: meal.preparationTime,
-    //       complexity: meal.complexity,
-    //       affordability: meal.affordability,
-    //       isFavorite: widget.favoriteIds.contains(meal.id),
-    //       favoriteFn: widget.setFavoriteFn,
-    //       removeFn: _removeItem,
-    //     );
-    //   },
-    //   itemCount: displayedMeals.length,
-    // );
-
     return PlatformPage(
         title: '$title Meals',
         content: MealListView(
           meals: displayedMeals,
           favorites: widget.favoriteIds,
+          delete: widget.deleteFn,
           setFavorite: widget.setFavoriteFn,
-          delete: _removeItem,
         ),
         action: PageAction(
           icon: const Icon(Icons.filter_alt),
@@ -92,17 +75,5 @@ class _CategoryMealsPageState extends State<CategoryMealsPage> {
                 .then((_) => widget.updateMealsFn())
           },
         ));
-  }
-
-  void _removeItem(String id) {
-    setState(() {
-      // Ideally we'd remove from meals and let state updates take care
-      //  of updating displayedMeals, but dependencies don't change
-      //  when 'pop'ping back to the page so we need to manually remove
-      //  from both displayedMeals and the source meals list.
-
-      meals.removeWhere((meal) => meal.id == id);
-      widget.updateMealsFn();
-    });
   }
 }
