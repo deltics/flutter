@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meals/pages/filters.dart';
+import 'package:meals/widgets/meal_list.dart';
 
 import '../utils.dart';
 import '../adapters/platform_page.dart';
@@ -57,28 +58,33 @@ class _CategoryMealsPageState extends State<CategoryMealsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final body = ListView.builder(
-      itemBuilder: (ctx, index) {
-        final meal = displayedMeals[index];
+    // final body = ListView.builder(
+    //   itemBuilder: (ctx, index) {
+    //     final meal = displayedMeals[index];
 
-        return MealItem(
-          id: meal.id,
-          title: meal.name,
-          imageUrl: meal.imageUrl,
-          preparationTime: meal.preparationTime,
-          complexity: meal.complexity,
-          affordability: meal.affordability,
-          isFavorite: widget.favoriteIds.contains(meal.id),
-          favoriteFn: widget.setFavoriteFn,
-          removeFn: _removeItem,
-        );
-      },
-      itemCount: displayedMeals.length,
-    );
+    //     return MealItem(
+    //       id: meal.id,
+    //       title: meal.name,
+    //       imageUrl: meal.imageUrl,
+    //       preparationTime: meal.preparationTime,
+    //       complexity: meal.complexity,
+    //       affordability: meal.affordability,
+    //       isFavorite: widget.favoriteIds.contains(meal.id),
+    //       favoriteFn: widget.setFavoriteFn,
+    //       removeFn: _removeItem,
+    //     );
+    //   },
+    //   itemCount: displayedMeals.length,
+    // );
 
     return PlatformPage(
         title: '$title Meals',
-        content: body,
+        content: MealListView(
+          meals: displayedMeals,
+          favorites: widget.favoriteIds,
+          setFavorite: widget.setFavoriteFn,
+          delete: _removeItem,
+        ),
         action: PageAction(
           icon: const Icon(Icons.filter_alt),
           onPressed: (_) => {
