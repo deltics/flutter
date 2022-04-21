@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:meals/pages/filters.dart';
-import 'package:meals/widgets/meal_list.dart';
+import 'package:meals/widgets/meal_list_view.dart';
 
 import '../utils.dart';
 import '../adapters/platform_page.dart';
 import '../data/meals.dart';
 import '../models/meal.dart';
-import '../widgets/meal_item.dart';
 
 class CategoryMealsPage extends StatefulWidget {
   static const route = '/category-meals';

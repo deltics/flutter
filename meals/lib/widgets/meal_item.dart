@@ -120,7 +120,11 @@ class MealItem extends StatelessWidget {
         'id': id,
       },
     ).then(
-      (result) => removeFn(id),
+      (result) {
+        if (result != null) {
+          removeFn(result);
+        }
+      },
     );
   }
 }

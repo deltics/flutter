@@ -20,14 +20,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  List<String> _favoriteIds = [];
   List<Meal> _meals = meals;
-  final List<MealSuitability> _mealFilter = [
-    MealSuitability.glutenFree,
-    MealSuitability.lactoseFree,
-    MealSuitability.vegan,
-    MealSuitability.vegetarian,
-  ];
+  final List<String> _favoriteIds = [];
+  final List<MealSuitability> _mealFilter = [];
 
   void _applyFilter({
     required MealSuitability suitability,
