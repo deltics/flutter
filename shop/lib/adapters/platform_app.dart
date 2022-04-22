@@ -7,12 +7,14 @@ class PlatformApp extends StatelessWidget {
   final String title;
   final String initialRoute;
   final Color primaryColor;
+  final Color accentColor;
   final Map<String, Widget Function(BuildContext)> routes;
 
   const PlatformApp({
     Key? key,
     this.initialRoute = '/',
     this.primaryColor = Colors.blue,
+    this.accentColor = Colors.orange,
     required this.routes,
     required this.title,
   }) : super(key: key);
@@ -24,6 +26,7 @@ class PlatformApp extends StatelessWidget {
             title: title,
             theme: CupertinoThemeData(
               primaryColor: primaryColor,
+              primaryContrastingColor: accentColor,
             ),
             initialRoute: initialRoute,
             routes: routes,

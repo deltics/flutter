@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../app_theme.dart';
+
 class PageAction {
   final Icon icon;
   final Function onPressed;
@@ -14,12 +16,14 @@ class PageAction {
 }
 
 class PlatformPage extends StatelessWidget {
+  final AppTheme theme;
   final Widget content;
   final String title;
   PageAction? action;
 
   PlatformPage({
     Key? key,
+    required this.theme,
     required this.title,
     required this.content,
     this.action,
@@ -30,7 +34,11 @@ class PlatformPage extends StatelessWidget {
     return Platform.isIOS
         ? CupertinoPageScaffold(
             navigationBar: CupertinoNavigationBar(
-              middle: Text(title),
+              backgroundColor: theme.primaryColor,
+              middle: Text(title,
+                  style: TextStyle(
+                    color: theme.pageTitleColor,
+                  )),
               trailing: (action != null)
                   ? GestureDetector(
                       child: action!.icon,

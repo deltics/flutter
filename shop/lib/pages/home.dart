@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../adapters/platform_page.dart';
+import '../app_theme.dart';
 
 class HomePage extends StatelessWidget {
   static const route = '/';
@@ -11,6 +12,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformPage(
+      theme: theme,
       title: title,
       content: Container(),
     );
