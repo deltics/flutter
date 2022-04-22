@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop/pages/product_detail.dart';
 
 import '../app_theme.dart';
 
@@ -35,28 +36,34 @@ class ProductGridItem extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: GridTile(
-          child: Image.network(
-            imageUrl,
-            fit: BoxFit.cover,
+        child: GestureDetector(
+          child: GridTile(
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.cover,
+            ),
+            footer: GridTileBar(
+              backgroundColor: Colors.black54,
+              title: Text(title),
+              leading: GestureDetector(
+                child: Icon(
+                  Icons.favorite_outline,
+                  color: theme.gridIconColor,
+                ),
+                onTap: () {},
+              ),
+              trailing: GestureDetector(
+                child: Icon(
+                  Icons.shopping_cart,
+                  color: theme.gridIconColor,
+                ),
+                onTap: () {},
+              ),
+            ),
           ),
-          footer: GridTileBar(
-            backgroundColor: Colors.black54,
-            title: Text(title),
-            leading: GestureDetector(
-              child: Icon(
-                Icons.favorite_outline,
-                color: theme.gridIconColor,
-              ),
-              onTap: () {},
-            ),
-            trailing: GestureDetector(
-              child: Icon(
-                Icons.shopping_cart,
-                color: theme.gridIconColor,
-              ),
-              onTap: () {},
-            ),
+          onTap: () => Navigator.of(context).pushNamed(
+            ProductDetailPage.route,
+            arguments: {'id': id},
           ),
         ),
       ),

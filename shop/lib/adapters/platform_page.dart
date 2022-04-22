@@ -19,9 +19,9 @@ class PlatformPage extends StatelessWidget {
   final AppTheme theme;
   final Widget content;
   final String title;
-  PageAction? action;
+  final PageAction? action;
 
-  PlatformPage({
+  const PlatformPage({
     Key? key,
     required this.theme,
     required this.title,
@@ -34,7 +34,7 @@ class PlatformPage extends StatelessWidget {
     return Platform.isIOS
         ? CupertinoPageScaffold(
             navigationBar: CupertinoNavigationBar(
-              backgroundColor: theme.primaryColor,
+//              backgroundColor: theme.primaryColor,
               middle: Text(title,
                   style: TextStyle(
                     color: theme.pageTitleColor,
