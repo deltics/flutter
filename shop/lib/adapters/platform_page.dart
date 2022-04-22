@@ -34,7 +34,14 @@ class PlatformPage extends StatelessWidget {
     return Platform.isIOS
         ? CupertinoPageScaffold(
             navigationBar: CupertinoNavigationBar(
-//              backgroundColor: theme.primaryColor,
+              backgroundColor: theme.primaryColor,
+              leading: GestureDetector(
+                child: Icon(
+                  Icons.chevron_left,
+                  color: theme.pageTitleColor,
+                ),
+                onTap: () => Navigator.of(context).pop(),
+              ),
               middle: Text(title,
                   style: TextStyle(
                     color: theme.pageTitleColor,
