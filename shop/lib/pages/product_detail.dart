@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/products_provider.dart';
+import '../models/products.dart';
 import '../utils.dart';
 import '../app_theme.dart';
 import '../adapters/platform_page.dart';
@@ -15,7 +15,7 @@ class ProductDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final id = routeArguments(context)['id'];
 
-    final product = ProductsProvider.of(context).byId(id!);
+    final product = Products.of(context).byId(id!);
 
     return PlatformPage(
       theme: theme,

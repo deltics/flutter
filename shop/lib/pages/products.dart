@@ -4,7 +4,7 @@ import 'package:shop/widgets/product_grid.dart';
 
 import '../adapters/platform_page.dart';
 import '../app_theme.dart';
-import '../providers/products_provider.dart';
+import '../models/products.dart';
 
 class ProductsPage extends StatelessWidget {
   static const route = '/products';
@@ -13,7 +13,7 @@ class ProductsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final products = Provider.of<ProductsProvider>(context).items;
+    final products = Products.of(context).items;
 
     return PlatformPage(
       theme: theme,

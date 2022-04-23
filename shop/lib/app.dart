@@ -3,15 +3,14 @@ import 'package:provider/provider.dart';
 
 import 'adapters/platform_app.dart';
 import 'app_theme.dart';
+import 'models/favorites.dart';
 import 'pages/home.dart';
 import 'pages/product_detail.dart';
 import 'pages/products.dart';
-import 'providers/products_provider.dart';
+import 'models/products.dart';
 
 class ShopApp extends StatelessWidget {
-  final ProductsProvider _products = ProductsProvider();
-
-  ShopApp({Key? key}) : super(key: key);
+  const ShopApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -22,8 +21,11 @@ class ShopApp extends StatelessWidget {
       pageTitleColor: Colors.white,
     );
 
-    return ChangeNotifierProvider(
-      create: (ctx) => ProductsProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => Products()),
+        ChangeNotifierProvider(create: (_) => Favorites()),
+      ],
       child: PlatformApp(
         title: 'Shop',
         primaryColor: theme.primaryColor,

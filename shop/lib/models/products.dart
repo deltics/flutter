@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/product.dart';
+import 'product.dart';
 
-class ProductsProvider with ChangeNotifier {
+class Products with ChangeNotifier {
   final _items = [
     const Product(
       id: 'p1',
@@ -52,7 +52,7 @@ class ProductsProvider with ChangeNotifier {
     return _items.where((p) => p.id == id).single;
   }
 
-  static ProductsProvider of(BuildContext context) {
-    return Provider.of<ProductsProvider>(context);
+  static Products of(BuildContext context) {
+    return Provider.of<Products>(context);
   }
 }

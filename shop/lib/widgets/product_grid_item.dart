@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:shop/pages/product_detail.dart';
 
 import '../app_theme.dart';
+import '../models/favorites.dart';
 
 class ProductGridItem extends StatelessWidget {
   final String id;
   final String title;
   final String imageUrl;
+  final bool isFavorite;
 
   const ProductGridItem({
     Key? key,
     required this.id,
     required this.title,
     required this.imageUrl,
+    required this.isFavorite,
   }) : super(key: key);
 
   @override
@@ -47,10 +50,11 @@ class ProductGridItem extends StatelessWidget {
               title: Text(title),
               leading: GestureDetector(
                 child: Icon(
-                  Icons.favorite_outline,
+                  isFavorite ? Icons.favorite : Icons.favorite_outline,
                   color: theme.gridIconColor,
                 ),
-                onTap: () {},
+                onTap: () => Favorites.of(context, listen: false)
+                    .setFavorite(id: id, isFavorite: !isFavorite),
               ),
               trailing: GestureDetector(
                 child: Icon(
