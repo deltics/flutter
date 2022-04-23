@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shop/widgets/product_grid.dart';
 
 import '../adapters/platform_page.dart';
@@ -13,12 +12,12 @@ class ProductsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final products = Products.of(context).items;
-
     return PlatformPage(
       theme: theme,
       title: 'Products',
-      content: ProductGrid(products: products),
+      content: ProductGrid(
+        products: Products.of(context).items,
+      ),
     );
   }
 }
