@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/product.dart';
 
@@ -45,5 +46,13 @@ class ProductsProvider with ChangeNotifier {
   void add(Product p) {
     _items.add(p);
     notifyListeners();
+  }
+
+  Product? byId(String id) {
+    return _items.where((p) => p.id == id).single;
+  }
+
+  static ProductsProvider of(BuildContext context) {
+    return Provider.of<ProductsProvider>(context);
   }
 }

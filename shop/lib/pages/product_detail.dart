@@ -13,17 +13,15 @@ class ProductDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final args = routeArguments(context);
-    final id = args['id'];
+    final id = routeArguments(context)['id'];
 
-    final products = Provider.of<ProductsProvider>(context).items;
-    final product = products.where((p) => p.id == id).single;
+    final product = ProductsProvider.of(context).byId(id!);
 
     return PlatformPage(
       theme: theme,
       title: 'Product',
       content: SizedBox(
-        child: Text(product.title),
+        child: Text(product!.title),
       ),
     );
   }
