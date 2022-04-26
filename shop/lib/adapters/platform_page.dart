@@ -20,6 +20,7 @@ class PlatformPage extends StatelessWidget {
   final Widget content;
   final String title;
   final PageAction? action;
+  final Widget? actionWidget;
 
   const PlatformPage({
     Key? key,
@@ -27,6 +28,7 @@ class PlatformPage extends StatelessWidget {
     required this.title,
     required this.content,
     this.action,
+    this.actionWidget,
   }) : super(key: key);
 
   @override
@@ -51,7 +53,7 @@ class PlatformPage extends StatelessWidget {
                       child: action!.icon,
                       onTap: () => action!.onPressed(context),
                     )
-                  : null,
+                  : actionWidget,
             ),
             child: SafeArea(child: content),
           )
@@ -65,7 +67,7 @@ class PlatformPage extends StatelessWidget {
                     child: action!.icon,
                     onPressed: () => action!.onPressed(context),
                   )
-                : null,
+                : actionWidget,
           );
   }
 }

@@ -48,6 +48,10 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
+  List<Product> filtered(bool Function(Product) condition) {
+    return _items.where(condition).toList();
+  }
+
   Product? byId(String id) {
     return _items.where((p) => p.id == id).single;
   }

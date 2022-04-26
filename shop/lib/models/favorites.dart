@@ -8,6 +8,10 @@ class Favorites with ChangeNotifier {
     return _ids.contains(id);
   }
 
+  List<String> get ids {
+    return [..._ids];
+  }
+
   void setFavorite({
     required String id,
     required bool isFavorite,
