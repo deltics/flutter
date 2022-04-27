@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop/pages/products.dart';
 
 import '../adapters/platform_page.dart';
 import '../app_theme.dart';
@@ -14,7 +15,13 @@ class HomePage extends StatelessWidget {
     return PlatformPage(
       theme: theme,
       title: title,
-      content: Container(),
+      content: Center(
+          child: GestureDetector(
+        child: const Icon(
+          Icons.factory,
+        ),
+        onTap: () => Navigator.of(context).pushNamed(ProductsPage.route),
+      )),
     );
   }
 }

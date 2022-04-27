@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import '../app_theme.dart';
 
 class PageAction {
-  final Icon icon;
+  final Widget child;
   final Function onPressed;
 
   const PageAction({
-    required this.icon,
+    required this.child,
     required this.onPressed,
   });
 }
@@ -20,7 +20,6 @@ class PlatformPage extends StatelessWidget {
   final Widget content;
   final String title;
   final PageAction? action;
-  final Widget? actionWidget;
 
   const PlatformPage({
     Key? key,
@@ -28,7 +27,6 @@ class PlatformPage extends StatelessWidget {
     required this.title,
     required this.content,
     this.action,
-    this.actionWidget,
   }) : super(key: key);
 
   @override
@@ -50,24 +48,25 @@ class PlatformPage extends StatelessWidget {
                   )),
               trailing: (action != null)
                   ? GestureDetector(
-                      child: action!.icon,
+                      child: action!.child,
                       onTap: () => action!.onPressed(context),
                     )
-                  : actionWidget,
+                  : null,
             ),
             child: SafeArea(child: content),
           )
         : Scaffold(
             appBar: AppBar(
               title: Text(title),
+              actions: [],
             ),
             body: SafeArea(child: content),
             floatingActionButton: (action != null)
                 ? FloatingActionButton(
-                    child: action!.icon,
+                    child: action!.child,
                     onPressed: () => action!.onPressed(context),
                   )
-                : actionWidget,
+                : null,
           );
   }
 }

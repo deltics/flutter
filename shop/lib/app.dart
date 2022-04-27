@@ -29,7 +29,7 @@ class ShopApp extends StatelessWidget {
       child: PlatformApp(
         title: 'Shop',
         primaryColor: theme.primaryColor,
-        initialRoute: ProductsPage.route,
+        initialRoute: HomePage.route,
         routes: {
           HomePage.route: (ctx) => const HomePage(title: 'Shop'),
           ProductsPage.route: (ctx) => const ProductsPage(),
