@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shop/widgets/product_grid.dart';
 
 import '../adapters/platform_page.dart';
+import '../adapters/platform_popup_menu.dart';
 import '../app_theme.dart';
 import '../models/favorites.dart';
 import '../models/products.dart';
@@ -27,19 +28,15 @@ class _ProductsPageState extends State<ProductsPage> {
     return PlatformPage(
       theme: theme,
       title: 'Products',
-      actionWidget: PopupMenuButton(
-        child: const Icon(Icons.filter),
-        itemBuilder: (_) => [
-          const PopupMenuItem(
-            child: Text(
-              'All Products',
-            ),
+      actionWidget: PlatformPopupMenu(
+        icon: const Icon(Icons.filter),
+        items: [
+          PlatformMenuItem(
+            child: const Text('All Products'),
             value: ProductsFilter.all,
           ),
-          const PopupMenuItem(
-            child: Text(
-              'Favorites',
-            ),
+          PlatformMenuItem(
+            child: const Text('Favorites'),
             value: ProductsFilter.favorites,
           ),
         ],
