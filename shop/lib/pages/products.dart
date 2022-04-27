@@ -9,7 +9,7 @@ import '../app_theme.dart';
 import '../models/favorites.dart';
 import '../models/products.dart';
 
-enum ProductsFilter { all, favorites }
+enum PageMode { all, favorites }
 
 class ProductsPage extends StatefulWidget {
   static const route = '/products';
@@ -21,12 +21,12 @@ class ProductsPage extends StatefulWidget {
 }
 
 class _ProductsPageState extends State<ProductsPage> {
-  var filter = ProductsFilter.all;
+  var _mode = PageMode.all;
 
   @override
   Widget build(BuildContext context) {
     final products = Products.of(context);
-    final favorites = (Platform.isIOS || filter == ProductsFilter.favorites)
+    final favorites = (Platform.isIOS || _mode == PageMode.favorites)
         ? Favorites.of(context).ids
         : null;
 
@@ -60,19 +60,18 @@ class _ProductsPageState extends State<ProductsPage> {
                   itemBuilder: (context) => [
                     const PopupMenuItem(
                       child: Text('All Products'),
-                      value: ProductsFilter.all,
+                      value: PageMode.all,
                     ),
                     const PopupMenuItem(
                       child: Text('Favorites'),
-                      value: ProductsFilter.favorites,
+                      value: PageMode.favorites,
                     ),
                   ],
-                  onSelected: (ProductsFilter value) =>
-                      setState(() => filter = value),
+                  onSelected: (PageMode value) => setState(() => _mode = value),
                 ),
                 onPressed: () => {}),
             content: ProductGrid(
-              products: (filter == ProductsFilter.favorites)
+              products: (_mode == PageMode.favorites)
                   ? products.filtered((p) => favorites!.contains(p.id)).toList()
                   : products.items,
             ),
