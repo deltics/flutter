@@ -25,6 +25,7 @@ class ProductGrid extends StatelessWidget {
         return ProductGridItem(
           id: product.id,
           title: product.title,
+          price: product.price,
           imageUrl: product.imageUrl,
           isFavorite: favorites.isFavorite(product.id),
         );

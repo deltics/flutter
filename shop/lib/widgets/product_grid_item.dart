@@ -10,6 +10,7 @@ import 'badge.dart';
 class ProductGridItem extends StatelessWidget {
   final String id;
   final String title;
+  final double price;
   final String imageUrl;
   final bool isFavorite;
 
@@ -19,6 +20,7 @@ class ProductGridItem extends StatelessWidget {
     required this.title,
     required this.imageUrl,
     required this.isFavorite,
+    required this.price,
   }) : super(key: key);
 
   @override
@@ -66,7 +68,7 @@ class ProductGridItem extends StatelessWidget {
                               cart.productQuantity(productId: id)?.toString(),
                           child: content!,
                         ),
-                        onTap: () => cart.add(productId: id, price: 10.00),
+                        onTap: () => cart.add(productId: id, price: price),
                       ),
                   child: Icon(
                     Icons.shopping_cart,
