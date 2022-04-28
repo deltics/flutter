@@ -1,13 +1,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop/models/cart.dart';
 import 'package:shop/widgets/product_grid.dart';
 
 import '../adapters/platform_page.dart';
 import '../adapters/platform_tabbed_page.dart';
+import '../app.dart';
 import '../app_theme.dart';
 import '../models/favorites.dart';
 import '../models/products.dart';
+import '../widgets/badge.dart';
 
 enum PageMode { all, favorites }
 
@@ -47,14 +51,40 @@ class _ProductsPageState extends State<ProductsPage> {
                   products: products.filtered((p) => favorites!.contains(p.id)),
                 ),
               ),
+              TabDefinition(
+                icon: Consumer<Cart>(
+                  builder: (_, cart, __) => Badge(
+                    child: const Icon(Icons.shopping_cart),
+                    value: cart.totalQuantity.toString(),
+                  ),
+                ),
+                title: "Cart",
+                content: Consumer<Cart>(
+                  builder: (_, cart, __) => ProductGrid(
+                    products: products
+                        .filtered((p) => cart.contains(productId: p.id)),
+                  ),
+                ),
+              ),
             ],
             title: "Products",
-            appRoutes: null,
+            appRoutes: routes,
           )
         : PlatformPage(
             theme: theme,
             title: 'Products',
-            action: PageAction(
+            actions: [
+              Consumer<Cart>(
+                builder: (_, cart, __) => Badge(
+                  child: GestureDetector(
+                    child: const Icon(Icons.shopping_cart),
+                    onTap: () {},
+                  ),
+                  value: cart.totalQuantity.toString(),
+                ),
+              ),
+            ],
+            floatingAction: PageAction(
                 child: PopupMenuButton(
                   icon: const Icon(Icons.filter_alt, color: Colors.white),
                   itemBuilder: (context) => [

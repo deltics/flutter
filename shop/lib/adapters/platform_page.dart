@@ -19,14 +19,16 @@ class PlatformPage extends StatelessWidget {
   final AppTheme theme;
   final Widget content;
   final String title;
-  final PageAction? action;
+  final List<Widget>? actions;
+  final PageAction? floatingAction;
 
   const PlatformPage({
     Key? key,
     required this.theme,
     required this.title,
     required this.content,
-    this.action,
+    this.floatingAction,
+    this.actions,
   }) : super(key: key);
 
   @override
@@ -46,10 +48,10 @@ class PlatformPage extends StatelessWidget {
                   style: TextStyle(
                     color: theme.pageTitleColor,
                   )),
-              trailing: (action != null)
+              trailing: (floatingAction != null)
                   ? GestureDetector(
-                      child: action!.child,
-                      onTap: () => action!.onPressed(context),
+                      child: floatingAction!.child,
+                      onTap: () => floatingAction!.onPressed(context),
                     )
                   : null,
             ),
@@ -58,13 +60,13 @@ class PlatformPage extends StatelessWidget {
         : Scaffold(
             appBar: AppBar(
               title: Text(title),
-              actions: [],
+              actions: actions,
             ),
             body: SafeArea(child: content),
-            floatingActionButton: (action != null)
+            floatingActionButton: (floatingAction != null)
                 ? FloatingActionButton(
-                    child: action!.child,
-                    onPressed: () => action!.onPressed(context),
+                    child: floatingAction!.child,
+                    onPressed: () => floatingAction!.onPressed(context),
                   )
                 : null,
           );

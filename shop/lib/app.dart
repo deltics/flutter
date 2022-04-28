@@ -3,11 +3,18 @@ import 'package:provider/provider.dart';
 
 import 'adapters/platform_app.dart';
 import 'app_theme.dart';
+import 'models/cart.dart';
 import 'models/favorites.dart';
+import 'models/products.dart';
 import 'pages/home.dart';
 import 'pages/product_detail.dart';
 import 'pages/products.dart';
-import 'models/products.dart';
+
+final routes = {
+  HomePage.route: (ctx) => const HomePage(title: 'Shop'),
+  ProductsPage.route: (ctx) => const ProductsPage(),
+  ProductDetailPage.route: (ctx) => const ProductDetailPage(),
+};
 
 class ShopApp extends StatelessWidget {
   const ShopApp({Key? key}) : super(key: key);
@@ -25,16 +32,13 @@ class ShopApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => Products()),
         ChangeNotifierProvider(create: (_) => Favorites()),
+        ChangeNotifierProvider(create: (_) => Cart()),
       ],
       child: PlatformApp(
         title: 'Shop',
         primaryColor: theme.primaryColor,
         initialRoute: HomePage.route,
-        routes: {
-          HomePage.route: (ctx) => const HomePage(title: 'Shop'),
-          ProductsPage.route: (ctx) => const ProductsPage(),
-          ProductDetailPage.route: (ctx) => const ProductDetailPage(),
-        },
+        routes: routes,
       ),
     );
   }

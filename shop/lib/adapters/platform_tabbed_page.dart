@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TabDefinition {
-  final Icon icon;
+  final Widget icon;
   final String title;
   final Widget content;
   final navigationKey = GlobalKey<NavigatorState>();

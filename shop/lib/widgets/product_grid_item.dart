@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shop/pages/product_detail.dart';
 
 import '../app_theme.dart';
+import '../models/cart.dart';
 import '../models/favorites.dart';
+import 'badge.dart';
 
 class ProductGridItem extends StatelessWidget {
   final String id;
@@ -56,16 +59,22 @@ class ProductGridItem extends StatelessWidget {
                 onTap: () => Favorites.of(context, listen: false)
                     .setFavorite(id: id, isFavorite: !isFavorite),
               ),
-              trailing: GestureDetector(
-                child: Icon(
-                  Icons.shopping_cart,
-                  color: theme.gridIconColor,
-                ),
-                onTap: () {},
-              ),
+              trailing: Consumer<Cart>(
+                  builder: (_, cart, content) => GestureDetector(
+                        child: Badge(
+                          value:
+                              cart.productQuantity(productId: id)?.toString(),
+                          child: content!,
+                        ),
+                        onTap: () => cart.add(productId: id, price: 10.00),
+                      ),
+                  child: Icon(
+                    Icons.shopping_cart,
+                    color: theme.gridIconColor,
+                  )),
             ),
           ),
-          onTap: () => Navigator.of(context).pushNamed(
+          onTap: () => Navigator.of(context, rootNavigator: true).pushNamed(
             ProductDetailPage.route,
             arguments: {'id': id},
           ),
