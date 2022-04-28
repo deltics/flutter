@@ -24,6 +24,14 @@ class Cart with ChangeNotifier {
   double get totalAmount => _totalAmount;
   int get totalQuantity => _totalQuantity;
 
+  List<CartItem> get items {
+    final List<CartItem> result = [];
+
+    _items.forEach((_, item) => result.add(item));
+
+    return result;
+  }
+
   void add({
     required String productId,
     required double price,

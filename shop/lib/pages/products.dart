@@ -2,16 +2,19 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop/models/cart.dart';
-import 'package:shop/widgets/product_grid.dart';
 
 import '../adapters/platform_page.dart';
 import '../adapters/platform_tabbed_page.dart';
 import '../app.dart';
 import '../app_theme.dart';
+import '../models/cart.dart';
 import '../models/favorites.dart';
 import '../models/products.dart';
+
+import '../pages/cart.dart';
 import '../widgets/badge.dart';
+import '../widgets/product_grid.dart';
+import '../widgets/shopping_cart.dart';
 
 enum PageMode { all, favorites }
 
@@ -60,10 +63,7 @@ class _ProductsPageState extends State<ProductsPage> {
                 ),
                 title: "Cart",
                 content: Consumer<Cart>(
-                  builder: (_, cart, __) => ProductGrid(
-                    products: products
-                        .filtered((p) => cart.contains(productId: p.id)),
-                  ),
+                  builder: (_, cart, __) => const ShoppingCart(),
                 ),
               ),
             ],
@@ -78,7 +78,8 @@ class _ProductsPageState extends State<ProductsPage> {
                 builder: (_, cart, __) => Badge(
                   child: GestureDetector(
                     child: const Icon(Icons.shopping_cart),
-                    onTap: () {},
+                    onTap: () =>
+                        Navigator.of(context).pushNamed(CartPage.route),
                   ),
                   value: cart.totalQuantity.toString(),
                 ),
