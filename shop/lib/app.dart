@@ -8,11 +8,9 @@ import 'models/favorites.dart';
 import 'models/products.dart';
 import 'pages/home.dart';
 import 'pages/product_detail.dart';
-import 'pages/products.dart';
 
 final routes = {
-  HomePage.route: (ctx) => const HomePage(title: 'Shop'),
-  ProductsPage.route: (ctx) => const ProductsPage(),
+  HomePage.route: (ctx) => const HomePage(),
   ProductDetailPage.route: (ctx) => const ProductDetailPage(),
 };
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../adapters/platform_chip.dart';
 import '../models/cart.dart';
 import '../models/products.dart';
 

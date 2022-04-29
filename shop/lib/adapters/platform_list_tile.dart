@@ -7,9 +7,9 @@ import 'cupertino_list_tile.dart';
 class PlatformListTile extends StatelessWidget {
   final Widget leading;
   final Widget title;
-  Function? onTap;
+  final Function? onTap;
 
-  PlatformListTile({
+  const PlatformListTile({
     Key? key,
     required this.leading,
     required this.title,

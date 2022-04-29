@@ -16,13 +16,13 @@ class TabDefinition {
   });
 }
 
-class PlatformTabbedPage extends StatelessWidget {
+class PlatformTabbedPage extends StatefulWidget {
   final List<TabDefinition> tabs;
   final String title;
   final Widget? drawer;
   final Map<String, Widget Function(BuildContext)>? appRoutes;
 
-  const PlatformTabbedPage({
+  PlatformTabbedPage({
     Key? key,
     required this.tabs,
     required this.title,
@@ -31,39 +31,43 @@ class PlatformTabbedPage extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Platform.isIOS
-        ? CupertinoPageScaffold(
-            navigationBar: CupertinoNavigationBar(
-              middle: Text(title),
-            ),
-            child: SafeArea(
-              child: CupertinoTabScaffold(
-                  tabBar: CupertinoTabBar(
-                    items: tabs
-                        .map((tab) => BottomNavigationBarItem(
-                              icon: tab.icon,
-                              label: tab.title,
-                            ))
-                        .toList(),
-                  ),
-                  tabBuilder: (context, index) {
-                    final tab = tabs[index];
+  State<PlatformTabbedPage> createState() => _PlatformTabbedPageState();
+}
 
-                    return CupertinoTabView(
-                      navigatorKey: tab.navigationKey,
-                      builder: (_) => tab.content,
-                      routes: appRoutes,
-                    );
-                  }),
-            ))
-        : DefaultTabController(
-            length: tabs.length,
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text(title),
-                bottom: TabBar(
-                  tabs: tabs
+class _PlatformTabbedPageState extends State<PlatformTabbedPage> {
+  int _activeTabIndex = 0;
+
+  void _activateTab(int tabIndex) {
+    setState(() => _activeTabIndex = tabIndex);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: widget.tabs.length,
+      child: Scaffold(
+        bottomNavigationBar: Platform.isIOS
+            ? BottomNavigationBar(
+                backgroundColor: Theme.of(context).primaryColor,
+                unselectedItemColor: Colors.grey,
+                selectedItemColor: Colors.white,
+                currentIndex: _activeTabIndex,
+                items: widget.tabs
+                    .map(
+                      (tab) => BottomNavigationBarItem(
+                        label: tab.title,
+                        icon: tab.icon,
+                      ),
+                    )
+                    .toList(),
+                onTap: _activateTab,
+              )
+            : null,
+        appBar: AppBar(
+          title: Text(widget.title),
+          bottom: Platform.isAndroid
+              ? TabBar(
+                  tabs: widget.tabs
                       .map(
                         (tab) => Tab(
                           icon: tab.icon,
@@ -71,17 +75,20 @@ class PlatformTabbedPage extends StatelessWidget {
                         ),
                       )
                       .toList(),
-                ),
-              ),
-              drawer: drawer,
-              body: TabBarView(
-                children: tabs
+                )
+              : null,
+        ),
+        drawer: widget.drawer,
+        body: Platform.isIOS
+            ? widget.tabs[_activeTabIndex].content
+            : TabBarView(
+                children: widget.tabs
                     .map(
                       (tab) => tab.content,
                     )
                     .toList(),
               ),
-            ),
-          );
+      ),
+    );
   }
 }
