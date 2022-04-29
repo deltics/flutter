@@ -62,18 +62,26 @@ class ProductGridItem extends StatelessWidget {
                     .setFavorite(id: id, isFavorite: !isFavorite),
               ),
               trailing: Consumer<Cart>(
-                  builder: (_, cart, content) => GestureDetector(
-                        child: Badge(
-                          value:
-                              cart.productQuantity(productId: id)?.toString(),
-                          child: content!,
+                builder: (context, cart, __) => GestureDetector(
+                    child: Icon(
+                      Icons.shopping_cart,
+                      color: theme.gridIconColor,
+                    ),
+                    onTap: () {
+                      cart.add(productId: id, price: price);
+
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text("Added to cart"),
+                          action: SnackBarAction(
+                            label: "UNDO",
+                            onPressed: () {},
+                          ),
+                          duration: const Duration(milliseconds: 1500),
                         ),
-                        onTap: () => cart.add(productId: id, price: price),
-                      ),
-                  child: Icon(
-                    Icons.shopping_cart,
-                    color: theme.gridIconColor,
-                  )),
+                      );
+                    }),
+              ),
             ),
           ),
           onTap: () => Navigator.of(context, rootNavigator: true).pushNamed(

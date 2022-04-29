@@ -13,7 +13,7 @@ class CartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlatformPage(
       title: "Cart",
-      content: ShoppingCart(),
+      content: const ShoppingCart(),
       theme: theme,
     );
   }

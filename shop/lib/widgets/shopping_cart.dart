@@ -22,6 +22,33 @@ class ShoppingCart extends StatelessWidget {
     final products = Products.of(context);
     final List<Widget> items = [];
 
+    items.addAll([
+      Container(
+        padding: const EdgeInsets.only(
+          left: 60,
+          right: 60,
+          top: 10,
+          bottom: 10,
+        ),
+        child: Row(
+          children: [
+            const Expanded(
+              child: Text(
+                'Total',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              '\$${cart.totalAmount.toStringAsFixed(2)}',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+      const Divider()
+    ]);
+
     items.addAll(cart.items.map((item) {
       final product = products.byId(item.productId);
 
@@ -73,31 +100,6 @@ class ShoppingCart extends StatelessWidget {
         ),
       );
     }));
-
-    items.add(const Divider());
-    items.add(Container(
-      padding: const EdgeInsets.only(
-        left: 60,
-        right: 60,
-        top: 10,
-        bottom: 10,
-      ),
-      child: Row(
-        children: [
-          const Expanded(
-            child: Text(
-              'Total',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Text(
-            '\$${cart.totalAmount.toStringAsFixed(2)}',
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    ));
 
     return Column(
       children: items,
