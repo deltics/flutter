@@ -6,11 +6,13 @@ import 'app_theme.dart';
 import 'models/cart.dart';
 import 'models/favorites.dart';
 import 'models/products.dart';
+import 'pages/cart.dart';
 import 'pages/home.dart';
 import 'pages/product_detail.dart';
 
 final routes = {
   HomePage.route: (ctx) => const HomePage(),
+  CartPage.route: (ctx) => const CartPage(),
   ProductDetailPage.route: (ctx) => const ProductDetailPage(),
 };
 

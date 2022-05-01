@@ -21,6 +21,7 @@ class Cart with ChangeNotifier {
   double _totalAmount = 0;
   int _totalQuantity = 0;
 
+  int get numberOfProducts => _items.length;
   double get totalAmount => _totalAmount;
   int get totalQuantity => _totalQuantity;
 
@@ -57,6 +58,10 @@ class Cart with ChangeNotifier {
     _totalAmount += price;
     _totalQuantity++;
     notifyListeners();
+  }
+
+  CartItem itemByIndex(int index) {
+    return _items.values.elementAt(index);
   }
 
   void remove({
