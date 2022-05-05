@@ -4,12 +4,14 @@ import 'package:provider/provider.dart';
 class CartItem {
   final String id;
   final String productId;
+  final double price;
   final int quantity;
 
   CartItem({
     required this.id,
     required this.productId,
     required this.quantity,
+    required this.price,
   });
 }
 
@@ -41,9 +43,11 @@ class Cart with ChangeNotifier {
       _items.update(
         productId,
         (existing) => CartItem(
-            id: existing.id,
-            productId: productId,
-            quantity: existing.quantity + 1),
+          id: existing.id,
+          productId: productId,
+          quantity: existing.quantity + 1,
+          price: price,
+        ),
       );
     } else {
       _items.putIfAbsent(
@@ -52,11 +56,19 @@ class Cart with ChangeNotifier {
           id: UniqueKey().toString(),
           productId: productId,
           quantity: 1,
+          price: price,
         ),
       );
     }
     _totalAmount += price;
     _totalQuantity++;
+    notifyListeners();
+  }
+
+  void clear() {
+    _items.clear();
+    _totalAmount = 0;
+    _totalQuantity = 0;
     notifyListeners();
   }
 
@@ -78,7 +90,8 @@ class Cart with ChangeNotifier {
         (existing) => CartItem(
             id: existing.id,
             productId: productId,
-            quantity: existing.quantity - 1),
+            quantity: existing.quantity - 1,
+            price: price),
       );
     } else {
       _items.remove(productId);

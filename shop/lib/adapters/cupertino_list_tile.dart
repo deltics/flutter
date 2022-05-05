@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class CupertinoListTile extends StatelessWidget {
   final Widget leading;
   final Widget title;
-  Function? onTap;
+  final Function? onTap;
 
-  CupertinoListTile({
+  const CupertinoListTile({
     Key? key,
     required this.leading,
     required this.title,

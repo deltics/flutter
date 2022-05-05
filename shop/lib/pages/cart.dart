@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../adapters/platform_page.dart';
-import '../app_theme.dart';
 import '../widgets/shopping_cart.dart';
 
 class CartPage extends StatelessWidget {
@@ -11,10 +10,9 @@ class CartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PlatformPage(
+    return const PlatformPage(
       title: "Cart",
-      content: const ShoppingCart(),
-      theme: theme,
+      content: ShoppingCart(),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'cart.dart';
 
@@ -17,23 +18,39 @@ class Order {
 }
 
 class Orders with ChangeNotifier {
+  static Orders of(BuildContext context, {bool listen = false}) =>
+      Provider.of<Orders>(context, listen: listen);
+
   final List<Order> _orders = [];
 
   List<Order> get orders => [..._orders];
 
-  void create({
-    required List<CartItem> items,
-    required double totalAmount,
+  void cancel({required String id}) {
+    _orders.removeWhere((order) => order.id == id);
+    notifyListeners();
+  }
+
+  String create({
+    required Cart cart,
   }) {
+    final id = UniqueKey().toString();
+
     _orders.insert(
       0,
       Order(
-        id: UniqueKey().toString(),
-        totalAmount: totalAmount,
-        items: items,
+        id: id,
+        totalAmount: cart.totalAmount,
+        items: cart.items,
         datetime: DateTime.now(),
       ),
     );
     notifyListeners();
+
+    return id;
+  }
+
+  List<CartItem> itemsInOrder({required String id}) {
+    final order = _orders.where((order) => order.id == id).single;
+    return order.items;
   }
 }

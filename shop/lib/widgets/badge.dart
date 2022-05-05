@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../app_theme.dart';
-
 class Badge extends StatelessWidget {
   final Widget child;
   final String? value;
@@ -16,6 +14,8 @@ class Badge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -29,7 +29,7 @@ class Badge extends StatelessWidget {
                   // color: Theme.of(context).accentColor,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
-                    color: color ?? theme.gridIconColor,
+                    color: color ?? colorScheme.inversePrimary,
                   ),
                   constraints: const BoxConstraints(
                     minWidth: 16,

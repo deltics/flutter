@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/pages/product_detail.dart';
+import 'package:shop/widgets/added_to_cart_snackbar.dart';
 
-import '../app_theme.dart';
 import '../models/cart.dart';
 import '../models/favorites.dart';
-import 'badge.dart';
 
 class ProductGridItem extends StatelessWidget {
   final String id;
@@ -25,6 +24,8 @@ class ProductGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       alignment: Alignment.center,
       margin: const EdgeInsets.all(8),
@@ -56,7 +57,7 @@ class ProductGridItem extends StatelessWidget {
               leading: GestureDetector(
                 child: Icon(
                   isFavorite ? Icons.favorite : Icons.favorite_outline,
-                  color: theme.gridIconColor,
+                  color: colorScheme.secondary,
                 ),
                 onTap: () => Favorites.of(context, listen: false)
                     .setFavorite(id: id, isFavorite: !isFavorite),
@@ -65,21 +66,18 @@ class ProductGridItem extends StatelessWidget {
                 builder: (context, cart, __) => GestureDetector(
                     child: Icon(
                       Icons.shopping_cart,
-                      color: theme.gridIconColor,
+                      color: colorScheme.secondary,
                     ),
                     onTap: () {
                       cart.add(productId: id, price: price);
 
-                      Scaffold.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text("Added to cart"),
-                          action: SnackBarAction(
-                            label: "UNDO",
-                            onPressed: () {},
-                          ),
-                          duration: const Duration(milliseconds: 1500),
-                        ),
-                      );
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(AddedToCartSnackBar.build(
+                              context: context,
+                              action: () => cart.remove(
+                                    productId: id,
+                                    price: price,
+                                  )));
                     }),
               ),
             ),

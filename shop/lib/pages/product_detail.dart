@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../utils.dart';
+import '../adapters/platform_page.dart';
 import '../models/cart.dart';
 import '../models/products.dart';
-import '../utils.dart';
-import '../app_theme.dart';
-import '../adapters/platform_page.dart';
 
 class ProductDetailPage extends StatelessWidget {
   static const route = "/product";
@@ -18,26 +17,29 @@ class ProductDetailPage extends StatelessWidget {
     final cart = Cart.of(context: context);
     final product = Products.of(context).byId(id!)!;
 
-    final content = SingleChildScrollView(
-      child: Column(
-        children: [
-          SizedBox(
-            height: 300,
-            width: double.infinity,
-            child: Image.network(
-              product.imageUrl,
-              fit: BoxFit.cover,
-            ),
+    final content = //SingleChildScrollView(
+        //child:
+        Column(
+      children: [
+        SizedBox(
+          height: 300,
+          width: double.infinity,
+          child: Image.network(
+            product.imageUrl,
+            fit: BoxFit.cover,
           ),
-          const SizedBox(height: 10),
-          Flex(
+        ),
+        const SizedBox(height: 10),
+        SizedBox(
+          width: double.infinity,
+          child: Flex(
             direction: Axis.horizontal,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 "\$${product.price}",
-                style: const TextStyle(
-                  color: Colors.grey,
+                style: TextStyle(
+                  color: Colors.grey[800],
                   fontSize: 20,
                 ),
               ),
@@ -51,29 +53,42 @@ class ProductDetailPage extends StatelessWidget {
                   Navigator.of(context).pop();
                 },
                 child: SizedBox(
-                  child: Row(children: const [
-                    Icon(Icons.shopping_cart),
-                    Text("Add to cart"),
+                  child: Row(children: [
+                    Icon(
+                      Icons.shopping_cart,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    Text("Add to cart",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                          color: Theme.of(context).primaryColor,
+                        )),
                   ]),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              width: double.infinity,
-              child: Text(
-                product.description,
-                textAlign: TextAlign.center,
-                softWrap: true,
-              )),
-        ],
-      ),
+        ),
+        const SizedBox(height: 20),
+        Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            width: double.infinity,
+            child: Text(
+              product.description,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 16,
+                color: Colors.black,
+              ),
+              softWrap: true,
+            )),
+      ],
+//      ),
     );
 
     return PlatformPage(
-      theme: theme,
       title: 'Product',
       content: SizedBox(
         child: content,

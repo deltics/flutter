@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TabDefinition {
@@ -22,7 +21,7 @@ class PlatformTabbedPage extends StatefulWidget {
   final Widget? drawer;
   final Map<String, Widget Function(BuildContext)>? appRoutes;
 
-  PlatformTabbedPage({
+  const PlatformTabbedPage({
     Key? key,
     required this.tabs,
     required this.title,
@@ -43,14 +42,16 @@ class _PlatformTabbedPageState extends State<PlatformTabbedPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return DefaultTabController(
       length: widget.tabs.length,
       child: Scaffold(
         bottomNavigationBar: Platform.isIOS
             ? BottomNavigationBar(
-                backgroundColor: Theme.of(context).primaryColor,
-                unselectedItemColor: Colors.grey,
-                selectedItemColor: Colors.white,
+                backgroundColor: colorScheme.primary,
+                unselectedItemColor: colorScheme.tertiary,
+                selectedItemColor: colorScheme.onPrimary,
                 currentIndex: _activeTabIndex,
                 items: widget.tabs
                     .map(

@@ -1,19 +1,16 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PlatformApp extends StatelessWidget {
   final String title;
   final String initialRoute;
-  final Color primaryColor;
+  final MaterialColor primaryColor;
   final Color accentColor;
   final Map<String, Widget Function(BuildContext)> routes;
 
   const PlatformApp({
     Key? key,
     this.initialRoute = '/',
-    this.primaryColor = Colors.blue,
+    this.primaryColor = Colors.purple,
     this.accentColor = Colors.orange,
     required this.routes,
     required this.title,
@@ -21,20 +18,13 @@ class PlatformApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return // Platform.isIOS ? CupertinoApp(
-        //     title: title,
-        //     theme: CupertinoThemeData(
-        //       primaryColor: primaryColor,
-        //       primaryContrastingColor: accentColor,
-        //     ),
-        //     initialRoute: initialRoute,
-        //     routes: routes,
-        //   )
-        // :
-        MaterialApp(
+    return MaterialApp(
       title: title,
       theme: ThemeData(
-          colorSchemeSeed: primaryColor,
+          colorScheme: ColorScheme.fromSwatch(
+            primarySwatch: primaryColor,
+            accentColor: accentColor,
+          ),
           fontFamily: 'Raleway',
           textTheme: ThemeData.light().textTheme.copyWith(
                 bodyText1: const TextStyle(
