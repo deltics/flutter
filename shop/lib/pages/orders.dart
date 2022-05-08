@@ -36,7 +36,6 @@ class OrdersPage extends StatelessWidget {
                   totalAmount: order.totalAmount,
                   orderDateTime: order.datetime,
                   items: order.items,
-                  expanded: false,
                 );
               }),
     );

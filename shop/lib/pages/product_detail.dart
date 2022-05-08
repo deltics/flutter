@@ -14,7 +14,7 @@ class ProductDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final id = routeArguments(context)['id'];
 
-    final cart = Cart.of(context: context);
+    final cart = Cart.of(context);
     final product = Products.of(context).byId(id!)!;
 
     final content = //SingleChildScrollView(

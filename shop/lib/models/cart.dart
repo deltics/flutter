@@ -16,8 +16,8 @@ class CartItem {
 }
 
 class Cart with ChangeNotifier {
-  static Cart of({required BuildContext context, bool listen = true}) =>
-      Provider.of<Cart>(context);
+  static Cart of(BuildContext context, {bool listen = true}) =>
+      Provider.of<Cart>(context, listen: listen);
 
   final Map<String, CartItem> _items = {};
   double _totalAmount = 0;
@@ -83,21 +83,17 @@ class Cart with ChangeNotifier {
     if (!_items.containsKey(productId)) {
       return;
     }
+    final item = _items[productId]!;
+    final quantityToRemove = item.quantity;
+    final priceToRemove = item.price * quantityToRemove;
+    _items.remove(productId);
 
-    if (_items[productId]!.quantity > 1) {
-      _items.update(
-        productId,
-        (existing) => CartItem(
-            id: existing.id,
-            productId: productId,
-            quantity: existing.quantity - 1,
-            price: price),
-      );
-    } else {
-      _items.remove(productId);
+    _totalAmount -= priceToRemove;
+    _totalQuantity -= quantityToRemove;
+
+    if (_totalAmount < 0) {
+      _totalAmount = 0;
     }
-    _totalAmount -= price;
-    _totalQuantity--;
     notifyListeners();
   }
 

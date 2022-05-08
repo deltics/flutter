@@ -10,7 +10,7 @@ class ShoppingCart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cart = Cart.of(context: context);
+    final cart = Cart.of(context);
 
     final products = Products.of(context);
     final colorScheme = Theme.of(context).colorScheme;
@@ -80,6 +80,7 @@ class ShoppingCart extends StatelessWidget {
 
         return ShoppingCartItem(
           id: item.id,
+          productId: product.id,
           title: product.title,
           price: product.price,
           quantity: item.quantity,
