@@ -1,8 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:shop/widgets/shopping_cart_item.dart';
+
+import 'dart:math';
 
 import '../models/cart.dart';
 import '../models/products.dart';

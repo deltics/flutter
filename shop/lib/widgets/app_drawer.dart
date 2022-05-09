@@ -17,37 +17,46 @@ class AppDrawerItem {
 class AppDrawer extends StatelessWidget {
   final String title;
   final List<AppDrawerItem> items;
+  final Color itemColor;
 
   const AppDrawer({
     Key? key,
     required this.title,
     required this.items,
+    required this.itemColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const itemStyle = TextStyle(
+    final itemStyle = TextStyle(
+        color: itemColor,
         fontFamily: 'RobotoCondensed',
-        fontSize: 24,
+        fontSize: 18,
         fontWeight: FontWeight.bold);
 
     final drawerItems = [
       Container(
-        height: 120,
+        height: 110,
         width: double.infinity,
         padding: const EdgeInsets.all(20),
-        alignment: Alignment.centerLeft,
+        alignment: Alignment.center,
         color: Theme.of(context).colorScheme.primary,
-        child: Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.w900,
-            fontSize: 30,
-            color: Colors.white,
-          ),
+        child: Column(
+          children: [
+            const SizedBox(height: 40),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontWeight: FontWeight.w900,
+                fontSize: 24,
+                color: Colors.white,
+              ),
+            ),
+          ],
         ),
       ),
-      const SizedBox(height: 20),
+      const SizedBox(height: 10),
     ];
 
     drawerItems.addAll(
@@ -55,10 +64,14 @@ class AppDrawer extends StatelessWidget {
         (item) => Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 10,
-            vertical: 8,
+            vertical: 6,
           ),
           child: PlatformListTile(
-            leading: Icon(item.iconData, size: 26),
+            leading: Icon(
+              item.iconData,
+              size: 26,
+              color: itemColor,
+            ),
             title: Text(item.title, style: itemStyle),
             onTap: () => Navigator.of(context).pushReplacementNamed(item.route),
           ),

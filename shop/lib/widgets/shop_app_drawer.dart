@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../pages/products.dart';
 import 'app_drawer.dart';
 import '../pages/home.dart';
 import '../pages/orders.dart';
@@ -11,15 +12,19 @@ class ShopAppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppDrawer(
       title: "40thieves",
+      itemColor: Colors.blueGrey.shade800,
       items: [
         AppDrawerItem(
-            title: "Product Catalog",
-            iconData: Icons.menu_book,
-            route: HomePage.route),
+            title: "Shop", iconData: Icons.shop, route: HomePage.route),
         AppDrawerItem(
           title: "Orders",
-          iconData: Icons.receipt_long,
+          iconData: Icons.move_to_inbox,
           route: OrdersPage.route,
+        ),
+        AppDrawerItem(
+          title: "Products",
+          iconData: Icons.edit,
+          route: ProductsPage.route,
         ),
       ],
     );

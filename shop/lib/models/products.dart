@@ -39,6 +39,8 @@ class Products with ChangeNotifier {
     ),
   ];
 
+  int get count => _items.length;
+
   List<Product> get items {
     return [..._items];
   }

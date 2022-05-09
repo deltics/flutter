@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../app.dart';
-import '../adapters/platform_page.dart';
 import '../adapters/platform_tabbed_page.dart';
 import '../models/cart.dart';
 import '../models/favorites.dart';
 import '../models/products.dart';
-import '../pages/cart.dart';
 import '../widgets/badge.dart';
 import '../widgets/product_grid.dart';
 import '../widgets/shop_app_drawer.dart';
@@ -27,14 +25,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var _mode = PageMode.all;
-
   @override
   Widget build(BuildContext context) {
     final products = Products.of(context);
-    final favorites = (Platform.isIOS || _mode == PageMode.favorites)
-        ? Favorites.of(context).ids
-        : null;
+    final favorites = Favorites.of(context).ids;
 
     return PlatformTabbedPage(
       tabs: [
@@ -49,7 +43,7 @@ class _HomePageState extends State<HomePage> {
           icon: const Icon(Icons.favorite),
           title: "Favorites",
           content: ProductGrid(
-            products: products.filtered((p) => favorites!.contains(p.id)),
+            products: products.filtered((p) => favorites.contains(p.id)),
           ),
         ),
         TabDefinition(
