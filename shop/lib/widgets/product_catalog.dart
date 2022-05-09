@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop/pages/edit_product.dart';
 
 import '../models/product.dart';
 
@@ -56,7 +57,8 @@ class ProductCatalogItem extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.edit),
               color: colors.primary,
-              onPressed: () {},
+              onPressed: () =>
+                  Navigator.of(context).pushNamed(EditProductPage.route),
             ),
             IconButton(
               icon: const Icon(Icons.delete),

@@ -15,7 +15,21 @@ class _EditProductPageState extends State<EditProductPage> {
   Widget build(BuildContext context) {
     return PlatformPage(
       title: "Edit Product",
-      content: Container(),
+      content: Form(
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextFormField(
+                  decoration: const InputDecoration(labelText: "Title"),
+                  textInputAction: TextInputAction.next,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

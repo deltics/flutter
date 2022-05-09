@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop/widgets/product_catalog.dart';
 
 import 'adapters/platform_app.dart';
 import 'models/cart.dart';
@@ -8,6 +7,7 @@ import 'models/favorites.dart';
 import 'models/orders.dart';
 import 'models/products.dart';
 import 'pages/cart.dart';
+import 'pages/edit_product.dart';
 import 'pages/home.dart';
 import 'pages/orders.dart';
 import 'pages/product_detail.dart';
@@ -16,6 +16,7 @@ import 'pages/products.dart';
 final routes = {
   HomePage.route: (ctx) => const HomePage(),
   CartPage.route: (ctx) => const CartPage(),
+  EditProductPage.route: (ctx) => const EditProductPage(),
   ProductsPage.route: (ctx) => const ProductsPage(),
   ProductDetailPage.route: (ctx) => const ProductDetailPage(),
   OrdersPage.route: (ctx) => const OrdersPage(),
