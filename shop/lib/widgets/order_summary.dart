@@ -51,7 +51,7 @@ class _OrderSummaryState extends State<OrderSummary> {
               height: min((widget.items.length * 20) + 10, 180),
               child: ListView(
                 children: widget.items.map((item) {
-                  final product = products!.byId(item.productId)!;
+                  final product = products?.byId(item.productId)!;
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
@@ -65,7 +65,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                           ),
                         ),
                         Text(
-                          "${item.quantity} x \$${product.price.toStringAsFixed(2)}",
+                          "${item.quantity} x \$${product!.price.toStringAsFixed(2)}",
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.blueGrey,
