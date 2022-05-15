@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/app_drawer.dart';
-
 class PageAction {
   final Widget child;
   final Function onPressed;
