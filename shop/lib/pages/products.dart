@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/pages/edit_product.dart';
 import 'package:shop/widgets/shop_app_drawer.dart';
 
 import '../adapters/platform_page.dart';
@@ -19,7 +20,8 @@ class ProductsPage extends StatelessWidget {
       actions: [
         IconButton(
           icon: const Icon(Icons.add),
-          onPressed: () {},
+          onPressed: () =>
+              Navigator.of(context).pushNamed(EditProductPage.route),
         ),
       ],
       content: Padding(

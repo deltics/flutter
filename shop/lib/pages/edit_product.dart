@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:shop/adapters/platform_page.dart';
 
+import '../adapters/platform_page.dart';
 import '../models/product.dart';
+import '../models/products.dart';
 
 class EditProductPage extends StatefulWidget {
   static const route = "/edit_product";
@@ -18,10 +19,20 @@ class _EditProductPageState extends State<EditProductPage> {
   final _imageUrlFocus = FocusNode();
   final _imageUrlInputController = TextEditingController();
   final _form = GlobalKey<FormState>();
+  final _imageUrlKey = GlobalKey<FormFieldState>();
   var _product = Product.createNew();
+  var _imageUrl = "";
 
   void _updateImage() {
-    setState(() {});
+    _imageUrlKey.currentState?.validate();
+
+    setState(() {
+      if (_urlValidator(_imageUrlInputController.text) == null) {
+        _imageUrl = _imageUrlInputController.text;
+      } else {
+        _imageUrl = "";
+      }
+    });
   }
 
   @override
@@ -43,15 +54,42 @@ class _EditProductPageState extends State<EditProductPage> {
     super.dispose();
   }
 
-  void _saveProduct() {
+  String? _urlValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Please enter a Url";
+    }
+    if (!value.startsWith("http:") && !value.startsWith("https:")) {
+      return "Please enter a valid Url";
+    }
+    if (!value.endsWith(".jpg") &&
+        !value.endsWith(".jpeg") &&
+        !value.endsWith(".png")) {
+      return "Please enter a valid image Url";
+    }
+    return null;
+  }
+
+  void _saveProduct(BuildContext context) {
+    if (!_form.currentState!.validate()) {
+      return;
+    }
     _form.currentState?.save();
-    print(_product);
+
+    Products.of(context).add(_product);
+
+    Navigator.of(context).pop;
   }
 
   @override
   Widget build(BuildContext context) {
     return PlatformPage(
       title: "Edit Product",
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.save),
+          onPressed: () => _saveProduct(context),
+        ),
+      ],
       content: Form(
         key: _form,
         child: Padding(
@@ -62,6 +100,12 @@ class _EditProductPageState extends State<EditProductPage> {
                 TextFormField(
                   decoration: const InputDecoration(labelText: "Title"),
                   textInputAction: TextInputAction.next,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter a Title";
+                    }
+                    return null;
+                  },
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_priceFocus);
                   },
@@ -75,6 +119,19 @@ class _EditProductPageState extends State<EditProductPage> {
                     decimal: true,
                   ),
                   focusNode: _priceFocus,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter a Price";
+                    }
+                    var d = double.tryParse(value);
+                    if (d == null) {
+                      return "Please enter a valid number";
+                    }
+                    if (d <= 0) {
+                      return "Price must be > 0.00";
+                    }
+                    return null;
+                  },
                   onFieldSubmitted: (_) =>
                       FocusScope.of(context).requestFocus(_descriptionFocus),
                   onSaved: (value) => _product =
@@ -85,6 +142,15 @@ class _EditProductPageState extends State<EditProductPage> {
                   keyboardType: TextInputType.multiline,
                   maxLines: 3,
                   focusNode: _descriptionFocus,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter a Description";
+                    }
+                    if (value.length < 10) {
+                      return "Description must be at least 10 characters";
+                    }
+                    return null;
+                  },
                   onFieldSubmitted: (_) =>
                       FocusScope.of(context).requestFocus(_imageUrlFocus),
                   onSaved: (value) =>
@@ -114,22 +180,26 @@ class _EditProductPageState extends State<EditProductPage> {
                             ))
                           : FittedBox(
                               fit: BoxFit.contain,
-                              child: Image.network(
-                                _imageUrlInputController.text,
-                              ),
+                              child: _imageUrl.isEmpty
+                                  ? null
+                                  : Image.network(
+                                      _imageUrl,
+                                    ),
                             ),
                     ),
                     Expanded(
                       child: TextFormField(
+                        key: _imageUrlKey,
                         decoration: const InputDecoration(
                           labelText: "Image URL",
                         ),
                         keyboardType: TextInputType.url,
                         textInputAction: TextInputAction.done,
                         focusNode: _imageUrlFocus,
+                        validator: _urlValidator,
                         controller: _imageUrlInputController,
                         onEditingComplete: _updateImage,
-                        onFieldSubmitted: (_) => _saveProduct(),
+                        onFieldSubmitted: (_) => _saveProduct(context),
                         onSaved: (value) =>
                             _product = _product.withValues(imageUrl: value!),
                       ),
