@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shop/adapters/platform_page.dart';
 
+import '../models/product.dart';
+
 class EditProductPage extends StatefulWidget {
   static const route = "/edit_product";
 
@@ -15,6 +17,8 @@ class _EditProductPageState extends State<EditProductPage> {
   final _descriptionFocus = FocusNode();
   final _imageUrlFocus = FocusNode();
   final _imageUrlInputController = TextEditingController();
+  final _form = GlobalKey<FormState>();
+  var _product = Product.createNew();
 
   void _updateImage() {
     setState(() {});
@@ -39,11 +43,17 @@ class _EditProductPageState extends State<EditProductPage> {
     super.dispose();
   }
 
+  void _saveProduct() {
+    _form.currentState?.save();
+    print(_product);
+  }
+
   @override
   Widget build(BuildContext context) {
     return PlatformPage(
       title: "Edit Product",
       content: Form(
+        key: _form,
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: SingleChildScrollView(
@@ -55,6 +65,8 @@ class _EditProductPageState extends State<EditProductPage> {
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_priceFocus);
                   },
+                  onSaved: (value) =>
+                      _product = _product.withValues(title: value!),
                 ),
                 TextFormField(
                   decoration: const InputDecoration(labelText: "Price"),
@@ -65,6 +77,8 @@ class _EditProductPageState extends State<EditProductPage> {
                   focusNode: _priceFocus,
                   onFieldSubmitted: (_) =>
                       FocusScope.of(context).requestFocus(_descriptionFocus),
+                  onSaved: (value) => _product =
+                      _product.withValues(price: double.parse(value!)),
                 ),
                 TextFormField(
                   decoration: const InputDecoration(labelText: "Description"),
@@ -73,6 +87,8 @@ class _EditProductPageState extends State<EditProductPage> {
                   focusNode: _descriptionFocus,
                   onFieldSubmitted: (_) =>
                       FocusScope.of(context).requestFocus(_imageUrlFocus),
+                  onSaved: (value) =>
+                      _product = _product.withValues(description: value!),
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -113,6 +129,9 @@ class _EditProductPageState extends State<EditProductPage> {
                         focusNode: _imageUrlFocus,
                         controller: _imageUrlInputController,
                         onEditingComplete: _updateImage,
+                        onFieldSubmitted: (_) => _saveProduct(),
+                        onSaved: (value) =>
+                            _product = _product.withValues(imageUrl: value!),
                       ),
                     ),
                   ],

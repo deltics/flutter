@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Product {
   final String id;
   final String title;
@@ -12,4 +14,37 @@ class Product {
     required this.price,
     required this.imageUrl,
   });
+
+  static const notSpecified = "__notspecified__";
+
+  @override
+  String toString() {
+    return "{\nid: $id,\ntitle: $title,\ndescription: $description,\nprice:${price.toStringAsFixed(2)},\nimageUrl: $imageUrl\n}";
+  }
+
+  static Product createNew() {
+    return Product(
+      id: UniqueKey().toString(),
+      title: "",
+      description: "",
+      price: 0.0,
+      imageUrl: "",
+    );
+  }
+
+  Product withValues({
+    String title = notSpecified,
+    String description = notSpecified,
+    double? price,
+    String imageUrl = notSpecified,
+  }) {
+    print(price);
+    return Product(
+      id: id,
+      title: title == notSpecified ? this.title : title,
+      description: description == notSpecified ? this.description : description,
+      price: price ?? this.price,
+      imageUrl: imageUrl == notSpecified ? this.imageUrl : imageUrl,
+    );
+  }
 }
