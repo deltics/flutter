@@ -48,7 +48,6 @@ class Product {
     double? price,
     String imageUrl = notSpecified,
   }) {
-    print(price);
     return Product(
       id: id,
       title: title == notSpecified ? this.title : title,

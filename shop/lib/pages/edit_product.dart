@@ -80,17 +80,18 @@ class _EditProductPageState extends State<EditProductPage> {
     _form.currentState?.save();
 
     if (_productId == newProductId) {
-      Products.of(context).add(_product);
+      Products.of(context, listen: false).add(_product);
     } else {
-      Products.of(context).update(id: _productId, using: _product);
+      Products.of(context, listen: false)
+          .update(id: _productId, using: _product);
     }
 
-    Navigator.of(context).pop;
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    _productId = routeArguments(context)["id"] ?? newProductId;
+    _productId = routeArguments(context)?["id"] ?? newProductId;
 
     if (_productId != newProductId) {
       _product = Products.of(context, listen: false).byId(_productId)!.clone();
@@ -120,6 +121,15 @@ class _EditProductPageState extends State<EditProductPage> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Please enter a Title";
+                    }
+                    final existing = Products.of(context, listen: false)
+                        .items
+                        .firstWhere(
+                            (item) =>
+                                item.title.toLowerCase() == value.toLowerCase(),
+                            orElse: () => _product);
+                    if (existing != _product) {
+                      return "Please enter a unique Title";
                     }
                     return null;
                   },

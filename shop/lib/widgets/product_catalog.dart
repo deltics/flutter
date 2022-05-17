@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shop/pages/edit_product.dart';
 
 import '../models/product.dart';
+import '../models/products.dart';
 
 class ProductCatalog extends StatelessWidget {
   final List<Product> items;
@@ -70,7 +71,8 @@ class ProductCatalogItem extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.delete),
               color: colors.error,
-              onPressed: () {},
+              onPressed: () =>
+                  Products.of(context, listen: false).deleteById(id),
             ),
           ],
         ),

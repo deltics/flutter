@@ -76,6 +76,11 @@ class Products with ChangeNotifier {
     return _items.where((p) => p.id == id).single;
   }
 
+  void deleteById(String id) {
+    _items.removeWhere((item) => item.id == id);
+    notifyListeners();
+  }
+
   static Products of(
     BuildContext context, {
     bool listen = true,

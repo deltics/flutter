@@ -12,7 +12,7 @@ class ProductDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final id = routeArguments(context)['id'];
+    final id = routeArguments(context)!['id'];
 
     final cart = Cart.of(context);
     final product = Products.of(context).byId(id!)!;
