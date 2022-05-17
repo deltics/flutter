@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop/utils.dart';
 
 import '../adapters/platform_page.dart';
 import '../models/product.dart';
@@ -14,6 +15,8 @@ class EditProductPage extends StatefulWidget {
 }
 
 class _EditProductPageState extends State<EditProductPage> {
+  static const newProductId = "";
+
   final _priceFocus = FocusNode();
   final _descriptionFocus = FocusNode();
   final _imageUrlFocus = FocusNode();
@@ -22,6 +25,7 @@ class _EditProductPageState extends State<EditProductPage> {
   final _imageUrlKey = GlobalKey<FormFieldState>();
   var _product = Product.createNew();
   var _imageUrl = "";
+  var _productId = newProductId;
 
   void _updateImage() {
     _imageUrlKey.currentState?.validate();
@@ -75,13 +79,25 @@ class _EditProductPageState extends State<EditProductPage> {
     }
     _form.currentState?.save();
 
-    Products.of(context).add(_product);
+    if (_productId == newProductId) {
+      Products.of(context).add(_product);
+    } else {
+      Products.of(context).update(id: _productId, using: _product);
+    }
 
     Navigator.of(context).pop;
   }
 
   @override
   Widget build(BuildContext context) {
+    _productId = routeArguments(context)["id"] ?? newProductId;
+
+    if (_productId != newProductId) {
+      _product = Products.of(context, listen: false).byId(_productId)!.clone();
+      _imageUrl = _product.imageUrl;
+      _imageUrlInputController.text = _imageUrl;
+    }
+
     return PlatformPage(
       title: "Edit Product",
       actions: [
@@ -98,6 +114,7 @@ class _EditProductPageState extends State<EditProductPage> {
             child: Column(
               children: [
                 TextFormField(
+                  initialValue: _product.title,
                   decoration: const InputDecoration(labelText: "Title"),
                   textInputAction: TextInputAction.next,
                   validator: (value) {
@@ -113,6 +130,7 @@ class _EditProductPageState extends State<EditProductPage> {
                       _product = _product.withValues(title: value!),
                 ),
                 TextFormField(
+                  initialValue: _product.price.toStringAsFixed(2),
                   decoration: const InputDecoration(labelText: "Price"),
                   textInputAction: TextInputAction.next,
                   keyboardType: const TextInputType.numberWithOptions(
@@ -138,6 +156,7 @@ class _EditProductPageState extends State<EditProductPage> {
                       _product.withValues(price: double.parse(value!)),
                 ),
                 TextFormField(
+                  initialValue: _product.description,
                   decoration: const InputDecoration(labelText: "Description"),
                   keyboardType: TextInputType.multiline,
                   maxLines: 3,

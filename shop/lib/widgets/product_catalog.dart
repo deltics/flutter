@@ -20,6 +20,7 @@ class ProductCatalog extends StatelessWidget {
         return Column(
           children: [
             ProductCatalogItem(
+              id: item.id,
               title: item.title,
               imageUrl: item.imageUrl,
             ),
@@ -32,11 +33,13 @@ class ProductCatalog extends StatelessWidget {
 }
 
 class ProductCatalogItem extends StatelessWidget {
+  final String id;
   final String title;
   final String imageUrl;
 
   const ProductCatalogItem({
     Key? key,
+    required this.id,
     required this.title,
     required this.imageUrl,
   }) : super(key: key);
@@ -57,8 +60,12 @@ class ProductCatalogItem extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.edit),
               color: colors.primary,
-              onPressed: () =>
-                  Navigator.of(context).pushNamed(EditProductPage.route),
+              onPressed: () => Navigator.of(context).pushNamed(
+                EditProductPage.route,
+                arguments: {
+                  "id": id,
+                },
+              ),
             ),
             IconButton(
               icon: const Icon(Icons.delete),

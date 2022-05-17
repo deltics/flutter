@@ -32,6 +32,16 @@ class Product {
     );
   }
 
+  Product clone() {
+    return Product(
+      id: id,
+      title: title,
+      description: description,
+      price: price,
+      imageUrl: imageUrl,
+    );
+  }
+
   Product withValues({
     String title = notSpecified,
     String description = notSpecified,

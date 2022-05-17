@@ -50,6 +50,24 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
+  void update({
+    required String id,
+    required Product using,
+  }) {
+    var itemIndex = _items.indexWhere((item) => item.id == id);
+
+    final item = _items[itemIndex].withValues(
+      title: using.title,
+      description: using.description,
+      price: using.price,
+      imageUrl: using.imageUrl,
+    );
+
+    _items[itemIndex] = item;
+
+    notifyListeners();
+  }
+
   List<Product> filtered(bool Function(Product) condition) {
     return _items.where(condition).toList();
   }
@@ -58,7 +76,13 @@ class Products with ChangeNotifier {
     return _items.where((p) => p.id == id).single;
   }
 
-  static Products of(BuildContext context) {
-    return Provider.of<Products>(context);
+  static Products of(
+    BuildContext context, {
+    bool listen = true,
+  }) {
+    return Provider.of<Products>(
+      context,
+      listen: listen,
+    );
   }
 }
