@@ -23,7 +23,7 @@ class _EditProductPageState extends State<EditProductPage> {
   final _imageUrlInputController = TextEditingController();
   final _form = GlobalKey<FormState>();
   final _imageUrlKey = GlobalKey<FormFieldState>();
-  var _product = Product.createNew();
+  var _product = Product.create();
   var _imageUrl = "";
   var _productId = newProductId;
   var _isNetBusy = false;
@@ -102,7 +102,7 @@ class _EditProductPageState extends State<EditProductPage> {
           actions: [
             TextButton(
               child: const Text("Okay"),
-              onPressed: () => Navigator.of(context).pop,
+              onPressed: () => Navigator.of(context).pop(),
             ),
           ],
         ),

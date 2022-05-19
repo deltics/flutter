@@ -69,10 +69,18 @@ class Products with ChangeNotifier {
   }
 
   Future<void> add(Product p) async {
-    final response = await http.post(_uri, body: jsonEncode(p));
-    if (response.statusCode == HttpStatus.ok) {
-      _items.add(p);
-      notifyListeners();
+    try {
+      final uri = Uri.https(_baseUrl, "products/${p.id}.json");
+      final response = await http.put(uri, body: jsonEncode(p));
+
+      if (response.statusCode == HttpStatus.created) {
+        _items.add(p);
+        notifyListeners();
+      }
+      throw "Unexpected ${response.statusCode} response: ${response.body}";
+    } catch (error) {
+      print(error);
+      rethrow;
     }
   }
 
@@ -89,17 +97,17 @@ class Products with ChangeNotifier {
       imageUrl: using.imageUrl,
     );
 
-    final itemUri = Uri.https(_baseUrl, "products/${item.id}");
-
     try {
-      final response = await http.put(itemUri, body: jsonEncode(item));
+      final response = await http.patch(_uri, body: {
+        item.id: jsonEncode(item),
+      });
+
       if (response.statusCode == HttpStatus.ok) {
         _items[itemIndex] = item;
         notifyListeners();
+        return;
       }
-      if (response.statusCode == HttpStatus.notFound) {
-        throw "Item does not exist!";
-      }
+      throw "Unexpected ${response.statusCode} response: ${response.body}";
     } catch (error) {
       print(error);
       rethrow;

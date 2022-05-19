@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class Product {
   final String id;
@@ -37,15 +38,12 @@ class Product {
         description = json["description"],
         imageUrl = json["imageUrl"];
 
-  static Product createNew() {
-    return Product(
-      id: UniqueKey().toString(),
-      title: "",
-      description: "",
-      price: 0.0,
-      imageUrl: "",
-    );
-  }
+  Product.create()
+      : id = const Uuid().v4(),
+        title = "",
+        description = "",
+        price = 0.0,
+        imageUrl = "";
 
   Product clone() {
     return Product(
