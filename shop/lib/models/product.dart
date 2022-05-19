@@ -22,6 +22,21 @@ class Product {
     return "{\nid: $id,\ntitle: $title,\ndescription: $description,\nprice:${price.toStringAsFixed(2)},\nimageUrl: $imageUrl\n}";
   }
 
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "title": title,
+        "price": price.toStringAsFixed(2),
+        "description": description,
+        "imageUrl": imageUrl,
+      };
+
+  Product.fromJson(Map<String, dynamic> json)
+      : id = json["id"],
+        title = json["title"],
+        price = double.parse(json["price"]),
+        description = json["description"],
+        imageUrl = json["imageUrl"];
+
   static Product createNew() {
     return Product(
       id: UniqueKey().toString(),

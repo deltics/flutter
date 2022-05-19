@@ -1,9 +1,17 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 import 'product.dart';
 
 class Products with ChangeNotifier {
+  static const _baseUrl =
+      "udemy-shop-fb-default-rtdb.asia-southeast1.firebasedatabase.app";
+  final _uri = Uri.https(_baseUrl, "products.json");
+
   final _items = [
     const Product(
       id: 'p1',
@@ -45,15 +53,33 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
-  void add(Product p) {
-    _items.add(p);
-    notifyListeners();
+  Future<void> fetchAll() async {
+    _items.clear();
+
+    try {
+      final response = await http.get(_uri);
+      print(response.body.toString);
+      final products =
+          jsonDecode(response.body) as Map<String, Map<String, String>>;
+
+      notifyListeners();
+    } catch (e) {
+      print(e.toString);
+    }
   }
 
-  void update({
+  Future<void> add(Product p) async {
+    final response = await http.post(_uri, body: jsonEncode(p));
+    if (response.statusCode == HttpStatus.ok) {
+      _items.add(p);
+      notifyListeners();
+    }
+  }
+
+  Future<void> update({
     required String id,
     required Product using,
-  }) {
+  }) async {
     var itemIndex = _items.indexWhere((item) => item.id == id);
 
     final item = _items[itemIndex].withValues(
@@ -63,9 +89,21 @@ class Products with ChangeNotifier {
       imageUrl: using.imageUrl,
     );
 
-    _items[itemIndex] = item;
+    final itemUri = Uri.https(_baseUrl, "products/${item.id}");
 
-    notifyListeners();
+    try {
+      final response = await http.put(itemUri, body: jsonEncode(item));
+      if (response.statusCode == HttpStatus.ok) {
+        _items[itemIndex] = item;
+        notifyListeners();
+      }
+      if (response.statusCode == HttpStatus.notFound) {
+        throw "Item does not exist!";
+      }
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
   }
 
   List<Product> filtered(bool Function(Product) condition) {
