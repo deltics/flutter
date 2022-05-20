@@ -48,6 +48,7 @@ class ProductDetailPage extends StatelessWidget {
                 onTap: () {
                   cart.add(
                     productId: product.id,
+                    title: product.title,
                     price: product.price,
                   );
                   Navigator.of(context).pop();

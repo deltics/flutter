@@ -26,7 +26,7 @@ class Product {
   Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
-        "price": price.toStringAsFixed(2),
+        "price": price,
         "description": description,
         "imageUrl": imageUrl,
       };
@@ -34,7 +34,7 @@ class Product {
   Product.fromJson(Map<String, dynamic> json)
       : id = json["id"],
         title = json["title"],
-        price = double.parse(json["price"]),
+        price = json["price"],
         description = json["description"],
         imageUrl = json["imageUrl"];
 

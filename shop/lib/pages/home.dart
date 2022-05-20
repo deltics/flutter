@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/adapters/platform_page.dart';
 
 import '../app.dart';
 import '../adapters/platform_tabbed_page.dart';
@@ -23,6 +24,29 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var _isLoading = true;
+
+  Future<void> _refresh(BuildContext context) async {
+    await Products.of(context, listen: false).fetchAll();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // This "Future.delayed" pattern has the effect of deferring execution
+    //  of the "then" function until after state initialisation has completed
+    //  and "context" is then valid.
+    //
+    // Without "Future.delayed", the context would be invalid at this point
+    //  and the app would crash and burn.
+
+    Future.delayed(Duration.zero)
+        .then((_) => _refresh(context)
+            .then((_) => Favorites.of(context, listen: false).fetch()))
+        .whenComplete(() => setState(() => _isLoading = false));
+  }
+
   @override
   Widget build(BuildContext context) {
     final products = Products.of(context);
@@ -33,9 +57,14 @@ class _HomePageState extends State<HomePage> {
         TabDefinition(
           icon: const Icon(Icons.menu_book),
           title: "Catalog",
-          content: ProductGrid(
-            products: products.items,
-          ),
+          content: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : RefreshIndicator(
+                  onRefresh: () => _refresh(context),
+                  child: ProductGrid(
+                    products: products.items,
+                  ),
+                ),
         ),
         TabDefinition(
           icon: const Icon(Icons.favorite),

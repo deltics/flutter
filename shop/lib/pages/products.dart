@@ -18,14 +18,6 @@ class ProductsPage extends StatefulWidget {
 
 class _ProductsPageState extends State<ProductsPage> {
   @override
-  void initState() {
-    super.initState();
-    print("Fetching products...");
-    Future.delayed(Duration.zero)
-        .then((_) => Products.of(context, listen: false).fetchAll());
-  }
-
-  @override
   Widget build(BuildContext context) {
     return PlatformPage(
       title: "Products",

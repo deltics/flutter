@@ -1,18 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class CartItem {
   final String id;
+  final String product;
   final String productId;
   final double price;
   final int quantity;
 
   CartItem({
     required this.id,
+    required this.product,
     required this.productId,
     required this.quantity,
     required this.price,
   });
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "product": product,
+        "productId": productId,
+        "quantity": quantity,
+        "price": price,
+      };
 }
 
 class Cart with ChangeNotifier {
@@ -37,6 +48,7 @@ class Cart with ChangeNotifier {
 
   void add({
     required String productId,
+    required String title,
     required double price,
   }) {
     if (_items.containsKey(productId)) {
@@ -45,6 +57,7 @@ class Cart with ChangeNotifier {
         (existing) => CartItem(
           id: existing.id,
           productId: productId,
+          product: title,
           quantity: existing.quantity + 1,
           price: price,
         ),
@@ -53,8 +66,9 @@ class Cart with ChangeNotifier {
       _items.putIfAbsent(
         productId,
         () => CartItem(
-          id: UniqueKey().toString(),
+          id: const Uuid().v4(),
           productId: productId,
+          product: title,
           quantity: 1,
           price: price,
         ),

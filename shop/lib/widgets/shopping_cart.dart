@@ -41,9 +41,9 @@ class ShoppingCart extends StatelessWidget {
                         backgroundColor: Colors.white,
                       ),
                       child: const Text("CHECK-OUT"),
-                      onPressed: () {
+                      onPressed: () async {
                         final orders = Orders.of(context, listen: false);
-                        final id = orders.create(cart: cart);
+                        final id = await orders.create(cart: cart);
 
                         cart.clear();
 
@@ -60,6 +60,7 @@ class ShoppingCart extends StatelessWidget {
                                 for (var item in items) {
                                   cart.add(
                                     productId: item.productId,
+                                    title: item.product,
                                     price: item.price,
                                   );
                                 }

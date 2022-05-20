@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:shop/pages/edit_product.dart';
 
 import '../models/product.dart';
 import '../models/products.dart';
+import '../pages/edit_product.dart';
 
 class ProductCatalog extends StatelessWidget {
   final List<Product> items;
@@ -33,7 +33,7 @@ class ProductCatalog extends StatelessWidget {
   }
 }
 
-class ProductCatalogItem extends StatelessWidget {
+class ProductCatalogItem extends StatefulWidget {
   final String id;
   final String title;
   final String imageUrl;
@@ -46,13 +46,20 @@ class ProductCatalogItem extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<ProductCatalogItem> createState() => _ProductCatalogItemState();
+}
+
+class _ProductCatalogItemState extends State<ProductCatalogItem> {
+  var _isDeleting = false;
+
+  @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
     return ListTile(
-      title: Text(title),
+      title: Text(widget.title),
       leading: CircleAvatar(
-        backgroundImage: NetworkImage(imageUrl),
+        backgroundImage: NetworkImage(widget.imageUrl),
       ),
       trailing: SizedBox(
         width: 100,
@@ -64,16 +71,22 @@ class ProductCatalogItem extends StatelessWidget {
               onPressed: () => Navigator.of(context).pushNamed(
                 EditProductPage.route,
                 arguments: {
-                  "id": id,
+                  "id": widget.id,
                 },
               ),
             ),
-            IconButton(
-              icon: const Icon(Icons.delete),
-              color: colors.error,
-              onPressed: () =>
-                  Products.of(context, listen: false).deleteById(id),
-            ),
+            _isDeleting
+                ? const CircularProgressIndicator()
+                : IconButton(
+                    icon: const Icon(Icons.delete),
+                    color: colors.error,
+                    onPressed: () {
+                      setState(() => _isDeleting = true);
+                      Products.of(context, listen: false)
+                          .deleteById(widget.id)
+                          .then((_) => setState(() => _isDeleting = false));
+                    },
+                  ),
           ],
         ),
       ),

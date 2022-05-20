@@ -1,29 +1,68 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+
+import '../firebase.dart';
+
+enum _FavoriteAction { add, remove, doNothing }
 
 class Favorites with ChangeNotifier {
+  final _uri = firebaseUri("favorites.json");
   final List<String> _ids = [];
-
-  bool isFavorite(String id) {
-    return _ids.contains(id);
-  }
 
   List<String> get ids {
     return [..._ids];
   }
 
-  void setFavorite({
+  Future<void> fetch() async {
+    _ids.clear();
+
+    try {
+      final response = await http.get(_uri);
+
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+
+      data.forEach((id, _) => _ids.add(id));
+
+      notifyListeners();
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      rethrow;
+    }
+  }
+
+  bool isFavorite(String id) {
+    return _ids.contains(id);
+  }
+
+  Future<void> setFavorite({
     required String id,
     required bool isFavorite,
-  }) {
+  }) async {
+    var action = _FavoriteAction.doNothing;
+
     if (isFavorite) {
       if (!_ids.contains(id)) {
-        _ids.add(id);
+        action = _FavoriteAction.add;
       }
     } else if (_ids.contains(id)) {
-      _ids.remove(id);
+      action = _FavoriteAction.remove;
     }
-    notifyListeners();
+
+    final response = (action == _FavoriteAction.add)
+        ? await http.put(_uri, body: "{\"$id\": true}")
+        : await http.delete(_uri);
+
+    if (response.statusCode == HttpStatus.ok) {
+      (action == _FavoriteAction.add) ? _ids.add(id) : _ids.remove(id);
+      notifyListeners();
+    }
   }
 
   static Favorites of(BuildContext context, {bool listen = true}) {

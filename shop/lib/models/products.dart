@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
+import '../firebase.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
-  static const _baseUrl =
-      "udemy-shop-fb-default-rtdb.asia-southeast1.firebasedatabase.app";
-  final _uri = Uri.https(_baseUrl, "products.json");
+  final _uri = firebaseUri("products.json");
 
   final _items = [
     const Product(
@@ -58,28 +58,40 @@ class Products with ChangeNotifier {
 
     try {
       final response = await http.get(_uri);
-      print(response.body.toString);
-      final products =
-          jsonDecode(response.body) as Map<String, Map<String, String>>;
+
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+
+      data.forEach((id, item) => _items.add(Product(
+            id: id,
+            title: item["title"],
+            description: item["description"],
+            price: item["price"],
+            imageUrl: item["imageUrl"],
+          )));
 
       notifyListeners();
-    } catch (e) {
-      print(e.toString);
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      rethrow;
     }
   }
 
   Future<void> add(Product p) async {
     try {
-      final uri = Uri.https(_baseUrl, "products/${p.id}.json");
+      final uri = firebaseUri("products/${p.id}.json");
       final response = await http.put(uri, body: jsonEncode(p));
-
-      if (response.statusCode == HttpStatus.created) {
-        _items.add(p);
-        notifyListeners();
+      if (response.statusCode != HttpStatus.ok) {
+        throw "Unexpected ${response.statusCode} response: ${response.body}";
       }
-      throw "Unexpected ${response.statusCode} response: ${response.body}";
+
+      _items.add(p);
+      notifyListeners();
     } catch (error) {
-      print(error);
+      if (kDebugMode) {
+        print(error);
+      }
       rethrow;
     }
   }
@@ -98,18 +110,18 @@ class Products with ChangeNotifier {
     );
 
     try {
-      final response = await http.patch(_uri, body: {
-        item.id: jsonEncode(item),
-      });
-
-      if (response.statusCode == HttpStatus.ok) {
-        _items[itemIndex] = item;
-        notifyListeners();
-        return;
+      final uri = firebaseUri("products/${item.id}.json");
+      final response = await http.put(uri, body: jsonEncode(item));
+      if (response.statusCode != HttpStatus.ok) {
+        throw "Unexpected ${response.statusCode} response: ${response.body}";
       }
-      throw "Unexpected ${response.statusCode} response: ${response.body}";
+
+      _items[itemIndex] = item;
+      notifyListeners();
     } catch (error) {
-      print(error);
+      if (kDebugMode) {
+        print(error);
+      }
       rethrow;
     }
   }
@@ -122,9 +134,23 @@ class Products with ChangeNotifier {
     return _items.where((p) => p.id == id).single;
   }
 
-  void deleteById(String id) {
-    _items.removeWhere((item) => item.id == id);
-    notifyListeners();
+  Future<void> deleteById(String id) async {
+    try {
+      final uri = firebaseUri("products/$id.json");
+      final response = await http.delete(uri);
+
+      if (response.statusCode != HttpStatus.ok) {
+        throw "Unexpected ${response.statusCode} response: ${response.body}";
+      }
+
+      _items.removeWhere((item) => item.id == id);
+      notifyListeners();
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      rethrow;
+    }
   }
 
   static Products of(

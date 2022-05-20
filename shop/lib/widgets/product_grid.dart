@@ -46,7 +46,7 @@ class ProductGrid extends StatelessWidget {
   }
 }
 
-class ProductGridItem extends StatelessWidget {
+class ProductGridItem extends StatefulWidget {
   final String id;
   final String title;
   final double price;
@@ -61,6 +61,13 @@ class ProductGridItem extends StatelessWidget {
     required this.isFavorite,
     required this.price,
   }) : super(key: key);
+
+  @override
+  State<ProductGridItem> createState() => _ProductGridItemState();
+}
+
+class _ProductGridItemState extends State<ProductGridItem> {
+  var _isFavoriteChanging = false;
 
   @override
   Widget build(BuildContext context) {
@@ -88,20 +95,32 @@ class ProductGridItem extends StatelessWidget {
         child: GestureDetector(
           child: GridTile(
             child: Image.network(
-              imageUrl,
+              widget.imageUrl,
               fit: BoxFit.cover,
             ),
             footer: GridTileBar(
               backgroundColor: Colors.black54,
-              title: Text(title),
-              leading: GestureDetector(
-                child: Icon(
-                  isFavorite ? Icons.favorite : Icons.favorite_outline,
-                  color: colorScheme.secondary,
-                ),
-                onTap: () => Favorites.of(context, listen: false)
-                    .setFavorite(id: id, isFavorite: !isFavorite),
-              ),
+              title: Text(widget.title),
+              leading: _isFavoriteChanging
+                  ? const SizedBox.square(
+                      dimension: 26, child: CircularProgressIndicator())
+                  : GestureDetector(
+                      child: Icon(
+                        widget.isFavorite
+                            ? Icons.favorite
+                            : Icons.favorite_outline,
+                        color: colorScheme.secondary,
+                        size: 26,
+                      ),
+                      onTap: () {
+                        setState(() => _isFavoriteChanging = true);
+                        Favorites.of(context, listen: false)
+                            .setFavorite(
+                                id: widget.id, isFavorite: !widget.isFavorite)
+                            .then((_) =>
+                                setState(() => _isFavoriteChanging = false));
+                      },
+                    ),
               trailing: Consumer<Cart>(
                 builder: (context, cart, __) => GestureDetector(
                     child: Icon(
@@ -109,14 +128,18 @@ class ProductGridItem extends StatelessWidget {
                       color: colorScheme.secondary,
                     ),
                     onTap: () {
-                      cart.add(productId: id, price: price);
+                      cart.add(
+                        productId: widget.id,
+                        title: widget.title,
+                        price: widget.price,
+                      );
 
                       ScaffoldMessenger.of(context)
                           .showSnackBar(AddedToCartSnackBar.build(
                               context: context,
                               action: () => cart.remove(
-                                    productId: id,
-                                    price: price,
+                                    productId: widget.id,
+                                    price: widget.price,
                                   )));
                     }),
               ),
@@ -124,7 +147,7 @@ class ProductGridItem extends StatelessWidget {
           ),
           onTap: () => Navigator.of(context, rootNavigator: true).pushNamed(
             ProductDetailPage.route,
-            arguments: {'id': id},
+            arguments: {'id': widget.id},
           ),
         ),
       ),
