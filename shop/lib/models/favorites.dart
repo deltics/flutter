@@ -11,7 +11,6 @@ import '../firebase.dart';
 enum _FavoriteAction { add, remove, doNothing }
 
 class Favorites with ChangeNotifier {
-  final _uri = firebaseUri("favorites.json");
   final List<String> _ids = [];
 
   List<String> get ids {
@@ -22,7 +21,7 @@ class Favorites with ChangeNotifier {
     _ids.clear();
 
     try {
-      final response = await http.get(_uri);
+      final response = await http.get(firebaseUri("favorites.json"));
 
       final data = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -54,10 +53,10 @@ class Favorites with ChangeNotifier {
     } else if (_ids.contains(id)) {
       action = _FavoriteAction.remove;
     }
-
+    final uri = firebaseUri("favorites/$id.json");
     final response = (action == _FavoriteAction.add)
-        ? await http.put(_uri, body: "{\"$id\": true}")
-        : await http.delete(_uri);
+        ? await http.put(uri, body: "true")
+        : await http.delete(uri);
 
     if (response.statusCode == HttpStatus.ok) {
       (action == _FavoriteAction.add) ? _ids.add(id) : _ids.remove(id);
