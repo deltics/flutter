@@ -24,10 +24,18 @@ class Order {
     required this.datetime,
   });
 
+  Order.fromJson(Map<String, dynamic> json)
+      : id = json["id"],
+        totalAmount = json["totalAmount"],
+        datetime = DateTime.parse(json["datetime"]),
+        items = (json["items"] as List<dynamic>)
+            .map((item) => CartItem.fromJson(item))
+            .toList();
+
   Map<String, dynamic> toJson() => {
         "id": id,
         "totalAmount": totalAmount,
-        "datetime": DateFormat('dd MMM yyyy, hh:mm').format(datetime),
+        "datetime": DateFormat('yyyy-MM-dd hh:mm:ss').format(datetime),
         "items": items.map((item) => item.toJson()).toList(),
       };
 }
@@ -68,6 +76,33 @@ class Orders with ChangeNotifier {
       notifyListeners();
 
       return id;
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> fetchAll() async {
+    try {
+      var uri = firebaseUri("orders.json");
+      var response = await http.get(uri);
+      if (response.statusCode != HttpStatus.ok) {
+        throw "Unexpected ${response.statusCode} response: ${response.body}";
+      }
+
+      final data = jsonDecode(response.body) as Map<String, dynamic>?;
+      if (data == null) {
+        return;
+      }
+
+      _orders.clear;
+      data.forEach((id, item) => _orders.add(Order.fromJson(item)));
+
+      _orders.sort((a, b) => b.datetime.compareTo(a.datetime));
+
+      notifyListeners();
     } catch (error) {
       if (kDebugMode) {
         print(error);

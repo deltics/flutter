@@ -54,20 +54,19 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAll() async {
-    _items.clear();
-
     try {
       final response = await http.get(_uri);
 
-      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      final data = jsonDecode(response.body) as Map<String, dynamic>?;
+      if (data == null) {
+        return;
+      }
 
-      data.forEach((id, item) => _items.add(Product(
-            id: id,
-            title: item["title"],
-            description: item["description"],
-            price: item["price"],
-            imageUrl: item["imageUrl"],
-          )));
+      _items.clear();
+      data.forEach((id, item) => _items.add(Product.fromJson(item)));
+
+      _items.sort(
+          (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
 
       notifyListeners();
     } catch (error) {
