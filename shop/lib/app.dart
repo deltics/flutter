@@ -6,6 +6,7 @@ import 'models/cart.dart';
 import 'models/favorites.dart';
 import 'models/orders.dart';
 import 'models/products.dart';
+import 'pages/auth.dart';
 import 'pages/cart.dart';
 import 'pages/edit_product.dart';
 import 'pages/home.dart';
@@ -20,6 +21,7 @@ final routes = {
   ProductsPage.route: (ctx) => const ProductsPage(),
   ProductDetailPage.route: (ctx) => const ProductDetailPage(),
   OrdersPage.route: (ctx) => const OrdersPage(),
+  AuthPage.route: (ctx) => const AuthPage(),
 };
 
 class ShopApp extends StatelessWidget {
@@ -39,7 +41,7 @@ class ShopApp extends StatelessWidget {
         title: 'Shop',
         primaryColor: Colors.purple,
         accentColor: Colors.orange,
-        initialRoute: HomePage.route,
+        initialRoute: AuthPage.route,
         routes: routes,
       ),
     );
