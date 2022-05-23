@@ -83,7 +83,7 @@ class _ProductCatalogItemState extends State<ProductCatalogItem> {
                     onPressed: () {
                       setState(() => _isDeleting = true);
                       Products.of(context, listen: false)
-                          .deleteById(widget.id)
+                          .deleteById(context, widget.id)
                           .then((_) => setState(() => _isDeleting = false));
                     },
                   ),

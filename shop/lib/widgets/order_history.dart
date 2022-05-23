@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/auth.dart';
 import '../models/orders.dart';
 import 'order_summary.dart';
 
@@ -18,11 +19,19 @@ class _OrderHistoryState extends State<OrderHistory> {
   initState() {
     super.initState();
 
-    _fetchOrders = Orders.of(context, listen: false).fetchAll();
+    _fetchOrders = Orders.of(context, listen: false).fetchAll(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    final auth = Auth.of(context);
+
+    if (!auth.isSignedIn) {
+      // Return a dummy container unless/until we
+      //  have successfully signed in
+      return Container();
+    }
+
     return FutureBuilder(
       future: _fetchOrders,
       builder: (_, future) {

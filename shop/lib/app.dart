@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'adapters/platform_app.dart';
+import 'models/auth.dart';
 import 'models/cart.dart';
 import 'models/favorites.dart';
 import 'models/orders.dart';
@@ -36,6 +37,7 @@ class ShopApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => Favorites()),
         ChangeNotifierProvider(create: (_) => Cart()),
         ChangeNotifierProvider(create: (_) => Orders()),
+        ChangeNotifierProvider(create: (_) => Auth()),
       ],
       child: PlatformApp(
         title: 'Shop',

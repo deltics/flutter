@@ -7,11 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 import '../firebase.dart';
+import 'auth.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
-  final _uri = firebaseUri("products.json");
-
   final _items = [
     const Product(
       id: 'p1',
@@ -53,13 +52,17 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
-  Future<void> fetchAll() async {
+  Future<void> fetchAll(BuildContext context) async {
     try {
-      final response = await http.get(_uri);
+      final uri = firebaseUri(context, "products.json");
+      final response = await http.get(uri);
 
       final data = jsonDecode(response.body) as Map<String, dynamic>?;
       if (data == null) {
         return;
+      }
+      if (response.statusCode != HttpStatus.ok) {
+        throw data["error"] as String;
       }
 
       _items.clear();
@@ -77,9 +80,9 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> add(Product p) async {
+  Future<void> add(BuildContext context, Product p) async {
     try {
-      final uri = firebaseUri("products/${p.id}.json");
+      final uri = firebaseUri(context, "products/${p.id}.json");
       final response = await http.put(uri, body: jsonEncode(p));
       if (response.statusCode != HttpStatus.ok) {
         throw "Unexpected ${response.statusCode} response: ${response.body}";
@@ -95,7 +98,8 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> update({
+  Future<void> update(
+    BuildContext context, {
     required String id,
     required Product using,
   }) async {
@@ -109,7 +113,7 @@ class Products with ChangeNotifier {
     );
 
     try {
-      final uri = firebaseUri("products/${item.id}.json");
+      final uri = firebaseUri(context, "products/${item.id}.json");
       final response = await http.put(uri, body: jsonEncode(item));
       if (response.statusCode != HttpStatus.ok) {
         throw "Unexpected ${response.statusCode} response: ${response.body}";
@@ -133,9 +137,12 @@ class Products with ChangeNotifier {
     return _items.where((p) => p.id == id).single;
   }
 
-  Future<void> deleteById(String id) async {
+  Future<void> deleteById(
+    BuildContext context,
+    String id,
+  ) async {
     try {
-      final uri = firebaseUri("products/$id.json");
+      final uri = firebaseUri(context, "products/$id.json");
       final response = await http.delete(uri);
 
       if (response.statusCode != HttpStatus.ok) {

@@ -85,9 +85,9 @@ class _EditProductPageState extends State<EditProductPage> {
     final products = Products.of(context, listen: false);
     try {
       if (_productId == newProductId) {
-        await products.add(_product);
+        await products.add(context, _product);
       } else {
-        await products.update(id: _productId, using: _product);
+        await products.update(context, id: _productId, using: _product);
       }
       setState(() => _isNetBusy = false);
       Navigator.of(context).pop();

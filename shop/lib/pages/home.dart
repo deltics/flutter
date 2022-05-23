@@ -4,6 +4,7 @@ import 'package:shop/adapters/platform_page.dart';
 
 import '../app.dart';
 import '../adapters/platform_tabbed_page.dart';
+import '../models/auth.dart';
 import '../models/cart.dart';
 import '../models/favorites.dart';
 import '../models/products.dart';
@@ -24,10 +25,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var _isLoading = true;
+  Future<void>? _fetchProducts;
+
+  Future<void> _getFutureFetchProducts(BuildContext context) {
+    _fetchProducts =
+        _fetchProducts ?? Products.of(context, listen: false).fetchAll(context);
+
+    return _fetchProducts!;
+  }
 
   Future<void> _refresh(BuildContext context) async {
-    await Products.of(context, listen: false).fetchAll();
+    await Products.of(context, listen: false).fetchAll(context);
   }
 
   @override
@@ -40,55 +48,71 @@ class _HomePageState extends State<HomePage> {
     //
     // Without "Future.delayed", the context would be invalid at this point
     //  and the app would crash and burn.
+    //
+    // The FutureBuilder alternative removes the need to track loading state
+    //  and enables us to isolate any provider consumers (listeners) to the
+    //  affected branch of the widget tree.
 
-    Future.delayed(Duration.zero)
-        .then((_) => _refresh(context)
-            .then((_) => Favorites.of(context, listen: false).fetch()))
-        .whenComplete(() => setState(() => _isLoading = false));
+    // Future.delayed(Duration.zero)
+    //     .then((_) => _refresh(context)
+    //         .then((_) => Favorites.of(context, listen: false).fetch()))
+    //     .whenComplete(() => setState(() => _isLoading = false));
   }
 
   @override
   Widget build(BuildContext context) {
+    final auth = Auth.of(context);
+
+    if (!auth.isSignedIn) {
+      // Return a dummy container unless/until we
+      //  have successfully signed in
+      return Container();
+    }
+
     final products = Products.of(context);
     final favorites = Favorites.of(context).ids;
 
-    return PlatformTabbedPage(
-      tabs: [
-        TabDefinition(
-          icon: const Icon(Icons.menu_book),
-          title: "Catalog",
-          content: _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : RefreshIndicator(
-                  onRefresh: () => _refresh(context),
-                  child: ProductGrid(
-                    products: products.items,
+    return FutureBuilder(
+      future: _getFutureFetchProducts(context),
+      builder: (_, data) => data.connectionState == ConnectionState.active
+          ? const Center(child: CircularProgressIndicator())
+          : PlatformTabbedPage(
+              tabs: [
+                TabDefinition(
+                  icon: const Icon(Icons.menu_book),
+                  title: "Catalog",
+                  content: RefreshIndicator(
+                    onRefresh: () => _refresh(context),
+                    child: ProductGrid(
+                      products: products.items,
+                    ),
                   ),
                 ),
-        ),
-        TabDefinition(
-          icon: const Icon(Icons.favorite),
-          title: "Favorites",
-          content: ProductGrid(
-            products: products.filtered((p) => favorites.contains(p.id)),
-          ),
-        ),
-        TabDefinition(
-          icon: Consumer<Cart>(
-            builder: (_, cart, __) => Badge(
-              child: const Icon(Icons.shopping_cart),
-              value: cart.totalQuantity.toString(),
+                TabDefinition(
+                  icon: const Icon(Icons.favorite),
+                  title: "Favorites",
+                  content: ProductGrid(
+                    products:
+                        products.filtered((p) => favorites.contains(p.id)),
+                  ),
+                ),
+                TabDefinition(
+                  icon: Consumer<Cart>(
+                    builder: (_, cart, __) => Badge(
+                      child: const Icon(Icons.shopping_cart),
+                      value: cart.totalQuantity.toString(),
+                    ),
+                  ),
+                  title: "Cart",
+                  content: Consumer<Cart>(
+                    builder: (_, cart, __) => const ShoppingCart(),
+                  ),
+                ),
+              ],
+              title: "MyShop",
+              appRoutes: routes,
+              drawer: const ShopAppDrawer(),
             ),
-          ),
-          title: "Cart",
-          content: Consumer<Cart>(
-            builder: (_, cart, __) => const ShoppingCart(),
-          ),
-        ),
-      ],
-      title: "MyShop",
-      appRoutes: routes,
-      drawer: const ShopAppDrawer(),
     );
   }
 }

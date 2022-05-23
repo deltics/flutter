@@ -53,7 +53,8 @@ class Orders with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> create({
+  Future<String> create(
+    BuildContext context, {
     required Cart cart,
   }) async {
     final id = const Uuid().v4();
@@ -66,7 +67,7 @@ class Orders with ChangeNotifier {
     );
 
     try {
-      var uri = firebaseUri("orders/$id.json");
+      var uri = firebaseUri(context, "orders/$id.json");
       var response = await http.put(uri, body: jsonEncode(order));
       if (response.statusCode != HttpStatus.ok) {
         throw "Unexpected ${response.statusCode} response: ${response.body}";
@@ -84,9 +85,9 @@ class Orders with ChangeNotifier {
     }
   }
 
-  Future<void> fetchAll() async {
+  Future<void> fetchAll(BuildContext context) async {
     try {
-      var uri = firebaseUri("orders.json");
+      var uri = firebaseUri(context, "orders.json");
       var response = await http.get(uri);
       if (response.statusCode != HttpStatus.ok) {
         throw "Unexpected ${response.statusCode} response: ${response.body}";

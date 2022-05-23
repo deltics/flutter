@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-import '../adapters/platform_page.dart';
+// import '../adapters/platform_page.dart';
+import '../models/auth.dart';
+import 'home.dart';
 
 enum AuthMode {
   signup,
@@ -46,7 +48,7 @@ class AuthPage extends StatelessWidget {
                     child: Container(
                       margin: const EdgeInsets.only(bottom: 20),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 94,
+                        horizontal: 56,
                         vertical: 8,
                       ),
                       transform: Matrix4.rotationZ(-8 * pi / 180)
@@ -66,7 +68,7 @@ class AuthPage extends StatelessWidget {
                         "40thieves",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 40,
+                          fontSize: 48,
                           fontFamily: 'Anton',
                           fontWeight: FontWeight.normal,
                         ),
@@ -94,6 +96,11 @@ class AuthCard extends StatefulWidget {
   State<AuthCard> createState() => _AuthCardState();
 }
 
+class _Credentials {
+  String? email;
+  String? password;
+}
+
 class _AuthCardState extends State<AuthCard> {
   static const Map<AuthMode, double> formHeight = {
     AuthMode.signup: 320,
@@ -110,25 +117,25 @@ class _AuthCardState extends State<AuthCard> {
 
   final _formKey = GlobalKey<FormState>();
   var _mode = AuthMode.login;
-  final _credentials = {
-    "email": "",
-    "password": "",
-  };
+  final _credentials = _Credentials();
   final _passwordController = TextEditingController();
 
-  void _submit() {
+  Future<void> _submit() async {
     final form = _formKey.currentState!;
     if (!form.validate()) {
       return;
     }
     form.save();
 
-    if (_mode == AuthMode.login) {
-      // Log the user in
-    }
-    if (_mode == AuthMode.signup) {
-      // Create new user
-    }
+    final auth = Auth.of(context, listen: false);
+    await auth
+        .signIn(
+            email: _credentials.email!,
+            password: _credentials.password!,
+            newUser: _mode == AuthMode.signup)
+        .then((_) => Navigator.of(context).pushReplacementNamed(
+              HomePage.route,
+            ));
   }
 
   void _changeMode() => setState(
@@ -167,7 +174,7 @@ class _AuthCardState extends State<AuthCard> {
                           }
                         },
                         onSaved: (value) {
-                          _credentials["email"] = value ?? "";
+                          _credentials.email = value ?? "";
                         }),
                     TextFormField(
                         decoration:
@@ -180,7 +187,7 @@ class _AuthCardState extends State<AuthCard> {
                           }
                         },
                         onSaved: (value) {
-                          _credentials["password"] = value ?? "";
+                          _credentials.password = value ?? "";
                         }),
                     if (_mode == AuthMode.signup)
                       TextFormField(
@@ -195,7 +202,7 @@ class _AuthCardState extends State<AuthCard> {
                             }
                           },
                           onSaved: (value) {
-                            _credentials["password"] = value ?? "";
+                            _credentials.password = value ?? "";
                           }),
                     const SizedBox(height: 20),
                     TextButton(

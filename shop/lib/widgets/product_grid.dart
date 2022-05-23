@@ -116,7 +116,10 @@ class _ProductGridItemState extends State<ProductGridItem> {
                         setState(() => _isFavoriteChanging = true);
                         Favorites.of(context, listen: false)
                             .setFavorite(
-                                id: widget.id, isFavorite: !widget.isFavorite)
+                              context,
+                              id: widget.id,
+                              isFavorite: !widget.isFavorite,
+                            )
                             .then((_) =>
                                 setState(() => _isFavoriteChanging = false));
                       },

@@ -17,11 +17,11 @@ class Favorites with ChangeNotifier {
     return [..._ids];
   }
 
-  Future<void> fetch() async {
+  Future<void> fetch(BuildContext context) async {
     _ids.clear();
 
     try {
-      final response = await http.get(firebaseUri("favorites.json"));
+      final response = await http.get(firebaseUri(context, "favorites.json"));
 
       final data = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -40,7 +40,8 @@ class Favorites with ChangeNotifier {
     return _ids.contains(id);
   }
 
-  Future<void> setFavorite({
+  Future<void> setFavorite(
+    BuildContext context, {
     required String id,
     required bool isFavorite,
   }) async {
@@ -53,7 +54,7 @@ class Favorites with ChangeNotifier {
     } else if (_ids.contains(id)) {
       action = _FavoriteAction.remove;
     }
-    final uri = firebaseUri("favorites/$id.json");
+    final uri = firebaseUri(context, "favorites/$id.json");
     final response = (action == _FavoriteAction.add)
         ? await http.put(uri, body: "true")
         : await http.delete(uri);
