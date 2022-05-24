@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 import '../firebase.dart';
+import '../utils.dart';
 
 enum _FavoriteAction { add, remove, doNothing }
 
@@ -21,9 +22,13 @@ class Favorites with ChangeNotifier {
     _ids.clear();
 
     try {
-      final response = await http.get(firebaseUri(context, "favorites.json"));
+      final uri = await firebaseUri(context, "favorites.json");
+      final response = await http.get(uri);
 
-      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      final data = okJsonResponse(response);
+      if (data == null) {
+        return;
+      }
 
       data.forEach((id, _) => _ids.add(id));
 
@@ -54,12 +59,12 @@ class Favorites with ChangeNotifier {
     } else if (_ids.contains(id)) {
       action = _FavoriteAction.remove;
     }
-    final uri = firebaseUri(context, "favorites/$id.json");
+    final uri = await firebaseUri(context, "favorites/$id.json");
     final response = (action == _FavoriteAction.add)
         ? await http.put(uri, body: "true")
         : await http.delete(uri);
 
-    if (response.statusCode == HttpStatus.ok) {
+    if (isOk(response)) {
       (action == _FavoriteAction.add) ? _ids.add(id) : _ids.remove(id);
       notifyListeners();
     }

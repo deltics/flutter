@@ -18,7 +18,6 @@ class AuthPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final device = MediaQuery.of(context).size;
-    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: Stack(
@@ -120,6 +119,29 @@ class _AuthCardState extends State<AuthCard> {
   final _credentials = _Credentials();
   final _passwordController = TextEditingController();
 
+  void _showError(BuildContext context, String message) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Authentication Error"),
+        content: Text(message),
+        actions: [
+          TextButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(colorScheme.primaryContainer),
+                foregroundColor:
+                    MaterialStateProperty.all(colorScheme.onPrimary),
+              ),
+              child: const Text("OK"),
+              onPressed: () => Navigator.of(context).pop()),
+        ],
+      ),
+    );
+  }
+
   Future<void> _submit() async {
     final form = _formKey.currentState!;
     if (!form.validate()) {
@@ -128,14 +150,20 @@ class _AuthCardState extends State<AuthCard> {
     form.save();
 
     final auth = Auth.of(context, listen: false);
-    await auth
-        .signIn(
-            email: _credentials.email!,
-            password: _credentials.password!,
-            newUser: _mode == AuthMode.signup)
-        .then((_) => Navigator.of(context).pushReplacementNamed(
-              HomePage.route,
-            ));
+    try {
+      await auth.signIn(
+          email: _credentials.email!,
+          password: _credentials.password!,
+          newUser: _mode == AuthMode.signup);
+
+      if (!auth.isSignedIn) {
+        return;
+      }
+
+      Navigator.of(context).pushReplacementNamed(HomePage.route);
+    } on AuthException catch (error) {
+      _showError(context, error.message);
+    }
   }
 
   void _changeMode() => setState(
@@ -194,7 +222,6 @@ class _AuthCardState extends State<AuthCard> {
                           decoration: const InputDecoration(
                               labelText: "Confirm password"),
                           obscureText: true,
-                          controller: _passwordController,
                           validator: (value) {
                             if (value == null ||
                                 value != _passwordController.text) {

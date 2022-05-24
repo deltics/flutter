@@ -5,46 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop/utils.dart';
 
 import '../firebase.dart';
-import 'auth.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
-  final _items = [
-    const Product(
-      id: 'p1',
-      title: 'Red Shirt',
-      description: 'A red shirt - it is pretty red!',
-      price: 29.99,
-      imageUrl:
-          'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-    ),
-    const Product(
-      id: 'p2',
-      title: 'Trousers',
-      description: 'A nice pair of trousers.',
-      price: 59.99,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-    ),
-    const Product(
-      id: 'p3',
-      title: 'Yellow Scarf',
-      description: 'Warm and cozy - exactly what you need for the winter.',
-      price: 19.99,
-      imageUrl:
-          'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
-    ),
-    const Product(
-      id: 'p4',
-      title: 'A Pan',
-      description: 'Prepare any meal you want.',
-      price: 49.99,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    ),
-  ];
+  final List<Product> _items = [];
 
   int get count => _items.length;
 
@@ -54,15 +21,12 @@ class Products with ChangeNotifier {
 
   Future<void> fetchAll(BuildContext context) async {
     try {
-      final uri = firebaseUri(context, "products.json");
+      final uri = await firebaseUri(context, "products.json");
       final response = await http.get(uri);
 
-      final data = jsonDecode(response.body) as Map<String, dynamic>?;
+      final data = okJsonResponse(response);
       if (data == null) {
         return;
-      }
-      if (response.statusCode != HttpStatus.ok) {
-        throw data["error"] as String;
       }
 
       _items.clear();
@@ -82,11 +46,9 @@ class Products with ChangeNotifier {
 
   Future<void> add(BuildContext context, Product p) async {
     try {
-      final uri = firebaseUri(context, "products/${p.id}.json");
-      final response = await http.put(uri, body: jsonEncode(p));
-      if (response.statusCode != HttpStatus.ok) {
-        throw "Unexpected ${response.statusCode} response: ${response.body}";
-      }
+      final uri = await firebaseUri(context, "products/${p.id}.json");
+
+      isOk(await http.put(uri, body: jsonEncode(p)));
 
       _items.add(p);
       notifyListeners();
@@ -113,11 +75,9 @@ class Products with ChangeNotifier {
     );
 
     try {
-      final uri = firebaseUri(context, "products/${item.id}.json");
-      final response = await http.put(uri, body: jsonEncode(item));
-      if (response.statusCode != HttpStatus.ok) {
-        throw "Unexpected ${response.statusCode} response: ${response.body}";
-      }
+      final uri = await firebaseUri(context, "products/${item.id}.json");
+
+      isOk(await http.put(uri, body: jsonEncode(item)));
 
       _items[itemIndex] = item;
       notifyListeners();
@@ -142,12 +102,9 @@ class Products with ChangeNotifier {
     String id,
   ) async {
     try {
-      final uri = firebaseUri(context, "products/$id.json");
-      final response = await http.delete(uri);
+      final uri = await firebaseUri(context, "products/$id.json");
 
-      if (response.statusCode != HttpStatus.ok) {
-        throw "Unexpected ${response.statusCode} response: ${response.body}";
-      }
+      isOk(await http.delete(uri));
 
       _items.removeWhere((item) => item.id == id);
       notifyListeners();

@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 
 import '../firebase.dart';
+import '../utils.dart';
 import 'cart.dart';
 
 class Order {
@@ -67,11 +68,9 @@ class Orders with ChangeNotifier {
     );
 
     try {
-      var uri = firebaseUri(context, "orders/$id.json");
-      var response = await http.put(uri, body: jsonEncode(order));
-      if (response.statusCode != HttpStatus.ok) {
-        throw "Unexpected ${response.statusCode} response: ${response.body}";
-      }
+      var uri = await firebaseUri(context, "orders/$id.json");
+
+      isOk(await http.put(uri, body: jsonEncode(order)));
 
       _orders.insert(0, order);
       notifyListeners();
@@ -87,13 +86,9 @@ class Orders with ChangeNotifier {
 
   Future<void> fetchAll(BuildContext context) async {
     try {
-      var uri = firebaseUri(context, "orders.json");
+      var uri = await firebaseUri(context, "orders.json");
       var response = await http.get(uri);
-      if (response.statusCode != HttpStatus.ok) {
-        throw "Unexpected ${response.statusCode} response: ${response.body}";
-      }
-
-      final data = jsonDecode(response.body) as Map<String, dynamic>?;
+      final data = okJsonResponse(response);
       if (data == null) {
         return;
       }
