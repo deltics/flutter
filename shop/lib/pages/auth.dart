@@ -114,9 +114,11 @@ class _AuthCardState extends State<AuthCard> {
   };
 
   final _formKey = GlobalKey<FormState>();
-  var _mode = AuthMode.login;
   final _credentials = _Credentials();
   final _passwordController = TextEditingController();
+
+  var _isSigningIn = false;
+  var _mode = AuthMode.login;
 
   void _showError(BuildContext context, String message) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -152,10 +154,12 @@ class _AuthCardState extends State<AuthCard> {
 
     final auth = Auth.of(context, listen: false);
     try {
+      setState(() => _isSigningIn = true);
       await auth.signIn(
           email: _credentials.email!,
           password: _credentials.password!,
           newUser: _mode == AuthMode.signup);
+      setState(() => _isSigningIn = false);
     } on AuthException catch (error) {
       _showError(context, error.message);
     }
@@ -227,28 +231,35 @@ class _AuthCardState extends State<AuthCard> {
                             _credentials.password = value ?? "";
                           }),
                     const SizedBox(height: 20),
-                    TextButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(colorScheme.primary),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                    _isSigningIn
+                        ? SizedBox(
+                            width: device.width / 3,
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                        : TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  colorScheme.primary),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                            child: SizedBox(
+                              width: device.width / 3,
+                              child: Center(
+                                child: Text(
+                                  formActionLabel[_mode]!,
+                                  style: TextStyle(
+                                      color: colorScheme.onPrimaryContainer),
+                                ),
+                              ),
+                            ),
+                            onPressed: _submit,
                           ),
-                        ),
-                      ),
-                      child: SizedBox(
-                        width: device.width / 3,
-                        child: Center(
-                          child: Text(
-                            formActionLabel[_mode]!,
-                            style: TextStyle(
-                                color: colorScheme.onPrimaryContainer),
-                          ),
-                        ),
-                      ),
-                      onPressed: _submit,
-                    ),
                     TextButton(
                       child: Text(
                         toggleActionLabel[_mode]!,

@@ -85,7 +85,7 @@ class _ProductGridItemState extends State<ProductGridItem> {
             spreadRadius: 3, //spread radius
             blurRadius: 8, // blur radius
             offset: const Offset(0, 2), // changes position of shadow
-            //first paramerter of offset is left-right
+            //first parameter of offset is left-right
             //second parameter is top to down
           ),
         ],

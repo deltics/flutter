@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:shop/utils.dart';
 
 import '../firebase.dart';
+import 'favorites.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
@@ -18,8 +19,14 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
-  Future<void> fetchAll(BuildContext context) async {
+  Future<void> fetchAll(BuildContext context, {bool forceFetch = false}) async {
+    if (!forceFetch && _items.isNotEmpty) {
+      return;
+    }
+
     try {
+      await Favorites.of(context, listen: false).fetch(context);
+
       final uri = await firebaseUri(context, "products.json");
       final response = await http.get(uri);
 

@@ -16,6 +16,10 @@ class Favorites with ChangeNotifier {
   }
 
   Future<void> fetch(BuildContext context) async {
+    if (_ids.isNotEmpty) {
+      return;
+    }
+
     _ids.clear();
 
     try {

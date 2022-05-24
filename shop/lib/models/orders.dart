@@ -84,6 +84,10 @@ class Orders with ChangeNotifier {
   }
 
   Future<void> fetchAll(BuildContext context) async {
+    if (_orders.isNotEmpty) {
+      return;
+    }
+
     try {
       var uri = await firebaseUri(context, "orders.json");
       var response = await http.get(uri);
@@ -92,7 +96,7 @@ class Orders with ChangeNotifier {
         return;
       }
 
-      _orders.clear;
+      _orders.clear();
       data.forEach((id, item) => _orders.add(Order.fromJson(item)));
 
       _orders.sort((a, b) => b.datetime.compareTo(a.datetime));

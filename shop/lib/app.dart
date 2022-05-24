@@ -16,7 +16,6 @@ import 'pages/product_detail.dart';
 import 'pages/products.dart';
 
 final routes = {
-//  HomePage.route: (ctx) => const HomePage(),
   CartPage.route: (ctx) => const CartPage(),
   EditProductPage.route: (ctx) => const EditProductPage(),
   ProductsPage.route: (ctx) => const ProductsPage(),
@@ -41,13 +40,11 @@ class ShopApp extends StatelessWidget {
       ],
       child: Consumer<Auth>(
         builder: (context, auth, _) {
-          print("building the App with auth.isSignedIn=${auth.isSignedIn}");
           return PlatformApp(
             title: 'Shop',
             primaryColor: Colors.purple,
             accentColor: Colors.orange,
             home: auth.isSignedIn ? const HomePage() : const AuthPage(),
-            //initialRoute: auth.isSignedIn ? HomePage.route : AuthPage.route,
             routes: routes,
           );
         },
