@@ -41,12 +41,21 @@ class Order {
 }
 
 class Orders with ChangeNotifier {
-  static Orders of(BuildContext context, {bool listen = false}) =>
-      Provider.of<Orders>(context, listen: listen);
+  static Orders? of(BuildContext context, {bool listen = false}) =>
+      Provider.of<Orders?>(context, listen: listen);
+
+  final userId;
+
+  Orders({required this.userId});
 
   final List<Order> _orders = [];
 
   List<Order> get orders => [..._orders];
+
+  void reset() {
+    _orders.clear();
+    notifyListeners();
+  }
 
   void cancel({required String id}) {
     _orders.removeWhere((order) => order.id == id);
@@ -67,7 +76,7 @@ class Orders with ChangeNotifier {
     );
 
     try {
-      var uri = await firebaseUri(context, "orders/$id.json");
+      var uri = await firebaseUri(context, "orders/$userId/$id.json");
 
       isOk(await http.put(uri, body: jsonEncode(order)));
 
@@ -89,7 +98,7 @@ class Orders with ChangeNotifier {
     }
 
     try {
-      var uri = await firebaseUri(context, "orders.json");
+      var uri = await firebaseUri(context, "orders/$userId.json");
       var response = await http.get(uri);
       final data = okJsonResponse(response);
       if (data == null) {

@@ -30,7 +30,7 @@ class ProductGrid extends StatelessWidget {
           title: product.title,
           price: product.price,
           imageUrl: product.imageUrl,
-          isFavorite: favorites.isFavorite(product.id),
+          isFavorite: favorites!.isFavorite(product.id),
         );
       },
       // The delegate determines the appearance of the grid itself.
@@ -114,7 +114,7 @@ class _ProductGridItemState extends State<ProductGridItem> {
                       ),
                       onTap: () {
                         setState(() => _isFavoriteChanging = true);
-                        Favorites.of(context, listen: false)
+                        Favorites.of(context, listen: false)!
                             .setFavorite(
                               context,
                               id: widget.id,

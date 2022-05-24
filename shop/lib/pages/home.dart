@@ -24,14 +24,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<void>? _pageFuture;
+  Future<void>? _fetchProducts;
 
-  Future<void> _getPageFuture(BuildContext context) {
-    _pageFuture =
-        _pageFuture ?? Products.of(context, listen: false).fetchAll(context);
-
-    return _pageFuture!;
-  }
+  Future<void> _future(BuildContext context) => _fetchProducts =
+      _fetchProducts ?? Products.of(context, listen: false).fetchAll(context);
 
   Future<void> _refresh(BuildContext context) async {
     await Products.of(
@@ -72,11 +68,11 @@ class _HomePageState extends State<HomePage> {
     }
 
     final products = Products.of(context);
-    final favorites = Favorites.of(context).ids;
+    final favorites = Favorites.of(context)!.ids;
 
     return FutureBuilder(
-      future: _getPageFuture(context),
-      builder: (_, data) => data.connectionState == ConnectionState.active
+      future: _future(context),
+      builder: (_, data) => data.connectionState == ConnectionState.waiting
           ? const Center(child: CircularProgressIndicator())
           : PlatformTabbedPage(
               tabs: [

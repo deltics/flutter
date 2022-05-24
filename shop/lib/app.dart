@@ -32,11 +32,19 @@ class ShopApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => Products()),
-        ChangeNotifierProvider(create: (_) => Favorites()),
-        ChangeNotifierProvider(create: (_) => Cart()),
-        ChangeNotifierProvider(create: (_) => Orders()),
         ChangeNotifierProvider(create: (_) => Auth()),
+        ChangeNotifierProvider(create: (_) => Products()),
+        ChangeNotifierProvider(create: (_) => Cart()),
+        ChangeNotifierProxyProvider<Auth, Favorites?>(
+          create: (_) => null,
+          update: (context, auth, _) =>
+              auth.isSignedIn ? Favorites(userId: auth.userId) : null,
+        ),
+        ChangeNotifierProxyProvider<Auth, Orders?>(
+          create: (_) => null,
+          update: (context, auth, _) =>
+              auth.isSignedIn ? Orders(userId: auth.userId) : null,
+        ),
       ],
       child: Consumer<Auth>(
         builder: (context, auth, _) {

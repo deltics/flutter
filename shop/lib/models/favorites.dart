@@ -5,28 +5,41 @@ import 'package:http/http.dart' as http;
 
 import '../firebase.dart';
 import '../utils.dart';
+import 'auth.dart';
 
 enum _FavoriteAction { add, remove, doNothing }
 
 class Favorites with ChangeNotifier {
   final List<String> _ids = [];
+  final String userId;
+  var _isLoaded = false;
+
+  Favorites({required this.userId});
 
   List<String> get ids {
     return [..._ids];
   }
 
+  void reset() {
+    _ids.clear();
+    notifyListeners();
+  }
+
   Future<void> fetch(BuildContext context) async {
-    if (_ids.isNotEmpty) {
+    if (_isLoaded || userId.isEmpty) {
       return;
     }
 
     _ids.clear();
 
     try {
-      final uri = await firebaseUri(context, "favorites.json");
+      final uri = await firebaseUri(context, "favorites/$userId.json");
       final response = await http.get(uri);
 
       final data = okJsonResponse(response);
+
+      _isLoaded = true;
+
       if (data == null) {
         return;
       }
@@ -51,6 +64,13 @@ class Favorites with ChangeNotifier {
     required String id,
     required bool isFavorite,
   }) async {
+    print("updating favorite for user with id $userId");
+    print(_isLoaded);
+
+    if (!_isLoaded || userId.isEmpty) {
+      return;
+    }
+
     var action = _FavoriteAction.doNothing;
 
     if (isFavorite) {
@@ -60,7 +80,8 @@ class Favorites with ChangeNotifier {
     } else if (_ids.contains(id)) {
       action = _FavoriteAction.remove;
     }
-    final uri = await firebaseUri(context, "favorites/$id.json");
+
+    final uri = await firebaseUri(context, "favorites/$userId/$id.json");
     final response = (action == _FavoriteAction.add)
         ? await http.put(uri, body: "true")
         : await http.delete(uri);
@@ -71,8 +92,8 @@ class Favorites with ChangeNotifier {
     }
   }
 
-  static Favorites of(BuildContext context, {bool listen = true}) {
-    return Provider.of<Favorites>(
+  static Favorites? of(BuildContext context, {bool listen = true}) {
+    return Provider.of<Favorites?>(
       context,
       listen: listen,
     );

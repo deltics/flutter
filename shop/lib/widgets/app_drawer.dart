@@ -5,13 +5,14 @@ import '../adapters/platform_list_tile.dart';
 class AppDrawerItem {
   final String title;
   final IconData iconData;
-  final String route;
+  final String? route;
+  final Function? onPressed;
 
-  AppDrawerItem({
-    required this.title,
-    required this.iconData,
-    required this.route,
-  });
+  AppDrawerItem(
+      {required this.title,
+      required this.iconData,
+      this.route,
+      this.onPressed});
 }
 
 class AppDrawer extends StatelessWidget {
@@ -73,7 +74,9 @@ class AppDrawer extends StatelessWidget {
               color: itemColor,
             ),
             title: Text(item.title, style: itemStyle),
-            onTap: () => Navigator.of(context).pushReplacementNamed(item.route),
+            onTap: item.route != null
+                ? () => Navigator.of(context).pushReplacementNamed(item.route!)
+                : item.onPressed,
           ),
         ),
       ),

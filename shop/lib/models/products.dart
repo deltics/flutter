@@ -19,13 +19,18 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
+  void reset() {
+    _items.clear();
+    notifyListeners();
+  }
+
   Future<void> fetchAll(BuildContext context, {bool forceFetch = false}) async {
     if (!forceFetch && _items.isNotEmpty) {
       return;
     }
 
     try {
-      await Favorites.of(context, listen: false).fetch(context);
+      await Favorites.of(context, listen: false)!.fetch(context);
 
       final uri = await firebaseUri(context, "products.json");
       final response = await http.get(uri);

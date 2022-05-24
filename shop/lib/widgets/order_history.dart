@@ -15,12 +15,8 @@ class OrderHistory extends StatefulWidget {
 class _OrderHistoryState extends State<OrderHistory> {
   Future? _fetchOrders;
 
-  @override
-  initState() {
-    super.initState();
-
-    _fetchOrders = Orders.of(context, listen: false).fetchAll(context);
-  }
+  Future<void> _future(BuildContext context) => _fetchOrders =
+      _fetchOrders ?? Orders.of(context, listen: false)!.fetchAll(context);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +29,7 @@ class _OrderHistoryState extends State<OrderHistory> {
     }
 
     return FutureBuilder(
-      future: _fetchOrders,
+      future: _future(context),
       builder: (_, future) {
         if (future.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
