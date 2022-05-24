@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop/adapters/platform_page.dart';
 
 import '../app.dart';
 import '../adapters/platform_tabbed_page.dart';

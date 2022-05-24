@@ -1,9 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../utils.dart';
@@ -14,8 +13,8 @@ class Auth with ChangeNotifier {
   var _refreshToken = "";
   var _token = "";
   var _tokenExpires = DateTime.now();
-  var _userEmail = "";
-  var _userId = "";
+  // var _userEmail = "";
+  // var _userId = "";
 
   static Auth of(BuildContext context, {bool listen = true}) {
     return Provider.of<Auth>(context, listen: listen);
@@ -50,8 +49,6 @@ class Auth with ChangeNotifier {
         seconds: int.parse(result["expires_in"]),
       ),
     );
-    print(
-        "refreshed token expires @ ${DateFormat("hh:mm:ss").format(_tokenExpires)}");
   }
 
   Future<void> signIn({
@@ -93,6 +90,8 @@ class Auth with ChangeNotifier {
         if (error.containsKey("message")) {
           return AuthException(error["message"]);
         }
+
+        return null;
       })!;
 
       _refreshToken = data["refreshToken"];
@@ -102,14 +101,16 @@ class Auth with ChangeNotifier {
           seconds: int.parse(data["expiresIn"]),
         ),
       );
-      _userEmail = data["email"];
-      _userId = data["localId"];
+      // _userEmail = data["email"];
+      // _userId = data["localId"];
 
-      print(
-          "initial token expires @ ${DateFormat("hh:mm:ss").format(_tokenExpires)}");
+      notifyListeners();
     } catch (error) {
-      print(error);
-      throw error;
+      if (kDebugMode) {
+        print(error);
+      }
+
+      rethrow;
     }
   }
 }

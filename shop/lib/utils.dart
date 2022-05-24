@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
@@ -12,8 +13,17 @@ Map<String, dynamic>? okJsonResponse(
   Response response, {
   Object? Function(int, String)? onError,
 }) {
+  isOk(response, onError: onError);
+
+  return jsonDecode(response.body) as Map<String, dynamic>?;
+}
+
+bool isOk(
+  Response response, {
+  Object? Function(int, String)? onError,
+}) {
   if (response.statusCode == HttpStatus.ok) {
-    return jsonDecode(response.body) as Map<String, dynamic>?;
+    return true;
   }
 
   if (onError != null) {
@@ -23,25 +33,14 @@ Map<String, dynamic>? okJsonResponse(
     }
   }
 
-  try {
-    print("response body (json): ${jsonDecode(response.body)}");
-  } catch (_) {
-    print("response body (string): ${response.body}");
-  }
-  throw HttpException(
-      "Unexpected (${response.statusCode}) response: ${response.body}");
-}
-
-bool isOk(Response response) {
-  if (response.statusCode == HttpStatus.ok) {
-    return true;
+  if (kDebugMode) {
+    try {
+      print("response body (json): ${jsonDecode(response.body)}");
+    } catch (_) {
+      print("response body (string): ${response.body}");
+    }
   }
 
-  try {
-    print("response body (json): ${jsonDecode(response.body)}");
-  } catch (_) {
-    print("response body (string): ${response.body}");
-  }
   throw HttpException(
       "unexpected (${response.statusCode}) response: ${response.body}");
 }

@@ -3,7 +3,6 @@ import 'dart:math';
 
 // import '../adapters/platform_page.dart';
 import '../models/auth.dart';
-import 'home.dart';
 
 enum AuthMode {
   signup,
@@ -144,9 +143,11 @@ class _AuthCardState extends State<AuthCard> {
 
   Future<void> _submit() async {
     final form = _formKey.currentState!;
+
     if (!form.validate()) {
       return;
     }
+
     form.save();
 
     final auth = Auth.of(context, listen: false);
@@ -155,12 +156,6 @@ class _AuthCardState extends State<AuthCard> {
           email: _credentials.email!,
           password: _credentials.password!,
           newUser: _mode == AuthMode.signup);
-
-      if (!auth.isSignedIn) {
-        return;
-      }
-
-      Navigator.of(context).pushReplacementNamed(HomePage.route);
     } on AuthException catch (error) {
       _showError(context, error.message);
     }
@@ -211,7 +206,7 @@ class _AuthCardState extends State<AuthCard> {
                         controller: _passwordController,
                         validator: (value) {
                           if (value == null || value.length < 5) {
-                            return "Passowrd must be at least 6 characters";
+                            return "Password must be at least 6 characters";
                           }
                         },
                         onSaved: (value) {
@@ -225,7 +220,7 @@ class _AuthCardState extends State<AuthCard> {
                           validator: (value) {
                             if (value == null ||
                                 value != _passwordController.text) {
-                              return "Passowrds are not the same";
+                              return "Passwords are not the same";
                             }
                           },
                           onSaved: (value) {

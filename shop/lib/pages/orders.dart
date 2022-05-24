@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shop/adapters/platform_page.dart';
 
-import '../models/orders.dart';
 import '../widgets/order_history.dart';
-import '../widgets/order_summary.dart';
 import '../widgets/shop_app_drawer.dart';
 
 class OrdersPage extends StatelessWidget {
