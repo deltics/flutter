@@ -116,44 +116,46 @@ class _AuthCardState extends State<AuthCard>
   final _credentials = _Credentials();
   final _passwordController = TextEditingController();
 
-  Animation<Size>? _modeAnimation;
-  AnimationController? _modeAnimationController;
-
   @override
   void dispose() {
     super.dispose();
 
     _passwordController.dispose();
-    _modeAnimationController?.dispose();
+    //_modeAnimationController?.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
+  // Animation scaffolding not required when using AnimatedContainer()...
 
-    _setupAnimation();
-  }
+  // Animation<Size>? _modeAnimation;
+  // AnimationController? _modeAnimationController;
 
-  void _setupAnimation() {
-    _modeAnimationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
+  // @override
+  // void initState() {
+  //   super.initState();
 
-    _modeAnimation = Tween<Size>(
-      begin: const Size(
-        double.infinity,
-        260,
-      ),
-      end: const Size(
-        double.infinity,
-        320,
-      ),
-    ).animate(CurvedAnimation(
-      parent: _modeAnimationController!,
-      curve: Curves.linear,
-    ));
-  }
+  //   _setupAnimation();
+  // }
+
+  // void _setupAnimation() {
+  //   _modeAnimationController = AnimationController(
+  //     vsync: this,
+  //     duration: const Duration(milliseconds: 300),
+  //   );
+
+  //   _modeAnimation = Tween<Size>(
+  //     begin: const Size(
+  //       double.infinity,
+  //       260,
+  //     ),
+  //     end: const Size(
+  //       double.infinity,
+  //       320,
+  //     ),
+  //   ).animate(CurvedAnimation(
+  //     parent: _modeAnimationController!,
+  //     curve: Curves.linear,
+  //   ));
+  // }
 
   var _isSigningIn = false;
   var _mode = AuthMode.login;
@@ -204,9 +206,9 @@ class _AuthCardState extends State<AuthCard>
   }
 
   void _changeMode() {
-    _mode == AuthMode.login
-        ? _modeAnimationController!.forward()
-        : _modeAnimationController!.reverse();
+    // _mode == AuthMode.login
+    //     ? _modeAnimationController!.forward()
+    //     : _modeAnimationController!.reverse();
 
     setState(() =>
         _mode = _mode == AuthMode.login ? AuthMode.signup : AuthMode.login);
@@ -222,16 +224,14 @@ class _AuthCardState extends State<AuthCard>
           borderRadius: BorderRadius.circular(10),
         ),
         elevation: 8,
-        child: AnimatedBuilder(
-            animation: _modeAnimation!,
-            builder: (_, child) => Container(
-                height: _modeAnimation!.value.height,
-                width: device.width * .75,
-                constraints: BoxConstraints(
-                  minHeight: _modeAnimation!.value.height,
-                ),
-                padding: const EdgeInsets.all(16),
-                child: child),
+        child: AnimatedContainer(
+            duration: const Duration(milliseconds: 175),
+            height: _mode == AuthMode.signup ? 320 : 260,
+            width: device.width * .75,
+            constraints: BoxConstraints(
+              minHeight: _mode == AuthMode.signup ? 320 : 260,
+            ),
+            padding: const EdgeInsets.all(16),
             child: Form(
               key: _formKey,
               child: SingleChildScrollView(
