@@ -111,51 +111,46 @@ class _AuthCardState extends State<AuthCard>
     AuthMode.signup: "Login instead",
     AuthMode.login: "Sign-Up instead",
   };
+  static const _animationDuration = Duration(milliseconds: 500);
 
   final _formKey = GlobalKey<FormState>();
   final _credentials = _Credentials();
   final _passwordController = TextEditingController();
+
+  var _formErrorCount = 0;
+  var _ignoreFormErrors = false;
 
   @override
   void dispose() {
     super.dispose();
 
     _passwordController.dispose();
-    //_modeAnimationController?.dispose();
+    _modeAnimationController?.dispose();
   }
 
-  // Animation scaffolding not required when using AnimatedContainer()...
+  Animation<double>? _opacityAnimation;
+  AnimationController? _modeAnimationController;
 
-  // Animation<Size>? _modeAnimation;
-  // AnimationController? _modeAnimationController;
+  @override
+  void initState() {
+    super.initState();
 
-  // @override
-  // void initState() {
-  //   super.initState();
+    _setupAnimation();
+  }
 
-  //   _setupAnimation();
-  // }
-
-  // void _setupAnimation() {
-  //   _modeAnimationController = AnimationController(
-  //     vsync: this,
-  //     duration: const Duration(milliseconds: 300),
-  //   );
-
-  //   _modeAnimation = Tween<Size>(
-  //     begin: const Size(
-  //       double.infinity,
-  //       260,
-  //     ),
-  //     end: const Size(
-  //       double.infinity,
-  //       320,
-  //     ),
-  //   ).animate(CurvedAnimation(
-  //     parent: _modeAnimationController!,
-  //     curve: Curves.linear,
-  //   ));
-  // }
+  void _setupAnimation() {
+    _modeAnimationController = AnimationController(
+      vsync: this,
+      duration: _animationDuration,
+    );
+    _opacityAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _modeAnimationController!,
+      curve: Curves.linear,
+    ));
+  }
 
   var _isSigningIn = false;
   var _mode = AuthMode.login;
@@ -184,9 +179,17 @@ class _AuthCardState extends State<AuthCard>
   }
 
   Future<void> _submit() async {
-    final form = _formKey.currentState!;
+    final prevErrorCount = _formErrorCount;
+    _formErrorCount = 0;
 
-    if (!form.validate()) {
+    final form = _formKey.currentState!;
+    form.validate();
+
+    if (_formErrorCount != prevErrorCount) {
+      setState(() {});
+    }
+    print("formErrorCount: $_formErrorCount");
+    if (_formErrorCount > 0) {
       return;
     }
 
@@ -195,20 +198,29 @@ class _AuthCardState extends State<AuthCard>
     final auth = Auth.of(context, listen: false);
     try {
       setState(() => _isSigningIn = true);
-      await auth.signIn(
-          email: _credentials.email!,
-          password: _credentials.password!,
-          newUser: _mode == AuthMode.signup);
-      setState(() => _isSigningIn = false);
+      try {
+        await auth.signIn(
+            email: _credentials.email!,
+            password: _credentials.password!,
+            newUser: _mode == AuthMode.signup);
+      } finally {
+        setState(() => _isSigningIn = false);
+      }
     } on AuthException catch (error) {
       _showError(context, error.message);
     }
   }
 
   void _changeMode() {
-    // _mode == AuthMode.login
-    //     ? _modeAnimationController!.forward()
-    //     : _modeAnimationController!.reverse();
+    final form = _formKey.currentState!;
+    _ignoreFormErrors = true;
+    _formErrorCount = 0;
+    form.validate();
+    _ignoreFormErrors = false;
+
+    _mode == AuthMode.login
+        ? _modeAnimationController!.forward()
+        : _modeAnimationController!.reverse();
 
     setState(() =>
         _mode = _mode == AuthMode.login ? AuthMode.signup : AuthMode.login);
@@ -218,18 +230,19 @@ class _AuthCardState extends State<AuthCard>
   Widget build(BuildContext context) {
     final device = MediaQuery.of(context).size;
     final colorScheme = Theme.of(context).colorScheme;
-
+    final double cardHeight =
+        (_mode == AuthMode.signup ? 320 : 260) + (_formErrorCount * 20);
     return Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
         elevation: 8,
         child: AnimatedContainer(
-            duration: const Duration(milliseconds: 175),
-            height: _mode == AuthMode.signup ? 320 : 260,
+            duration: _animationDuration,
+            height: cardHeight,
             width: device.width * .75,
             constraints: BoxConstraints(
-              minHeight: _mode == AuthMode.signup ? 320 : 260,
+              minHeight: cardHeight,
             ),
             padding: const EdgeInsets.all(16),
             child: Form(
@@ -241,9 +254,13 @@ class _AuthCardState extends State<AuthCard>
                         decoration: const InputDecoration(labelText: "email"),
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
+                          if (_ignoreFormErrors) {
+                            return null;
+                          }
                           if (value == null ||
                               value.isEmpty ||
                               !(value.contains(".") && value.contains("@"))) {
+                            _formErrorCount++;
                             return "Please enter a valid email address";
                           }
                         },
@@ -256,27 +273,43 @@ class _AuthCardState extends State<AuthCard>
                         obscureText: true,
                         controller: _passwordController,
                         validator: (value) {
+                          if (_ignoreFormErrors) {
+                            return null;
+                          }
                           if (value == null || value.length < 5) {
+                            _formErrorCount++;
                             return "Password must be at least 6 characters";
                           }
                         },
                         onSaved: (value) {
                           _credentials.password = value ?? "";
                         }),
-                    if (_mode == AuthMode.signup)
-                      TextFormField(
+                    AnimatedContainer(
+                      duration: _animationDuration,
+                      constraints: BoxConstraints(
+                        minHeight: _mode == AuthMode.signup ? 60 : 0,
+                        maxHeight: _mode == AuthMode.signup ? 80 : 0,
+                      ),
+                      child: FadeTransition(
+                        opacity: _opacityAnimation!,
+                        child: TextFormField(
                           decoration: const InputDecoration(
                               labelText: "Confirm password"),
                           obscureText: true,
                           validator: (value) {
+                            if (_ignoreFormErrors ||
+                                (_mode == AuthMode.login)) {
+                              return null;
+                            }
                             if (value == null ||
                                 value != _passwordController.text) {
+                              _formErrorCount++;
                               return "Passwords are not the same";
                             }
                           },
-                          onSaved: (value) {
-                            _credentials.password = value ?? "";
-                          }),
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     _isSigningIn
                         ? SizedBox(
