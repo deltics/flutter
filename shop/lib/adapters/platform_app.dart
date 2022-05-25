@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class PlatformApp extends StatelessWidget {
   final String title;
-  //final String initialRoute = "/";
   final Widget home;
   final MaterialColor primaryColor;
   final Color accentColor;
@@ -10,7 +9,6 @@ class PlatformApp extends StatelessWidget {
 
   const PlatformApp({
     Key? key,
-    //this.initialRoute = '/',
     required this.home,
     this.primaryColor = Colors.purple,
     this.accentColor = Colors.orange,
@@ -41,7 +39,6 @@ class PlatformApp extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               )),
-      //initialRoute: initialRoute,
       home: home,
       routes: routes,
     );

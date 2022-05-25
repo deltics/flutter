@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'dart:math';
 
-// import '../adapters/platform_page.dart';
+import 'package:flutter/material.dart';
+
 import '../models/auth.dart';
 
 enum AuthMode {

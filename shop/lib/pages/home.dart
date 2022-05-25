@@ -24,11 +24,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<void>? _fetchProducts;
-
-  Future<void> _future(BuildContext context) => _fetchProducts =
-      _fetchProducts ?? Products.of(context, listen: false).fetchAll(context);
-
   Future<void> _refresh(BuildContext context) async {
     await Products.of(
       context,
@@ -70,47 +65,41 @@ class _HomePageState extends State<HomePage> {
     final products = Products.of(context);
     final favorites = Favorites.of(context)!.ids;
 
-    return FutureBuilder(
-      future: _future(context),
-      builder: (_, data) => data.connectionState == ConnectionState.waiting
-          ? const Center(child: CircularProgressIndicator())
-          : PlatformTabbedPage(
-              tabs: [
-                TabDefinition(
-                  icon: const Icon(Icons.menu_book),
-                  title: "Catalog",
-                  content: RefreshIndicator(
-                    onRefresh: () => _refresh(context),
-                    child: ProductGrid(
-                      products: products.items,
-                    ),
-                  ),
-                ),
-                TabDefinition(
-                  icon: const Icon(Icons.favorite),
-                  title: "Favorites",
-                  content: ProductGrid(
-                    products:
-                        products.filtered((p) => favorites.contains(p.id)),
-                  ),
-                ),
-                TabDefinition(
-                  icon: Consumer<Cart>(
-                    builder: (_, cart, __) => Badge(
-                      child: const Icon(Icons.shopping_cart),
-                      value: cart.totalQuantity.toString(),
-                    ),
-                  ),
-                  title: "Cart",
-                  content: Consumer<Cart>(
-                    builder: (_, cart, __) => const ShoppingCart(),
-                  ),
-                ),
-              ],
-              title: "MyShop",
-              appRoutes: routes,
-              drawer: const ShopAppDrawer(),
+    return PlatformTabbedPage(
+      tabs: [
+        TabDefinition(
+          icon: const Icon(Icons.menu_book),
+          title: "Catalog",
+          content: RefreshIndicator(
+            onRefresh: () => _refresh(context),
+            child: const ProductGrid(
+              mode: ProductGridMode.all,
             ),
+          ),
+        ),
+        TabDefinition(
+          icon: const Icon(Icons.favorite),
+          title: "Favorites",
+          content: const ProductGrid(
+            mode: ProductGridMode.favorites,
+          ),
+        ),
+        TabDefinition(
+          icon: Consumer<Cart>(
+            builder: (_, cart, __) => Badge(
+              child: const Icon(Icons.shopping_cart),
+              value: cart.totalQuantity.toString(),
+            ),
+          ),
+          title: "Cart",
+          content: Consumer<Cart>(
+            builder: (_, cart, __) => const ShoppingCart(),
+          ),
+        ),
+      ],
+      title: "MyShop",
+      appRoutes: routes,
+      drawer: const ShopAppDrawer(),
     );
   }
 }

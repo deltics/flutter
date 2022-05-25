@@ -4,8 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:shop/pages/home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../pages/home.dart';
 import '../utils.dart';
 import 'cart.dart';
 import 'favorites.dart';
@@ -40,15 +41,17 @@ class Auth with ChangeNotifier {
   String get userId => _userId;
 
   Future<void> _getFreshToken() async {
-    final uri =
-        Uri.https("securetoken.googleapis.com", "v1/token", {"key": _apiKey});
-    final response = await http.post(uri,
+    final uri = Uri.https(
+      "securetoken.googleapis.com",
+      "v1/token",
+      {"key": _apiKey},
+    );
+
+    final result = okJsonResponse(await http.post(uri,
         body: jsonEncode({
           "grant_type": "refresh_token",
           "refresh_token": _refreshToken,
-        }));
-
-    final result = okJsonResponse(response)!;
+        })))!;
 
     _refreshToken = result["refresh_token"];
     _token = result["id_token"];
@@ -112,6 +115,17 @@ class Auth with ChangeNotifier {
       );
       _userId = data["localId"];
 
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString(
+        "auth",
+        jsonEncode({
+          "refreshToken": _refreshToken,
+          "token": _token,
+          "tokenExpires": _tokenExpires.toIso8601String(),
+          "userId": _userId,
+        }),
+      );
+
       notifyListeners();
     } catch (error) {
       if (kDebugMode) {
@@ -122,19 +136,49 @@ class Auth with ChangeNotifier {
     }
   }
 
-  void signOut(BuildContext context) {
+  Future<void> signOut(BuildContext context) async {
     _refreshToken = "";
     _token = "";
     _tokenExpires = DateTime.now();
+    _userId = "";
 
     Cart.of(context, listen: false).clear();
     Products.of(context, listen: false).reset();
     Favorites.of(context, listen: false)?.reset();
     Orders.of(context, listen: false)?.reset();
 
-    Navigator.of(context).popUntil((route) => route.isFirst);
+    Navigator.of(context).pushNamedAndRemoveUntil(HomePage.route, (_) => false);
+
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey("auth")) {
+      prefs.remove("auth");
+    }
 
     notifyListeners();
+  }
+
+  Future<bool> tryAutoSignIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey("auth")) {
+      return false;
+    }
+
+    final authJson = prefs.getString("auth");
+
+    final auth = jsonDecode(authJson!) as Map<String, dynamic>;
+
+    _refreshToken = auth["refreshToken"];
+    _token = auth["token"];
+    _tokenExpires = DateTime.parse(auth["tokenExpires"]);
+    _userId = auth["userId"];
+
+    if (_tokenExpired) {
+      await _getFreshToken();
+    }
+
+    notifyListeners();
+
+    return isSignedIn;
   }
 }
 

@@ -36,7 +36,10 @@ class ShopAppDrawer extends StatelessWidget {
           AppDrawerItem(
             title: "Sign Out",
             iconData: Icons.logout,
-            onPressed: () => auth.signOut(context),
+            onPressed: () async {
+              Navigator.of(context).pop();
+              await auth.signOut(context);
+            },
           )
       ],
     );

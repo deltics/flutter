@@ -14,6 +14,7 @@ import 'pages/home.dart';
 import 'pages/orders.dart';
 import 'pages/product_detail.dart';
 import 'pages/products.dart';
+import 'pages/splash.dart';
 
 final routes = {
   CartPage.route: (ctx) => const CartPage(),
@@ -52,7 +53,15 @@ class ShopApp extends StatelessWidget {
             title: 'Shop',
             primaryColor: Colors.purple,
             accentColor: Colors.orange,
-            home: auth.isSignedIn ? const HomePage() : const AuthPage(),
+            home: auth.isSignedIn
+                ? const HomePage()
+                : FutureBuilder(
+                    future: auth.tryAutoSignIn(),
+                    builder: (_, result) =>
+                        result.connectionState == ConnectionState.waiting
+                            ? const Splash()
+                            : const AuthPage(),
+                  ),
             routes: routes,
           );
         },

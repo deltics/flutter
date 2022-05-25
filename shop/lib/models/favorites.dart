@@ -16,9 +16,8 @@ class Favorites with ChangeNotifier {
 
   Favorites({required this.userId});
 
-  List<String> get ids {
-    return [..._ids];
-  }
+  int get count => _ids.length;
+  List<String> get ids => [..._ids];
 
   void reset() {
     _ids.clear();

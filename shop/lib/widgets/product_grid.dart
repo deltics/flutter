@@ -1,47 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/products.dart';
 import 'added_to_cart_snackbar.dart';
 import '../models/cart.dart';
 import '../models/favorites.dart';
 import '../models/product.dart';
 import '../pages/product_detail.dart';
 
-class ProductGrid extends StatelessWidget {
-  final List<Product> products;
+enum ProductGridMode {
+  all,
+  favorites,
+}
+
+class ProductGrid extends StatefulWidget {
+  final ProductGridMode mode;
 
   const ProductGrid({
     Key? key,
-    required this.products,
+    required this.mode,
   }) : super(key: key);
+
+  @override
+  State<ProductGrid> createState() => _ProductGridState();
+}
+
+class _ProductGridState extends State<ProductGrid> {
+  final List<Product> products = [];
+
+  Future<void>? _fetchProducts;
+
+  Future<void> _future(BuildContext context) => _fetchProducts =
+      _fetchProducts ?? Products.of(context, listen: false).fetchAll(context);
 
   @override
   Widget build(BuildContext context) {
     final favorites = Favorites.of(context);
 
-    return GridView.builder(
-      padding: const EdgeInsets.all(10),
-      itemCount: products.length,
-      itemBuilder: (ctx, idx) {
-        final product = products[idx];
+    return FutureBuilder(
+      future: _future(context),
+      builder: (_, data) {
+        if (data.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        final products = Products.of(context, listen: false).items;
 
-        return ProductGridItem(
-          id: product.id,
-          title: product.title,
-          price: product.price,
-          imageUrl: product.imageUrl,
-          isFavorite: favorites!.isFavorite(product.id),
+        return GridView.builder(
+          padding: const EdgeInsets.all(10),
+          itemCount: widget.mode == ProductGridMode.all
+              ? products.length
+              : favorites!.count,
+          itemBuilder: (ctx, idx) {
+            final product = widget.mode == ProductGridMode.all
+                ? products[idx]
+                : products
+                    .singleWhere((item) => item.id == favorites!.ids[idx]);
+
+            return ProductGridItem(
+              id: product.id,
+              title: product.title,
+              price: product.price,
+              imageUrl: product.imageUrl,
+              isFavorite: (widget.mode == ProductGridMode.favorites) ||
+                  favorites!.isFavorite(product.id),
+            );
+          },
+          // The delegate determines the appearance of the grid itself.
+          //  This delegate determines a fixed number of "cross axis elements"
+          //  - i.e. columns.
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 3 / 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+          ),
         );
       },
-      // The delegate determines the appearance of the grid itself.
-      //  This delegate determines a fixed number of "cross axis elements"
-      //  - i.e. columns.
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 3 / 2,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-      ),
     );
   }
 }
