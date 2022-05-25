@@ -153,8 +153,6 @@ class _AuthCardState extends State<AuthCard>
       parent: _modeAnimationController!,
       curve: Curves.linear,
     ));
-
-    _modeAnimation!.addListener(() => setState(() {}));
   }
 
   var _isSigningIn = false;
@@ -224,13 +222,16 @@ class _AuthCardState extends State<AuthCard>
           borderRadius: BorderRadius.circular(10),
         ),
         elevation: 8,
-        child: Container(
-            height: _modeAnimation!.value.height,
-            width: device.width * .75,
-            constraints: BoxConstraints(
-              minHeight: _modeAnimation!.value.height,
-            ),
-            padding: const EdgeInsets.all(16),
+        child: AnimatedBuilder(
+            animation: _modeAnimation!,
+            builder: (_, child) => Container(
+                height: _modeAnimation!.value.height,
+                width: device.width * .75,
+                constraints: BoxConstraints(
+                  minHeight: _modeAnimation!.value.height,
+                ),
+                padding: const EdgeInsets.all(16),
+                child: child),
             child: Form(
               key: _formKey,
               child: SingleChildScrollView(
