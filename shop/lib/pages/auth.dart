@@ -188,7 +188,6 @@ class _AuthCardState extends State<AuthCard>
     if (_formErrorCount != prevErrorCount) {
       setState(() {});
     }
-    print("formErrorCount: $_formErrorCount");
     if (_formErrorCount > 0) {
       return;
     }

@@ -44,7 +44,7 @@ class Orders with ChangeNotifier {
   static Orders? of(BuildContext context, {bool listen = false}) =>
       Provider.of<Orders?>(context, listen: listen);
 
-  final userId;
+  final String userId;
 
   Orders({required this.userId});
 

@@ -15,6 +15,8 @@ enum ProductGridMode {
 
 class ProductGrid extends StatefulWidget {
   final ProductGridMode mode;
+  final placeholderImage =
+      const AssetImage("assets/images/product-placeholder.png");
 
   const ProductGrid({
     Key? key,
@@ -63,6 +65,7 @@ class _ProductGridState extends State<ProductGrid> {
               imageUrl: product.imageUrl,
               isFavorite: (widget.mode == ProductGridMode.favorites) ||
                   favorites!.isFavorite(product.id),
+              placeholderImage: widget.placeholderImage,
             );
           },
           // The delegate determines the appearance of the grid itself.
@@ -86,15 +89,17 @@ class ProductGridItem extends StatefulWidget {
   final double price;
   final String imageUrl;
   final bool isFavorite;
+  final ImageProvider<Object> placeholderImage;
 
-  const ProductGridItem({
-    Key? key,
-    required this.id,
-    required this.title,
-    required this.imageUrl,
-    required this.isFavorite,
-    required this.price,
-  }) : super(key: key);
+  const ProductGridItem(
+      {Key? key,
+      required this.id,
+      required this.title,
+      required this.imageUrl,
+      required this.isFavorite,
+      required this.price,
+      required this.placeholderImage})
+      : super(key: key);
 
   @override
   State<ProductGridItem> createState() => _ProductGridItemState();
@@ -128,8 +133,11 @@ class _ProductGridItemState extends State<ProductGridItem> {
         borderRadius: BorderRadius.circular(10),
         child: GestureDetector(
           child: GridTile(
-            child: Image.network(
-              widget.imageUrl,
+            child: FadeInImage(
+              placeholder: widget.placeholderImage,
+              image: NetworkImage(
+                widget.imageUrl,
+              ),
               fit: BoxFit.cover,
             ),
             footer: GridTileBar(

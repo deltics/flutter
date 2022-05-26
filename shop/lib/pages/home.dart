@@ -5,7 +5,6 @@ import '../app.dart';
 import '../adapters/platform_tabbed_page.dart';
 import '../models/auth.dart';
 import '../models/cart.dart';
-import '../models/favorites.dart';
 import '../models/products.dart';
 import '../widgets/badge.dart';
 import '../widgets/product_grid.dart';
@@ -61,9 +60,6 @@ class _HomePageState extends State<HomePage> {
       //  have successfully signed in
       return Container();
     }
-
-    final products = Products.of(context);
-    final favorites = Favorites.of(context)!.ids;
 
     return PlatformTabbedPage(
       tabs: [

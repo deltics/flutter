@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 
 import '../firebase.dart';
 import '../utils.dart';
-import 'auth.dart';
 
 enum _FavoriteAction { add, remove, doNothing }
 
@@ -63,9 +62,6 @@ class Favorites with ChangeNotifier {
     required String id,
     required bool isFavorite,
   }) async {
-    print("updating favorite for user with id $userId");
-    print(_isLoaded);
-
     if (!_isLoaded || userId.isEmpty) {
       return;
     }
