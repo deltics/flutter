@@ -27,7 +27,7 @@ class _OrderSummaryState extends State<OrderSummary> {
 
   @override
   Widget build(BuildContext context) {
-    final products = _expanded ? Products.of(context) : null;
+    final products = Products.of(context, listen: false);
 
     return Card(
       margin: const EdgeInsets.all(10),
@@ -46,37 +46,37 @@ class _OrderSummaryState extends State<OrderSummary> {
               },
             ),
           ),
-          if (_expanded)
-            SizedBox(
-              height: min((widget.items.length * 20) + 10, 180),
-              child: ListView(
-                children: widget.items.map((item) {
-                  final product = products?.byId(item.productId)!;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          products!.byId(item.productId)!.title,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 175),
+            height: _expanded ? min((widget.items.length * 20) + 10, 180) : 0,
+            child: ListView(
+              children: widget.items.map((item) {
+                final product = products.byId(item.productId)!;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        product.title,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
                         ),
-                        Text(
-                          "${item.quantity} x \$${product!.price.toStringAsFixed(2)}",
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.blueGrey,
-                          ),
+                      ),
+                      Text(
+                        "${item.quantity} x \$${product!.price.toStringAsFixed(2)}",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.blueGrey,
                         ),
-                      ],
-                    ),
-                  );
-                }).toList(),
-              ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
             ),
+          ),
         ],
       ),
     );

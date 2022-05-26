@@ -144,8 +144,8 @@ class _AuthCardState extends State<AuthCard>
       duration: _animationDuration,
     );
     _opacityAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _modeAnimationController!,
       curve: Curves.linear,
