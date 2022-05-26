@@ -133,13 +133,15 @@ class _ProductGridItemState extends State<ProductGridItem> {
         borderRadius: BorderRadius.circular(10),
         child: GestureDetector(
           child: GridTile(
-            child: FadeInImage(
-              placeholder: widget.placeholderImage,
-              image: NetworkImage(
-                widget.imageUrl,
-              ),
-              fit: BoxFit.cover,
-            ),
+            child: Hero(
+                tag: widget.id,
+                child: FadeInImage(
+                  placeholder: widget.placeholderImage,
+                  image: NetworkImage(
+                    widget.imageUrl,
+                  ),
+                  fit: BoxFit.contain,
+                )),
             footer: GridTileBar(
               backgroundColor: Colors.black54,
               title: Text(widget.title),

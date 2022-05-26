@@ -21,13 +21,16 @@ class ProductDetailPage extends StatelessWidget {
         //child:
         Column(
       children: [
-        SizedBox(
+        Container(
           height: 300,
           width: double.infinity,
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
-          ),
+          padding: const EdgeInsets.all(8),
+          child: Hero(
+              tag: product.id,
+              child: Image.network(
+                product.imageUrl,
+                fit: BoxFit.contain,
+              )),
         ),
         const SizedBox(height: 10),
         SizedBox(
