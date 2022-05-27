@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:places/pages/place_detail.dart';
+import 'package:provider/provider.dart';
 
+import '../data/providers/places.dart';
 import '../pages/add_place.dart';
 
 class PlacesListPage extends StatelessWidget {
@@ -21,8 +24,28 @@ class PlacesListPage extends StatelessWidget {
           ),
         ],
       ),
-      body: const Center(
-        child: CircularProgressIndicator(color: Colors.green),
+      body: Consumer<Places>(
+        child: const Center(child: Text("Start adding some places")),
+        builder: (context, places, noPlaces) {
+          if (places.length == 0) {
+            return noPlaces!;
+          }
+
+          final items = places.items;
+          return ListView.builder(
+            itemCount: places.length,
+            itemBuilder: (context, index) {
+              final place = items[index];
+              return ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: FileImage(place.image),
+                  ),
+                  title: Text(place.title),
+                  onTap: () =>
+                      Navigator.of(context).pushNamed(PlaceDetailPage.route));
+            },
+          );
+        },
       ),
     );
   }

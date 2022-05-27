@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:uuid/uuid.dart';
+
 import 'location.dart';
 
 class Place {
@@ -14,4 +16,10 @@ class Place {
     required this.location,
     required this.image,
   });
+
+  Place.createNew({
+    required this.title,
+    required this.image,
+    required this.location,
+  }) : id = const Uuid().v4().toString();
 }
