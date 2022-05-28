@@ -24,28 +24,44 @@ class PlacesListPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<Places>(
-        child: const Center(child: Text("Start adding some places")),
-        builder: (context, places, noPlaces) {
-          if (places.length == 0) {
-            return noPlaces!;
-          }
+      body: FutureBuilder(
+        future: Places.of(context).fetch(),
+        builder: (context, data) => data.connectionState ==
+                ConnectionState.waiting
+            ? const Center(child: CircularProgressIndicator())
+            : Consumer<Places>(
+                child: const Center(child: Text("Start adding some places")),
+                builder: (context, places, noPlaces) {
+                  if (places.length == 0) {
+                    return noPlaces!;
+                  }
 
-          final items = places.items;
-          return ListView.builder(
-            itemCount: places.length,
-            itemBuilder: (context, index) {
-              final place = items[index];
-              return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: FileImage(place.image),
-                  ),
-                  title: Text(place.title),
-                  onTap: () =>
-                      Navigator.of(context).pushNamed(PlaceDetailPage.route));
-            },
-          );
-        },
+                  final items = places.items;
+                  const titleStyle = TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  );
+
+                  return ListView.builder(
+                    itemCount: places.length,
+                    itemBuilder: (context, index) {
+                      final place = items[index];
+                      return Card(
+                        elevation: 4,
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(12),
+                          leading: CircleAvatar(
+                            backgroundImage: FileImage(place.image),
+                          ),
+                          title: Text(place.title, style: titleStyle),
+                          onTap: () => Navigator.of(context)
+                              .pushNamed(PlaceDetailPage.route),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
       ),
     );
   }
