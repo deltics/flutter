@@ -65,7 +65,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                         ),
                       ),
                       Text(
-                        "${item.quantity} x \$${product!.price.toStringAsFixed(2)}",
+                        "${item.quantity} x \$${product.price.toStringAsFixed(2)}",
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.blueGrey,
