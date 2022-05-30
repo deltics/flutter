@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../data/providers/places.dart';
 import '../widgets/image_input.dart';
+import '../widgets/location_input.dart';
 
 class AddPlacePage extends StatefulWidget {
   static const route = "/addPlace";
@@ -24,6 +25,7 @@ class _AddPlacePageState extends State<AddPlacePage> {
   String? _title;
 
   bool _imageInputError = false;
+  bool _locationInputError = false;
   bool _autoValidate = false;
 
   @override
@@ -71,7 +73,7 @@ class _AddPlacePageState extends State<AddPlacePage> {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(10),
               child: Form(
                 autovalidateMode: _autoValidate
                     ? AutovalidateMode.onUserInteraction
@@ -88,6 +90,7 @@ class _AddPlacePageState extends State<AddPlacePage> {
                       },
                       onSaved: (value) => _title = value,
                     ),
+                    const SizedBox(height: 10),
                     ImageInput(
                       onCapture: (image) => setState(() {
                         _image = image;
@@ -98,6 +101,10 @@ class _AddPlacePageState extends State<AddPlacePage> {
                         _imageInputError = false;
                       }),
                       inErrorState: _imageInputError,
+                    ),
+                    const SizedBox(height: 10),
+                    LocationInput(
+                      inErrorState: _locationInputError,
                     ),
                   ],
                 ),

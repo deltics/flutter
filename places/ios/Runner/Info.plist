@@ -51,5 +51,7 @@
 		<string>Take pictures of places</string>
 		<key>NSMicrophoneUsageDescription</key>
 		<string>Capture audio in videos of places</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>Identifying current location when adding a new Place</string>
 	</dict>
 </plist>
