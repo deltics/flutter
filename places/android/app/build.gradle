@@ -5,6 +5,10 @@ if (localPropertiesFile.exists()) {
         localProperties.load(reader)
     }
 }
+def googleMapsApiKey = localProperties.getProperty('googlemaps.apikey')
+if (googleMapsApiKey == null) {
+    throw new GradleException("Google Maps API Key not found.  Configure googlemaps.apikey in local.properties file.")
+}
 
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
@@ -44,10 +48,13 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.places"
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 20 // required by Google_Maps_Flutter plug-in
+        // minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+
+        manifestPlaceholders.googleMapsApiKey = googleMapsApiKey
     }
 
     buildTypes {

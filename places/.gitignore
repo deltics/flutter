@@ -44,3 +44,8 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Secure Secrets Stores
+lib/secrets.dart
+ios/Runner/secrets.swift
+android/local.properties

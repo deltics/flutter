@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+import 'package:places/pages/location_picker.dart';
 
 import "../data/models/location.dart" as model;
 import '../helpers/google_maps.dart';
 
 class LocationInput extends StatefulWidget {
   final bool inErrorState;
+  final Function(model.Location?) onLocationChanged;
 
   const LocationInput({
     Key? key,
     required this.inErrorState,
+    required this.onLocationChanged,
   }) : super(key: key);
 
   @override
@@ -17,25 +20,52 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInputState extends State<LocationInput> {
-  String? _previewImageUrl;
+  model.Location? _location;
+  Uri? _mapUri;
   bool _loadingImage = false;
 
   Future<void> _getCurrentLocation() async {
     setState(() {
       _loadingImage = true;
-      _previewImageUrl = null;
+      _mapUri = null;
     });
 
+    widget.onLocationChanged(null);
     final deviceLocation = await Location().getLocation();
 
-    final location = model.Location(
-      latitude: deviceLocation.latitude!,
-      longitude: deviceLocation.longitude!,
+    if (mounted) {
+      _location = model.Location(
+        latitude: deviceLocation.latitude!,
+        longitude: deviceLocation.longitude!,
+      );
+      widget.onLocationChanged(_location!);
+    }
+
+    if (mounted) {
+      setState(
+        () => _mapUri = GoogleMaps.getStaticMapUri(location: _location!),
+      );
+    }
+  }
+
+  Future<void> _selectOnMap() async {
+    final location = await Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (context) => LocationPickerPage(
+          initialLocation: _location ??
+              model.Location(
+                latitude: -36.842,
+                longitude: 174.751,
+              ),
+          allowSelection: true,
+        ),
+      ),
     );
 
-    final imageUri = GoogleMaps.getStaticMapUri(location: location);
-
-    setState(() => _previewImageUrl = imageUri.toString());
+    if (location == null) {
+      return;
+    }
   }
 
   @override
@@ -51,15 +81,13 @@ class _LocationInputState extends State<LocationInput> {
             color: widget.inErrorState ? Colors.red : Colors.blueGrey.shade500,
           ),
         ),
-        child: _previewImageUrl == null
+        child: _mapUri == null
             ? Stack(
                 fit: StackFit.passthrough,
                 children: [
-                  Expanded(
-                    child: Image.asset(
-                      "assets/images/earth-map.png",
-                      fit: BoxFit.cover,
-                    ),
+                  Image.asset(
+                    "assets/images/earth-map.png",
+                    fit: BoxFit.cover,
                   ),
                   Center(
                     child: _loadingImage
@@ -75,7 +103,7 @@ class _LocationInputState extends State<LocationInput> {
                 ],
               )
             : Image.network(
-                _previewImageUrl!,
+                _mapUri.toString(),
                 fit: BoxFit.cover,
                 frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
                   _loadingImage = false;
@@ -92,7 +120,7 @@ class _LocationInputState extends State<LocationInput> {
           TextButton.icon(
             icon: const Icon(Icons.map),
             label: const Text("Choose on Map"),
-            onPressed: () {},
+            onPressed: _selectOnMap,
           ),
           TextButton.icon(
             icon: const Icon(Icons.location_on),

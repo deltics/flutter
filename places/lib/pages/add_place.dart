@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:places/helpers/google_maps.dart';
 
+import '../data/models/location.dart';
 import '../data/providers/places.dart';
 import '../widgets/image_input.dart';
 import '../widgets/location_input.dart';
@@ -23,6 +25,10 @@ class _AddPlacePageState extends State<AddPlacePage> {
 
   XFile? _image;
   String? _title;
+  Location? _location;
+  String? _address;
+  final List<String> _addresses = [];
+  final _addressController = TextEditingController();
 
   bool _imageInputError = false;
   bool _locationInputError = false;
@@ -44,9 +50,15 @@ class _AddPlacePageState extends State<AddPlacePage> {
     Future<void> _submit() async {
       final form = _formKey.currentState;
 
-      setState(() => _imageInputError = (_image == null));
+      if ((_image == null && !_imageInputError) ||
+          (_location == null && !_locationInputError)) {
+        setState(() {
+          _imageInputError = (_image == null);
+          _locationInputError = (_location == null);
+        });
+      }
 
-      if (!form!.validate() || _imageInputError) {
+      if (!form!.validate() || _imageInputError || _locationInputError) {
         _autoValidate = true;
         return;
       }
@@ -56,9 +68,10 @@ class _AddPlacePageState extends State<AddPlacePage> {
       form.save();
 
       Places.of(context).addPlace(
-        title: _title!,
-        image: image,
-      );
+          title: _title!,
+          image: image,
+          location: _location!,
+          address: _address);
 
       Navigator.of(context).pop();
     }
@@ -105,7 +118,78 @@ class _AddPlacePageState extends State<AddPlacePage> {
                     const SizedBox(height: 10),
                     LocationInput(
                       inErrorState: _locationInputError,
+                      onLocationChanged: (location) async {
+                        if (!mounted) {
+                          return;
+                        }
+
+                        _location = location;
+                        _addresses.clear();
+                        if (_locationInputError && (_location != null)) {
+                          _locationInputError = false;
+                        }
+
+                        if (location == null) {
+                          setState(() {});
+                          return;
+                        }
+
+                        final addresses =
+                            await GoogleMaps.getAddresses(location: location);
+
+                        if (!mounted) {
+                          setState(() {
+                            _location = location;
+                            _addresses.addAll(addresses);
+                          });
+                        }
+                      },
                     ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                          labelText: _addresses.isEmpty
+                              ? "Enter address"
+                              : "Enter address or choose from list below"),
+                      onSaved: (value) => _address = value,
+                      controller: _addressController,
+                    ),
+                    if (_addresses.isNotEmpty) const SizedBox(height: 10),
+                    if (_addresses.isNotEmpty)
+                      SizedBox(
+                        height: 200,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: _addresses
+                                .map(
+                                  (address) => Container(
+                                    width: double.infinity,
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 4),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.shade200),
+                                    child: GestureDetector(
+                                      child: Text(
+                                        address,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.blueGrey.shade700,
+                                        ),
+                                      ),
+                                      onTap: () => setState(() =>
+                                          _addressController.text = address),
+                                    ),
+                                    padding: const EdgeInsets.only(
+                                      left: 24,
+                                      top: 8,
+                                      bottom: 8,
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),

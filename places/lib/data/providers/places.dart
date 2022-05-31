@@ -22,13 +22,15 @@ class Places with ChangeNotifier {
   void addPlace({
     required String title,
     required File image,
+    required Location location,
+    String? address,
   }) {
     final place = Place.createNew(
       title: title,
       location: Location(
-        latitude: 0.0,
-        longitude: 0.0,
-        address: "",
+        latitude: location.latitude,
+        longitude: location.longitude,
+        address: address,
       ),
       image: image,
     );
@@ -39,6 +41,9 @@ class Places with ChangeNotifier {
       "id": place.id,
       "title": place.title,
       "image": place.image.path,
+      "latitude": place.location.latitude,
+      "longitude": place.location.longitude,
+      "address": place.location.address,
     });
 
     notifyListeners();
