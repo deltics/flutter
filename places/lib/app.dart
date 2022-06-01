@@ -4,6 +4,7 @@ import 'package:places/pages/places_list.dart';
 import 'package:provider/provider.dart';
 
 import 'data/providers/places.dart';
+import 'pages/place_detail.dart';
 
 class PlacesApp extends StatelessWidget {
   const PlacesApp({Key? key}) : super(key: key);
@@ -27,7 +28,8 @@ class PlacesApp extends StatelessWidget {
         ),
         home: const PlacesListPage(),
         routes: {
-          AddPlacePage.route: (_) => AddPlacePage(),
+          AddPlacePage.route: (_) => const AddPlacePage(),
+          PlaceDetailPage.route: (_) => const PlaceDetailPage(),
         },
       ),
     );

@@ -3,8 +3,17 @@ import 'package:sqflite/sqflite.dart' as sql;
 
 class Database {
   static Future<void> _init(sql.Database db, int version) async {
-    return db.execute(
-        'create table places(id text primary key, title text, image text)');
+    return db.execute('''
+create table places
+(
+  id       text primary key,
+ title     text,
+ image     text,
+ latitude  double,
+ longitude double,
+ address   text
+)
+''');
   }
 
   static Future<sql.Database> _open() async {

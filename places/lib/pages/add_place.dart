@@ -137,7 +137,7 @@ class _AddPlacePageState extends State<AddPlacePage> {
                         final addresses =
                             await GoogleMaps.getAddresses(location: location);
 
-                        if (!mounted) {
+                        if (mounted) {
                           setState(() {
                             _location = location;
                             _addresses.addAll(addresses);

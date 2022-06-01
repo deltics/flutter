@@ -54,8 +54,14 @@ class PlacesListPage extends StatelessWidget {
                             backgroundImage: FileImage(place.image),
                           ),
                           title: Text(place.title, style: titleStyle),
-                          onTap: () => Navigator.of(context)
-                              .pushNamed(PlaceDetailPage.route),
+                          subtitle: Text(place.location.address == null ||
+                                  place.location.address!.isEmpty
+                              ? place.location.toString()
+                              : place.location.address!),
+                          onTap: () => Navigator.of(context).pushNamed(
+                            PlaceDetailPage.route,
+                            arguments: place.id,
+                          ),
                         ),
                       );
                     },

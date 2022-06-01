@@ -19,6 +19,10 @@ class Places with ChangeNotifier {
   int get length => _items.length;
   List<Place> get items => [..._items];
 
+  Place byId(String id) {
+    return _items.firstWhere((item) => item.id == id);
+  }
+
   void addPlace({
     required String title,
     required File image,
@@ -63,7 +67,11 @@ class Places with ChangeNotifier {
           id: item["id"],
           title: item["title"],
           image: File(item["image"]),
-          location: Location(latitude: 0, longitude: 0),
+          location: Location(
+            latitude: item["latitude"],
+            longitude: item["longitude"],
+            address: item["address"],
+          ),
         ),
       ),
     );

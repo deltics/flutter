@@ -1,6 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
-import 'package:places/pages/location_picker.dart';
+import 'package:places/pages/location_map.dart';
 
 import "../data/models/location.dart" as model;
 import '../helpers/google_maps.dart';
@@ -25,46 +26,64 @@ class _LocationInputState extends State<LocationInput> {
   bool _loadingImage = false;
 
   Future<void> _getCurrentLocation() async {
+    _clearLocation();
+    try {
+      final deviceLocation = await Location().getLocation();
+      if (mounted) {
+        _setLocation(
+          model.Location(
+            latitude: deviceLocation.latitude!,
+            longitude: deviceLocation.longitude!,
+          ),
+        );
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print("Unable to obtain location: $error");
+      }
+      return;
+    }
+  }
+
+  void _clearLocation() {
     setState(() {
       _loadingImage = true;
       _mapUri = null;
     });
 
     widget.onLocationChanged(null);
-    final deviceLocation = await Location().getLocation();
-
-    if (mounted) {
-      _location = model.Location(
-        latitude: deviceLocation.latitude!,
-        longitude: deviceLocation.longitude!,
-      );
-      widget.onLocationChanged(_location!);
-    }
-
-    if (mounted) {
-      setState(
-        () => _mapUri = GoogleMaps.getStaticMapUri(location: _location!),
-      );
-    }
   }
 
   Future<void> _selectOnMap() async {
     final location = await Navigator.of(context).push(
       MaterialPageRoute(
         fullscreenDialog: true,
-        builder: (context) => LocationPickerPage(
+        builder: (context) => LocationMapPage(
           initialLocation: _location ??
               model.Location(
                 latitude: -36.842,
                 longitude: 174.751,
               ),
-          allowSelection: true,
+          onLocationSelected: (location) async {
+            _clearLocation();
+            _setLocation(location);
+          },
         ),
       ),
     );
 
     if (location == null) {
       return;
+    }
+  }
+
+  void _setLocation(model.Location location) {
+    widget.onLocationChanged(location);
+    if (mounted) {
+      setState(() {
+        _location = location;
+        _mapUri = GoogleMaps.getStaticMapUri(location: location);
+      });
     }
   }
 
