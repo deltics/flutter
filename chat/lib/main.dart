@@ -19,6 +19,10 @@ void main() async {
   //
   // 2. Slightly more obvious: to 'await' the initializeApp() call, the usually
   //     'sync' main() method needs to be made 'async'.
+  //
+  // 3. iOS platform version in Podfile needs to be increased from 9.0 (I went
+  //     straight to 11.0, which worked, though may not be the minimum
+  //     supported)
 
   // Finally, not something to change, but to explain what's going on above...
   //

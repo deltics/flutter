@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'pages/auth.dart';
 import 'pages/chat.dart';
 
 class ChatApp extends StatelessWidget {
@@ -8,11 +10,27 @@ class ChatApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Chat',
+      title: 'ChatterBox',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
+        backgroundColor: Colors.yellow,
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            textStyle: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+        ),
       ),
-      home: const ChatPage(),
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) =>
+            snapshot.hasData ? const ChatPage() : const AuthPage(),
+      ),
     );
   }
 }

@@ -48,10 +48,15 @@ android {
         applicationId "com.example.chat"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        // Firebase FireStore SDK requires minSdkVersion 19, even though Flutter can run on earlier SDK's
+        // minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
+        minSdkVersion 19
+        // targetSdkVersion 19
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        // Required due to Firebase SDK
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -71,4 +76,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation platform('com.google.firebase:firebase-bom:30.1.0')
     implementation 'com.google.firebase:firebase-analytics'    
+    implementation 'androidx.multidex:multidex:2.0.1'
 }
