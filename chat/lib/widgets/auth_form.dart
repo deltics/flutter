@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+
+import 'profile_image_picker.dart';
 
 enum AuthMode { signIn, signUp }
 
@@ -9,6 +13,7 @@ class AuthForm extends StatefulWidget {
     required String password,
     required bool createUser,
     String? username,
+    File? profilePicture,
   }) onSubmit;
 
   const AuthForm({
@@ -31,6 +36,7 @@ class _AuthFormState extends State<AuthForm> {
   String? _email;
   String? _username;
   String? _password;
+  File? _profilePicture;
 
   String? _emailValidator(String? value) {
     if (value == null || value.isEmpty) {
@@ -89,6 +95,10 @@ class _AuthFormState extends State<AuthForm> {
     return null;
   }
 
+  void _setImage(File image) {
+    _profilePicture = image;
+  }
+
   void _submit(BuildContext context) async {
     final form = _formKey.currentState;
 
@@ -106,9 +116,12 @@ class _AuthFormState extends State<AuthForm> {
         password: _password!,
         createUser: _mode == AuthMode.signUp,
         username: _mode == AuthMode.signUp ? _username : null,
+        profilePicture: _mode == AuthMode.signUp ? _profilePicture : null,
       );
     } finally {
-      setState(() => _isSubmitting = false);
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
     }
   }
 
@@ -122,6 +135,8 @@ class _AuthFormState extends State<AuthForm> {
 
   @override
   Widget build(BuildContext context) {
+    final signUp = _mode == AuthMode.signUp;
+
     return Center(
       child: Card(
         elevation: 10,
@@ -134,6 +149,7 @@ class _AuthFormState extends State<AuthForm> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  if (signUp) ProfileImagePicker(onImagePicked: _setImage),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: "email",

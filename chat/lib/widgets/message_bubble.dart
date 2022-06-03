@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../data/models/user_profile.dart';
+
 class MessageBubble extends StatelessWidget {
   final String message;
-  final Future<String>? senderName;
+  final Future<UserProfile>? sender;
 
   const MessageBubble({
     Key? key,
     required this.message,
-    this.senderName,
+    this.sender,
   }) : super(key: key);
 
   @override
@@ -15,33 +17,13 @@ class MessageBubble extends StatelessWidget {
     const rounded = Radius.circular(18);
     const square = Radius.circular(0);
 
-    final bool wasReceived = senderName != null;
+    final bool wasReceived = sender != null;
 
     return Row(
       mainAxisAlignment:
           wasReceived ? MainAxisAlignment.end : MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (wasReceived)
-          FutureBuilder(
-            future: senderName,
-            builder: (context, snapshot) => !snapshot.hasData
-                ? SizedBox.square(
-                    dimension: 12,
-                    child: CircularProgressIndicator(
-                      color: Colors.blueGrey.shade400,
-                    ))
-                : Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Text(
-                      snapshot.data! as String,
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.blueGrey.shade400,
-                      ),
-                    ),
-                  ),
-          ),
         Container(
           constraints: BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width * 0.75,
@@ -74,6 +56,35 @@ class MessageBubble extends StatelessWidget {
             ),
           ),
         ),
+        if (wasReceived)
+          FutureBuilder(
+            future: sender,
+            builder: (context, snapshot) => !snapshot.hasData
+                ? SizedBox.square(
+                    dimension: 12,
+                    child: CircularProgressIndicator(
+                      color: Colors.blueGrey.shade400,
+                    ))
+                : Column(
+                    children: [
+                      const SizedBox(height: 4),
+                      CircleAvatar(
+                        radius: 12,
+                        backgroundColor: Colors.blueGrey.shade600,
+                        backgroundImage:
+                            (snapshot.data as UserProfile).picture?.image,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        (snapshot.data as UserProfile).username,
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.blueGrey.shade400,
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
       ],
     );
   }

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../data/providers/users.dart';
+import '../data/providers/user_profiles.dart';
 import 'message_bubble.dart';
 
 class ChatMessages extends StatelessWidget {
@@ -41,7 +41,7 @@ class ChatMessages extends StatelessWidget {
             return MessageBubble(
               key: ValueKey(doc.id),
               message: doc["text"],
-              senderName: users.getName(uid: fromUid),
+              sender: users.getById(fromUid),
             );
           },
           reverse: true,

@@ -54,12 +54,6 @@ class ChatPage extends StatelessWidget {
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   child: const Icon(Icons.add),
-      //   onPressed: () => FirebaseFirestore.instance
-      //       .collection("chats/_collection/messages")
-      //       .add({"text": "Added by the app!"}),
-      // ),
     );
   }
 }

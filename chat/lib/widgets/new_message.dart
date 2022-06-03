@@ -13,28 +13,20 @@ class _NewMessageState extends State<NewMessage> {
   final _messageController = TextEditingController();
 
   String _message = "";
-  // bool _isSending = true;
-  bool _isSending = false;
 
   Future<void> _sendMessage({required BuildContext context}) async {
-    print("sending...");
     FocusScope.of(context).unfocus();
 
-    setState(() => _isSending = true);
-    try {
-      final uid = FirebaseAuth.instance.currentUser!.uid;
+    final uid = FirebaseAuth.instance.currentUser!.uid;
 
-      await FirebaseFirestore.instance.collection('chat').add({
-        "from": uid,
-        "text": _message,
-        "createdAt": Timestamp.now(),
-      });
+    await FirebaseFirestore.instance.collection('chat').add({
+      "from": uid,
+      "text": _message,
+      "createdAt": Timestamp.now(),
+    });
 
-      _message = "";
-      _messageController.clear();
-    } finally {
-      setState(() => _isSending = false);
-    }
+    _message = "";
+    _messageController.clear();
   }
 
   @override

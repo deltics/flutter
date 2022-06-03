@@ -45,5 +45,11 @@
 	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Select images to send in messages or use as profile picture.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Take photos to send in messages or use as profile picture.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Record audio in videos taken to be sent in messages.</string>
 </dict>
 </plist>
