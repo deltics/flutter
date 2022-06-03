@@ -1,7 +1,8 @@
+import 'package:chat/widgets/new_message.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../widgets/chat_messages.dart';
 
 class ChatPage extends StatelessWidget {
   static const route = "/";
@@ -26,7 +27,6 @@ class ChatPage extends StatelessWidget {
                   child: Text(
                     "ChatterBox",
                     style: TextStyle(
-                      // color: Colors.white,
                       color: Theme.of(context).colorScheme.onPrimaryContainer,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -43,34 +43,23 @@ class ChatPage extends StatelessWidget {
           ),
         ),
       ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('chats/_collection/messages')
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          final docs = (snapshot.data as QuerySnapshot).docs;
-
-          return ListView.builder(
-            itemCount: docs.length,
-            itemBuilder: (context, index) => Container(
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                docs[index]["text"],
-              ),
+      body: Container(
+        padding: const EdgeInsets.all(6),
+        child: Column(
+          children: const [
+            Expanded(
+              child: ChatMessages(),
             ),
-          );
-        },
+            NewMessage(),
+          ],
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () => FirebaseFirestore.instance
-            .collection("chats/_collection/messages")
-            .add({"text": "Added by the app!"}),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: const Icon(Icons.add),
+      //   onPressed: () => FirebaseFirestore.instance
+      //       .collection("chats/_collection/messages")
+      //       .add({"text": "Added by the app!"}),
+      // ),
     );
   }
 }

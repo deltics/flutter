@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 enum AuthMode { signIn, signUp }
@@ -41,6 +40,8 @@ class _AuthFormState extends State<AuthForm> {
     if (!value.contains('.') || !value.contains('@')) {
       return "Please enter a valid email address";
     }
+
+    return null;
   }
 
   String? _passwordValidator(String? value) {
@@ -51,6 +52,8 @@ class _AuthFormState extends State<AuthForm> {
     if (value.length < 7) {
       return "Password must be a minimum of 7 characters";
     }
+
+    return null;
   }
 
   String? _usernameValidator(String? value) {
@@ -67,6 +70,7 @@ class _AuthFormState extends State<AuthForm> {
           ? "Reminder: Your username is at least 5 characters"
           : "Username must be a minimum of 5 characters";
     }
+    return null;
   }
 
   String? _confirmPasswordValidator(String? value) {
@@ -81,6 +85,8 @@ class _AuthFormState extends State<AuthForm> {
     if (value != _passwordController.text) {
       return "Passwords do not match";
     }
+
+    return null;
   }
 
   void _submit(BuildContext context) async {
