@@ -1,7 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'app.dart';
+
+Future<void> _onBackgroundMessage(RemoteMessage msg) async {
+  await Firebase.initializeApp();
+  if (kDebugMode) {
+    print("onBackgroundMessage.notification.title: ${msg.notification?.title}");
+    print("onBackgroundMessage.notification.body: ${msg.notification?.body}");
+  }
+}
 
 void main() async {
   // This is required...
@@ -9,6 +19,16 @@ void main() async {
 
   // ... before we can do this...
   await Firebase.initializeApp();
+
+  if (kDebugMode) {
+    FirebaseMessaging.instance.getToken().then((token) {
+      if (kDebugMode) {
+        print("FCM registration token: $token");
+      }
+    });
+  }
+
+  FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage);
 
   // And some other things to remember:
   //

@@ -49,3 +49,8 @@ app.*.map.json
 # GoogleServices configuration (includes secrets!)
 google-services.json
 GoogleService-info.plist
+
+# ignore service-account.json, npm packages and build folder when developing Firebase Cloud Functions
+service-account.json
+functions/lib
+node_modules
